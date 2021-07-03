@@ -9,7 +9,9 @@ import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 
 import Header from './header'
-import './layout.css'
+import GlobalStyles from './globalStyles'
+import './resets.css'
+import styled from 'styled-components'
 
 type LayoutProps = {
   children: React.ReactNode
@@ -27,27 +29,28 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   `)
 
   return (
-    <>
+    <Container>
+      <GlobalStyles />
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer
-          style={{
-            marginTop: `2rem`,
-          }}
-        >
-          © {new Date().getFullYear()}, Built with
-          <a href="https://www.gatsbyjs.com">Gatsby</a>
-        </footer>
-      </div>
-    </>
+
+      <main>{children}</main>
+      <Footer>
+        © {new Date().getFullYear()}, Built with
+        <a href="https://www.gatsbyjs.com">Gatsby</a>
+      </Footer>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  padding: 0 2em;
+`
+
+const Footer = styled.footer`
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  font-size: small;
+`
 
 export default Layout

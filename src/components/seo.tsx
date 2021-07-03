@@ -38,8 +38,11 @@ function Seo({ description, lang, meta, title }: SEOProps) {
   const metaDescription = description || site.siteMetadata.description
   const defaultTitle = site.siteMetadata?.title
 
-  return (
-    <Helmet
+  console.log(site)
+
+  return null
+  return {
+    /* <Helmet
       htmlAttributes={{
         lang,
       }}
@@ -79,8 +82,8 @@ function Seo({ description, lang, meta, title }: SEOProps) {
           content: metaDescription,
         },
       ].concat(meta)}
-    />
-  )
+    /> */
+  }
 }
 
 export default Seo
