@@ -6,6 +6,9 @@ type HamburgerProps = {
   active: boolean
 }
 
+const DURATION = 0.5
+const EASING = 'easeInOut'
+
 const HamburgerVariants = ({ rotate, y }) => ({
   open: {
     y: [y, '0%', '0%'],
@@ -23,10 +26,12 @@ export default function HamburgerIcon({ active, ...rest }: HamburgerProps) {
       <Span
         variants={HamburgerVariants({ rotate: '45deg', y: '100%' })}
         initial={{ y: '100%' }}
+        transition={{ duration: DURATION, ease: EASING }}
       ></Span>
       <Span
         variants={HamburgerVariants({ rotate: '-45deg', y: '-100%' })}
         initial={{ y: '-100%' }}
+        transition={{ duration: DURATION, ease: EASING }}
       ></Span>
     </Conatiner>
   )
@@ -48,7 +53,7 @@ const Span = styled(motion.span)`
 
   position: absolute;
 
-  width: 36px;
+  width: 30px;
   height: 6px;
   border-radius: 10000px;
   background-color: white;

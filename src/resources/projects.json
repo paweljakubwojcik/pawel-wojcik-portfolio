@@ -1,0 +1,57 @@
+{
+  "projects": [
+    {
+      "name": "Fakebook-Facebook-Clone",
+      "links": {
+        "repo": "https://github.com/paweljakubwojcik/facebook-clone",
+        "live": "https://fakebook-fake-facebook.netlify.app/"
+      },
+      "tech": [
+        "React",
+        "GraphQL",
+        "Apollo Server & Apollo Client",
+        "MongoDB",
+        "Styled Components",
+        "Firebase Storage",
+        "Unsplash Api",
+        "Google Authentication"
+      ],
+      "description": "",
+      "images": [],
+      "videos": []
+    },
+    {
+      "name": "Online sampler",
+      "links": {
+        "repo": "https://github.com/paweljakubwojcik/online-sampler",
+        "live": "https://paweljakubwojcik.github.io/online-sampler/"
+      },
+      "tech": ["React", "GSAP", "Howler.js"],
+      "description": "",
+      "images": [],
+      "videos": []
+    },
+    {
+      "name": "Neural Network Training App",
+      "links": {
+        "repo": "https://github.com/paweljakubwojcik/neural-network-training-app",
+        "live": "https://paweljakubwojcik.github.io/neural-network-training-app/"
+      },
+      "tech": ["React", "Typescript", "Tensorflow.js", "Material UI", "Styled Components"],
+      "description": "Education app based on tensorflow.js API intended to help teach students about linear regression in machine learning context.",
+      "images": [],
+      "videos": []
+    },
+    {
+      "name": "Interior Designer Portfolio",
+      "links": {
+        "repo": "https://github.com/paweljakubwojcik/weronika-web-page",
+        "live": "https://weronikawojcikdesign.gtsb.io/"
+      },
+      "tech": ["React", "Gatsbyjs", "Strapi CMS", "Three.js", "SCSS"],
+      "description": "Portfolio type website for a interior designer, utilizing pulling data from external cms & modyfing it through gatsby-node api",
+      "images": [],
+      "videos": []
+    }
+  ]
+}
