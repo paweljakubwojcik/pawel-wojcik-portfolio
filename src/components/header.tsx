@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
           <IconButton as="a" href="#">
             <FontAwesomeIcon icon={faFacebook} />
           </IconButton>
-          <IconButton onClick={() => setSideMenu(true)}>
+          <IconButton onClick={() => setSideMenu((v) => !v)}>
             <HamburgerIcon active={sideMenu} />
           </IconButton>
         </Links>
