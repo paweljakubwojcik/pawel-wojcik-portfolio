@@ -13,28 +13,29 @@ type sideBarMenuProps = {
     x: number
     y: number
   }
+  toggleOpen: React.MouseEventHandler<HTMLElement>
 }
 
 const options = [
   {
     name: 'Home',
     icon: null,
-    link: '/',
+    link: '/#Home',
   },
   {
     name: 'Projects',
     icon: null,
-    link: '#projects',
+    link: '#Projects',
   },
   {
     name: 'About',
     icon: null,
-    link: '#about',
+    link: '#About',
   },
   {
     name: 'Contact',
     icon: null,
-    link: '#contact',
+    link: '#Contact',
   },
 ]
 
@@ -43,6 +44,7 @@ const options = [
 export default function SideBarMenu({
   open = true,
   paddingTop = 100,
+  toggleOpen,
   clickCoordinates: { x = 100, y = 100 },
 }: sideBarMenuProps) {
   const { height, width } = useScreenSize()
@@ -76,7 +78,7 @@ export default function SideBarMenu({
           <List>
             {options.map(({ name, link }) => (
               <Item key={name}>
-                <Link to={link} style={{ color: 'inherit' }}>
+                <Link to={link} style={{ color: 'inherit' }} onClick={toggleOpen}>
                   {name}
                 </Link>
               </Item>

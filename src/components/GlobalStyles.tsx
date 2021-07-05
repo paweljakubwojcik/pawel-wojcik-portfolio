@@ -7,6 +7,7 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     color: ${(props) => props.theme.colors.font.main};
     background: ${(props) => props.theme.colors.background};
+    background-attachment:fixed;
     min-height: 100vh;
     font-family: 'Montserrat', sans-serif;
     font-weight: normal;
@@ -17,6 +18,8 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
     font-feature-settings: "kern", "liga", "clig", "calt";
 
+   
+
   }
 
 
@@ -25,13 +28,17 @@ const GlobalStyle = createGlobalStyle`
     -webkit-text-size-adjust: 100%;
     font: 112.5%/1.45em georgia, serif, sans-serif;
     box-sizing: border-box;
-    
+
   }
 
   a{
     color: ${(props) => props.theme.colors.palette.pink.light};
     text-decoration: none;
   }
+
+  * :focus:not(input):not(textarea):not(:active) {
+            outline: 1px solid ${(props) => props.theme.colors.palette.pink.light};
+    }
 
 `
 

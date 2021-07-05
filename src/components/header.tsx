@@ -17,6 +17,7 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
   const [clickCoordinates, setClickCoordinates] = useState({ x: 0, y: 0 })
 
   const toggleSideMenu: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.currentTarget.blur()
     const { clientX, clientY } = e
     setClickCoordinates({ x: clientX ? clientX : window.innerWidth, y: clientY })
     setSideMenuOpen((v) => !v)
@@ -56,6 +57,7 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
         paddingTop={headerRef?.current?.clientHeight}
         open={sideMenuOpen}
         clickCoordinates={clickCoordinates}
+        toggleOpen={toggleSideMenu}
       />
     </StyledHeader>
   )
@@ -72,6 +74,7 @@ const StyledHeader = styled.header`
   background: transparent;
   position: sticky;
   z-index: 1;
+  top: 0;
 `
 
 const FlexContainer = styled.div`
