@@ -51,6 +51,7 @@ const Container = styled.div`
 
 const Footer = styled.footer`
   display: flex;
+  z-index: 1;
   position: fixed;
   bottom: 0;
   font-size: small;

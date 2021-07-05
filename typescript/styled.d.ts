@@ -22,5 +22,10 @@ declare module 'styled-components' {
         green: Color
       }
     }
+    breakpoints: {
+      MAX_MOBILE: number
+      MAX_TABLET: number
+      MAX_LAPTOP: number
+    }
   }
 }

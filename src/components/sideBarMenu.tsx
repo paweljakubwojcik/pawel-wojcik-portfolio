@@ -1,67 +1,85 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
 import { AnimatePresence, motion } from 'framer-motion'
+import useScreenSize from '../hooks/useScreenSize'
+import { Link } from 'gatsby'
 
 type sideBarMenuProps = {
   open?: boolean
   paddingTop: number
-  width: number
+  clickCoordinates: {
+    x: number
+    y: number
+  }
 }
 
 const options = [
   {
     name: 'Home',
     icon: null,
+    link: '/',
   },
   {
     name: 'Projects',
     icon: null,
+    link: '#projects',
   },
   {
     name: 'About',
     icon: null,
+    link: '#about',
   },
   {
     name: 'Contact',
     icon: null,
+    link: '#contact',
   },
 ]
 
-const MenuStates = {
-  open: {
-    opacity: [1, 1],
-    clipPath: 'circle(700px at 260px 0px)',
-  },
-  closed: {
-    clipPath: 'circle(30px at 260px 0px)',
-    opacity: [1, 0],
-  },
-}
+// FIXME: when animating clipPath, component is using clickcoordinates from previous click
 
-export default function sideBarMenu({
+export default function SideBarMenu({
   open = true,
   paddingTop = 100,
-  width = 300,
+  clickCoordinates: { x = 100, y = 100 },
 }: sideBarMenuProps) {
+  const { height, width } = useScreenSize()
+
+  // hamburger button x coordinate is calculated from left side of the screen
+  // if we skip this step, menu gonna resize properly but will not move clipPath origin point
+  const XFromLeft = useMemo(() => width - x, [x])
+
+  const MenuStates = {
+    open: {
+      clipPath: `circle(${Math.sqrt(width * width + height * height)}px at ${
+        width - XFromLeft
+      }px ${y}px)`,
+    },
+    closed: {
+      clipPath: `circle(2px at ${width - XFromLeft}px ${y}px)`,
+    },
+  }
+
   return createPortal(
     <AnimatePresence>
       {open && (
         <MenuContainer
-          style={{ paddingTop, width }}
-          initial={{
-            opacity: 0,
-          }}
+          initial={MenuStates.closed}
           animate={MenuStates.open}
           exit={MenuStates.closed}
           transition={{
-            duration: 0.5,
+            duration: 0.7,
           }}
         >
           <List>
-            {options.map(({ name }) => (
-              <Item>{name}</Item>
+            {options.map(({ name, link }) => (
+              <Item key={name}>
+                <Link to={link} style={{ color: 'inherit' }}>
+                  {name}
+                </Link>
+              </Item>
             ))}
           </List>
         </MenuContainer>
@@ -77,23 +95,26 @@ const MenuContainer = styled(motion.div)`
   top: 0;
   z-index: 0;
 
-  width: 50%;
-  min-width: 350px;
+  width: 100vw;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.palette.violet.main};
   color: ${(props) => props.theme.colors.font.main};
 
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: 600;
+
+  box-shadow: ${(props) => props.theme.shadows.medium};
 `
 
 const List = styled.ul`
   display: flex;
   flex-direction: column;
+  justify-content: center;
 
   width: 100%;
   height: 100%;
   padding: 1em;
+  padding-bottom: 1.5em;
   margin: 0;
 `
 

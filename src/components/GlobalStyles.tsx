@@ -28,6 +28,11 @@ const GlobalStyle = createGlobalStyle`
     
   }
 
+  a{
+    color: ${(props) => props.theme.colors.palette.pink.light};
+    text-decoration: none;
+  }
+
 `
 
 export default GlobalStyle

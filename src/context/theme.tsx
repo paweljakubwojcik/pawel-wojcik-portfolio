@@ -3,7 +3,7 @@ import { DefaultTheme, ThemeProvider } from 'styled-components'
 
 const theme: DefaultTheme = {
   shadows: {
-    medium: '21px 34px 18px -19px  #00000041',
+    medium: ' rgba(0, 0, 0, 0.24) 0px 3px 8px;',
   },
   colors: {
     font: {
@@ -27,6 +27,11 @@ const theme: DefaultTheme = {
         dark: '#03763f',
       },
     },
+  },
+  breakpoints: {
+    MAX_MOBILE: 480,
+    MAX_TABLET: 720,
+    MAX_LAPTOP: 1440,
   },
 }
 
