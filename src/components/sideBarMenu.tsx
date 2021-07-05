@@ -80,8 +80,8 @@ const MenuContainer = styled(motion.div)`
   width: 50%;
   min-width: 350px;
   height: 100vh;
-  background-color: #644190;
-  color: white;
+  background-color: ${(props) => props.theme.colors.palette.violet.main};
+  color: ${(props) => props.theme.colors.font.main};
 
   font-size: 1.5em;
   font-weight: 600;

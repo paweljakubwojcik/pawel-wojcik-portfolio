@@ -56,5 +56,5 @@ const Span = styled(motion.span)`
   width: 30px;
   height: 6px;
   border-radius: 10000px;
-  background-color: white;
+  background-color: ${(props) => props.theme.colors.font.main};
 `

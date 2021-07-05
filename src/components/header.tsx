@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faFacebook } from '@fortawesome/free-brands-svg-icons'
-import HamburgerIcon from './hamburgerIcon'
-import SideBarMenu from './sideBarMenu'
+import HamburgerIcon from './HamburgerIcon'
+import SideBarMenu from './SideBarMenu'
 import { useRef } from 'react'
 
 type HeaderProps = {
@@ -86,7 +86,7 @@ const Links = styled.div`
   min-width: 300px;
   max-width: 500px;
 
-  color: white;
+  color: ${(props) => props.theme.colors.font.main};
   font-size: 1.5em;
 
   & > * {

@@ -8,8 +8,9 @@
 import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 
-import Header from './header'
-import GlobalStyles from './globalStyles'
+import Header from './Header'
+import GlobalStyles from './GlobalStyles'
+import ThemeProvider from '../context/theme'
 import './resets.css'
 import styled from 'styled-components'
 
@@ -29,16 +30,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   `)
 
   return (
-    <Container>
-      <GlobalStyles />
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
+    <ThemeProvider>
+      <Container>
+        <GlobalStyles />
+        <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
 
-      <main>{children}</main>
-      <Footer>
-        © {new Date().getFullYear()}, Built with
-        <a href="https://www.gatsbyjs.com">Gatsby</a>
-      </Footer>
-    </Container>
+        <main>{children}</main>
+        <Footer>
+          © {new Date().getFullYear()}, Built with
+          <a href="https://www.gatsbyjs.com">Gatsby</a>
+        </Footer>
+      </Container>
+    </ThemeProvider>
   )
 }
 
