@@ -6,6 +6,7 @@ import Section from '../components/Section'
 import SnapScrollContainer from '../components/SnapScrollContainer'
 import { useEffect } from 'react'
 import VulfyPicture from '../components/VulfyPicture'
+import Moon from '../components/Moon'
 
 const IndexPage = () => {
   return (
@@ -18,6 +19,8 @@ const IndexPage = () => {
             <Section.SubTitle>Web Developer</Section.SubTitle>
             <Section.Paragraph>Take your ideas to the moon 🚀</Section.Paragraph>
           </Section.Column>
+
+          <Moon />
         </Section>
         <Section id="Projects">
           <Section.Column>
