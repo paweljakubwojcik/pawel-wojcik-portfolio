@@ -25,17 +25,17 @@ const options = [
   {
     name: 'Projects',
     icon: null,
-    link: '#Projects',
+    link: '/#Projects',
   },
   {
     name: 'About',
     icon: null,
-    link: '#About',
+    link: '/#About',
   },
   {
     name: 'Contact',
     icon: null,
-    link: '#Contact',
+    link: '/#Contact',
   },
 ]
 

@@ -6,7 +6,8 @@ import Section from '../components/Section'
 import SnapScrollContainer from '../components/SnapScrollContainer'
 import { useEffect } from 'react'
 
-const IndexPage = ({ location }) => {
+const IndexPage = () => {
+  console.log('render')
   return (
     <>
       <Seo title="Home" />

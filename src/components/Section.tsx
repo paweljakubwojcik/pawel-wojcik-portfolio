@@ -22,11 +22,9 @@ export default function Section({ children, id, ...props }: SectionProps) {
     (entry) => {
       if (!visible) {
         if (locationHash === active) {
-          console.log(`#${id}` !== DEFAULT_HASH ? `/#${id}` : '/')
           navigate(`#${id}` !== DEFAULT_HASH ? `/#${id}` : '/')
         }
         setActive(`#${id}`)
-        console.log({ location: locationHash, active })
       }
     },
     { threshold: 0.2 }

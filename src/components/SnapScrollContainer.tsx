@@ -5,6 +5,8 @@ import { useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import MediaQuery from './MediaQuery'
 import Navigator from './Navigator'
+import { useLocation } from '@reach/router'
+import { navigate } from 'gatsby'
 
 type SnapScrollContainerProps = {
   children: React.ReactNode
@@ -16,10 +18,21 @@ export const SectionActiveContext = createContext<{
 }>({ active: '', setActive: () => {} })
 
 export default function SnapScrollContainer({ children }: SnapScrollContainerProps) {
+  const location = useLocation()
   const { breakpoints } = useTheme()
-  const [active, setActive] = useState<string>(window.location.hash || '#Home')
-
   const keys = (children as Array<JSX.Element>).map(({ props }) => props.id)
+
+  const [active, setActive] = useState<string>('#Home')
+
+  useEffect(() => {
+    if (!location.hash) {
+      document.getElementById(keys[0]).scrollIntoView()
+    } else {
+      if (!keys.includes(location.hash.replace('#', ''))) {
+        navigate('/')
+      }
+    }
+  }, [location.hash])
 
   return (
     <SectionActiveContext.Provider value={{ active, setActive }}>

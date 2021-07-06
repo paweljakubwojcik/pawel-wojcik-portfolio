@@ -10,10 +10,6 @@ type NavigatorProps = {
 export default function Navigator({ keys }: NavigatorProps) {
   const location = window.location.hash
 
-  useEffect(() => {
-    if (!location) document.getElementById(keys[0]).scrollIntoView()
-  })
-
   return (
     <Wrapper>
       {keys.map((key, i) => {
