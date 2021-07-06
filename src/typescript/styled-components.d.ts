@@ -1,12 +1,11 @@
 import 'styled-components'
 
-type Color = {
-  main: string
-  light: string
-  dark: string
-}
-
 declare module 'styled-components' {
+  type Color = {
+    main: string
+    light: string
+    dark: string
+  }
   export interface DefaultTheme {
     shadows: {
       medium: string

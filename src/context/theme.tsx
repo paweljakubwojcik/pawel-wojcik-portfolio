@@ -1,5 +1,6 @@
 import React from 'react'
-import { DefaultTheme, ThemeProvider } from 'styled-components'
+import { useContext } from 'react'
+import { ThemeContext, ThemeProvider, DefaultTheme } from 'styled-components'
 
 const theme: DefaultTheme = {
   shadows: {
@@ -38,3 +39,5 @@ const theme: DefaultTheme = {
 export default function StyledComponentsThemeProvider({ children }) {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }
+
+export const useTheme = () => useContext<DefaultTheme>(ThemeContext)

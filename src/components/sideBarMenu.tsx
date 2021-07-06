@@ -20,7 +20,7 @@ const options = [
   {
     name: 'Home',
     icon: null,
-    link: '/#Home',
+    link: '/',
   },
   {
     name: 'Projects',
@@ -78,7 +78,12 @@ export default function SideBarMenu({
           <List>
             {options.map(({ name, link }) => (
               <Item key={name}>
-                <Link to={link} style={{ color: 'inherit' }} onClick={toggleOpen}>
+                <Link
+                  to={link}
+                  state={{ viaLink: true }}
+                  style={{ color: 'inherit' }}
+                  onClick={toggleOpen}
+                >
                   {name}
                 </Link>
               </Item>
