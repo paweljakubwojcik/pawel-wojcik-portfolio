@@ -39,7 +39,25 @@ export default function Section({ children, id, ...props }: SectionProps) {
 
 const Container = styled.section`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: left;
   height: 100%;
+  padding-left: 9em;
+`
+
+Section.Title = styled.h2`
+  font-size: 4em;
+  margin: 0.4em 0;
+`
+
+Section.SubTitle = styled.h3`
+  font-size: 2em;
+  margin: 1em 0.1rem;
+  color: ${(props) => props.theme.colors.palette.pink.main};
+`
+
+Section.Paragraph = styled.p`
+  font-weight: 100;
+  margin: 1em 0.1rem;
 `
