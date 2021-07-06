@@ -39,11 +39,18 @@ export default function Section({ children, id, ...props }: SectionProps) {
 
 const Container = styled.section`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding-left: 9em;
+`
+Section.Column = styled.div`
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: left;
+  flex-grow: 1;
   height: 100%;
-  padding-left: 9em;
 `
 
 Section.Title = styled.h2`
