@@ -43,6 +43,13 @@ const Container = styled.section`
   align-items: center;
   height: 100%;
   padding-left: 9em;
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+    padding-left: 7em;
+    flex-direction: column;
+  }
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_MOBILE}px) {
+    padding-left: var(--content-global-padding);
+  }
 `
 Section.Column = styled.div`
   display: flex;
@@ -50,12 +57,13 @@ Section.Column = styled.div`
   justify-content: center;
   align-items: left;
   flex-grow: 1;
-  height: 100%;
+  width: 100%;
 `
 
 Section.Title = styled.h2`
   font-size: 4em;
   margin: 0.4em 0;
+  width: 100%;
 `
 
 Section.SubTitle = styled.h3`

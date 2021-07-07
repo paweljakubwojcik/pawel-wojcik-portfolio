@@ -1,18 +1,23 @@
 import React, { useState } from 'react'
 import { Link } from 'gatsby'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGithub, faFacebook } from '@fortawesome/free-brands-svg-icons'
+
 import HamburgerIcon from './HamburgerIcon'
 import SideBarMenu from './SideBarMenu'
+import MediaQuery from './MediaQuery'
+import IconButton from './shared/IconButton'
 import { useRef } from 'react'
+import SocialLinks from './shared/SocialLinks'
 
 type HeaderProps = {
   siteTitle?: string
 }
 
 const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
+  const {
+    breakpoints: { MIN_TABLET },
+  } = useTheme()
   const [sideMenuOpen, setSideMenuOpen] = useState(false)
   const [clickCoordinates, setClickCoordinates] = useState({ x: 0, y: 0 })
 
@@ -41,12 +46,9 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
         </Logo>
 
         <Links>
-          <IconButton as="a" href="#">
-            <FontAwesomeIcon icon={faGithub} />
-          </IconButton>
-          <IconButton as="a" href="#">
-            <FontAwesomeIcon icon={faFacebook} />
-          </IconButton>
+          <MediaQuery query={`(min-width:${MIN_TABLET}px)`}>
+            <SocialLinks />
+          </MediaQuery>
           <IconButton onClick={toggleSideMenu}>
             <HamburgerIcon active={sideMenuOpen} />
           </IconButton>
@@ -62,13 +64,6 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
     </StyledHeader>
   )
 }
-
-const IconButton = styled.button`
-  display: block;
-  padding: 0.5em;
-  background-color: transparent;
-  color: inherit;
-`
 
 const StyledHeader = styled.header`
   background: transparent;
@@ -92,7 +87,8 @@ const Logo = styled.h1`
 
 const Links = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: right;
   flex-grow: 1;
   max-width: 500px;
   margin-left: 1em;
@@ -100,7 +96,8 @@ const Links = styled.div`
   color: ${(props) => props.theme.colors.font.main};
   font-size: 1.5em;
 
-  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+  & > * {
+    margin-left: auto;
   }
 `
 

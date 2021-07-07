@@ -39,7 +39,7 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
       <Wrapper>
         <>{children}</>
       </Wrapper>
-      <MediaQuery query={`(min-width: ${breakpoints.MAX_MOBILE}px)`}>
+      <MediaQuery query={`(min-width: ${breakpoints.MIN_TABLET}px)`}>
         <Navigator keys={keys} />
       </MediaQuery>
     </SectionActiveContext.Provider>

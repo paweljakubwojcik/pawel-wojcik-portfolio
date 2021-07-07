@@ -31,8 +31,11 @@ const theme: DefaultTheme = {
   },
   breakpoints: {
     MAX_MOBILE: 480,
+    MIN_TABLET: 481,
     MAX_TABLET: 720,
+    MIN_LAPTOP: 721,
     MAX_LAPTOP: 1440,
+    MIN_WIDESCREEN: 1441,
   },
 }
 

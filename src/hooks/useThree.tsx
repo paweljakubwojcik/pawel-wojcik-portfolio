@@ -4,7 +4,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Clock } from 'three'
 const fov = 50
 const aspectRatio = typeof window !== `undefined` ? window.innerWidth / window.innerHeight : undefined
 const near = 0.1
-const far = 10000
+const far = 10e4
 
 export default function useThree() {
   const scene = useMemo(() => (typeof window !== `undefined` ? new Scene() : null), [])
@@ -33,10 +33,13 @@ export default function useThree() {
     }
   }, [resize])
 
-  const [canvas, canvasRef] = useState<HTMLElement>(null)
+  const [canvas, canvasRef] = useState<HTMLElement>()
+
   useEffect(() => {
-    canvas.appendChild(renderer.domElement)
-  }, [])
+    if (canvas) {
+      canvas.appendChild(renderer.domElement)
+    }
+  }, [canvas])
 
   return { scene, camera, renderer, render, canvas, canvasRef, clock }
 }

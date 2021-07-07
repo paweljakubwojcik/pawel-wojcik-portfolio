@@ -46,7 +46,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 }
 
 const Container = styled.div`
-  margin: 0 2em;
+  margin: 0 var(--content-global-padding);
 `
 
 const Footer = styled.footer`

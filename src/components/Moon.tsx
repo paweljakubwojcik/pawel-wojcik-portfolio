@@ -3,6 +3,9 @@ import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import { TextureLoader, Mesh, SphereBufferGeometry, Color, MeshStandardMaterial, PointLight } from 'three'
 import useThree from '../hooks/useThree'
 import * as dat from 'dat.gui'
+import { useTheme } from 'styled-components'
+
+// TODO: Split up threejs elements into canvas, light, moons and other stuff
 
 export default function Moon() {
   const {
@@ -15,59 +18,70 @@ export default function Moon() {
     }
   `)
 
+  const {
+    colors: {
+      palette: { green, pink },
+    },
+  } = useTheme()
+
   const { canvas, canvasRef, camera, renderer, render, scene, clock } = useThree()
+
+  const createMoon = () => {
+    const geometry = new SphereBufferGeometry(1, 128, 128)
+
+    // texture loader is async, so it takes callback
+    const textureLoader = new TextureLoader()
+    const moonTexture = textureLoader.load(
+      MOON_TEXTURE,
+      () => render(),
+      () => {},
+      (error) => {
+        throw error
+      }
+    )
+
+    // Materials
+    const material = new MeshStandardMaterial({
+      color: new Color('#ffffff'),
+      /*  displacementMap: moonTextureDisplaycment,
+        displacementScale: 0.01, */
+      map: moonTexture,
+    })
+
+    return new Mesh(geometry, material)
+  }
 
   useEffect(() => {
     if (canvas) {
       console.log('creating view')
 
-      camera.position.set(0, 0, 1.5)
+      camera.position.set(-1, 0, 3)
       renderer.setSize(window?.innerWidth, window?.innerHeight)
 
-      const geometry = new SphereBufferGeometry(1, 128, 128)
-
-      // texture loader is async, so it takes callback
-      const textureLoader = new TextureLoader()
-      const moonTexture = textureLoader.load(
-        MOON_TEXTURE,
-        () => render(),
-        () => {},
-        (error) => {
-          throw error
-        }
-      )
-
-      const pointLight = new PointLight(0xffffff, 0.6)
+      const pointLight = new PointLight('#ffffff', 0.6)
       pointLight.position.set(0, -1, 7)
       scene.add(pointLight)
 
-      const orangeLight = new PointLight(0xf26b2c, 0.7)
-      orangeLight.position.set(10, 3, 0)
-      scene.add(orangeLight)
+      const pinkLight = new PointLight(pink.main, 0.9)
+      pinkLight.position.set(-2, -3, 10)
+      scene.add(pinkLight)
 
-      const gui = new dat.GUI()
+      // helpers
+      /* const gui = new dat.GUI() */
 
-      gui.add(pointLight.position, 'x', -10, 10, 1)
+      /*  gui.add(pointLight.position, 'x', -10, 10, 1)
       gui.add(pointLight.position, 'y', -10, 10, 1)
       gui.add(pointLight.position, 'z', -10, 10, 1)
-      gui.add(pointLight, 'intensity', -0, 1, 0.1)
+      gui.add(pointLight, 'intensity', -0, 1, 0.1) */
 
-      gui.add(orangeLight.position, 'x', -10, 10, 1)
-      gui.add(orangeLight.position, 'y', -10, 10, 1)
-      gui.add(orangeLight.position, 'z', -10, 10, 1)
-      gui.add(orangeLight, 'intensity', -0, 1, 0.1)
-
-      // Materials
-      const material = new MeshStandardMaterial({
-        color: new Color(0xffffff),
-        /*  displacementMap: moonTextureDisplaycment,
-        displacementScale: 0.01, */
-        map: moonTexture,
-      })
-
-      let moon = new Mesh(geometry, material)
-      moon.position.set(0, 0, 0)
-
+      /* gui.add(camera.position, 'x', -10, 100, 1)
+      gui.add(camera.position, 'y', -10, 100, 1)
+      gui.add(camera.position, 'z', -10, 100, 1)
+      gui.add(camera, 'fov', -10, 10000, 100)
+      gui.add(camera, 'far', -10, 10000, 10)
+      gui.add(camera, 'near', -10, 10, 0.1)
+ */
+      const moon = createMoon()
       scene.add(moon)
       camera.updateProjectionMatrix()
 

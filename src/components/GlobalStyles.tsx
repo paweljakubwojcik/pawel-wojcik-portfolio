@@ -18,7 +18,15 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
     font-feature-settings: "kern", "liga", "clig", "calt";
 
-   
+    /* variables that changes globally with screen size */
+    --content-global-padding: 2em;
+    
+    @media (max-width: ${(props) => props.theme.breakpoints.MAX_MOBILE}px){
+       --content-global-padding: 1em;
+       font-size: 16px;
+    }
+
+    transition: font-size .2s;
 
   }
 

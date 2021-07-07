@@ -23,8 +23,11 @@ declare module 'styled-components' {
     }
     breakpoints: {
       MAX_MOBILE: number
+      MIN_TABLET: number
       MAX_TABLET: number
+      MIN_LAPTOP: number
       MAX_LAPTOP: number
+      MIN_WIDESCREEN: number
     }
   }
 }

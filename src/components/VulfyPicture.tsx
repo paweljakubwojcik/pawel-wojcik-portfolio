@@ -14,9 +14,7 @@ export default function VulfyPicture() {
             src={SRC}
             alt="Me"
             placeholder="blurred"
-            layout="fixed"
-            width={400}
-            height={400}
+            layout="fullWidth"
             key={i}
             style={{
               position: i === 0 ? 'static' : 'absolute',
@@ -24,6 +22,7 @@ export default function VulfyPicture() {
               left: 0,
               transform: `translate(${i * DIFFRENCE * 1.2}px, -${i * DIFFRENCE}px)`,
               opacity: 1 - i * 0.2,
+              width: '100%',
             }}
           />
         )
@@ -34,14 +33,21 @@ export default function VulfyPicture() {
 
 const Wrapper = styled.div`
   position: relative;
+  width: 100%;
+  min-width: 300px;
+  max-width: 500px;
+
+  transform: translateX(-10%);
+  z-index: -1;
+
   &::before {
     content: '';
     display: block;
     position: absolute;
-    top: 20px;
-    left: 100px;
-    width: 350px;
-    height: 450px;
+    top: 5%;
+    left: 25%;
+    width: 87.5%;
+    height: 112.5%;
     background-color: ${(props) => props.theme.colors.palette.pink.light};
   }
 `

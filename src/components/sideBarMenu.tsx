@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react'
 import { createPortal } from 'react-dom'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 
 import { AnimatePresence, motion } from 'framer-motion'
 import useScreenSize from '../hooks/useScreenSize'
 import { Link } from 'gatsby'
+import SocialLinks from './shared/SocialLinks'
+import MediaQuery from './MediaQuery'
 
 type sideBarMenuProps = {
   open?: boolean
@@ -48,6 +50,7 @@ export default function SideBarMenu({
   clickCoordinates: { x = 100, y = 100 },
 }: sideBarMenuProps) {
   const { height, width } = useScreenSize()
+  const { breakpoints } = useTheme()
 
   // hamburger button x coordinate is calculated from left side of the screen
   // if we skip this step, menu gonna resize properly but will not move clipPath origin point
@@ -55,9 +58,7 @@ export default function SideBarMenu({
 
   const MenuStates = {
     open: {
-      clipPath: `circle(${Math.sqrt(width * width + height * height)}px at ${
-        width - XFromLeft
-      }px ${y}px)`,
+      clipPath: `circle(${Math.sqrt(width * width + height * height)}px at ${width - XFromLeft}px ${y}px)`,
     },
     closed: {
       clipPath: `circle(2px at ${width - XFromLeft}px ${y}px)`,
@@ -78,16 +79,16 @@ export default function SideBarMenu({
           <List>
             {options.map(({ name, link }) => (
               <Item key={name}>
-                <Link
-                  to={link}
-                  state={{ viaLink: true }}
-                  style={{ color: 'inherit' }}
-                  onClick={toggleOpen}
-                >
+                <Link to={link} state={{ viaLink: true }} style={{ color: 'inherit' }} onClick={toggleOpen}>
                   {name}
                 </Link>
               </Item>
             ))}
+            <MediaQuery query={`(max-width: ${breakpoints.MAX_MOBILE}px)`}>
+              <Item>
+                <SocialLinks />
+              </Item>
+            </MediaQuery>
           </List>
         </MenuContainer>
       )}
