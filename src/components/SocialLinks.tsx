@@ -10,7 +10,7 @@ export default function SocialLinks() {
       <IconButton as="a" href="https://github.com/paweljakubwojcik" target="_blank">
         <FontAwesomeIcon icon={faGithub} />
       </IconButton>
-      <IconButton as="a" href="https://www.facebook.com/profile.php?id=10000388906932" target="_blank">
+      <IconButton as="a" href="https://www.facebook.com/profile.php?id=100003889069327" target="_blank">
         <FontAwesomeIcon icon={faFacebook} />
       </IconButton>
     </>

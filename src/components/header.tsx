@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { Link } from 'gatsby'
 import styled, { useTheme } from 'styled-components'
 
-
 import HamburgerIcon from './HamburgerIcon'
 import SideBarMenu from './SideBarMenu'
 import MediaQuery from './MediaQuery'
-import IconButton from './shared/IconButton'
+import IconButton from './IconButton'
 import { useRef } from 'react'
-import SocialLinks from './shared/SocialLinks'
+import SocialLinks from './SocialLinks'
 
 type HeaderProps = {
   siteTitle?: string
@@ -24,14 +23,16 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
   const toggleSideMenu: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.currentTarget.blur()
     const { clientX, clientY } = e
-    setClickCoordinates({ x: clientX ? clientX : window.innerWidth, y: clientY })
+    // when not using the mouse or touchscreen clientX is 0  (left side), it is better to have it open from right top corner
+    const x = clientX ? clientX : window.innerWidth
+    const y = clientY
+    console.log('toggleMenu', { x, y })
+    setClickCoordinates({ x, y })
     setSideMenuOpen((v) => !v)
   }
 
-  const headerRef = useRef<HTMLElement>(null)
-
   return (
-    <StyledHeader ref={headerRef}>
+    <StyledHeader>
       <FlexContainer>
         <Logo>
           <Link
@@ -56,10 +57,9 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
       </FlexContainer>
 
       <SideBarMenu
-        paddingTop={headerRef?.current?.clientHeight}
         open={sideMenuOpen}
         clickCoordinates={clickCoordinates}
-        toggleOpen={toggleSideMenu}
+        toggleOpen={() => setSideMenuOpen((v) => !v)}
       />
     </StyledHeader>
   )
