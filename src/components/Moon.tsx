@@ -1,13 +1,6 @@
 import { graphql, useStaticQuery } from 'gatsby'
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
-import {
-  TextureLoader,
-  Mesh,
-  SphereBufferGeometry,
-  Color,
-  MeshStandardMaterial,
-  PointLight,
-} from 'three'
+import { TextureLoader, Mesh, SphereBufferGeometry, Color, MeshStandardMaterial, PointLight } from 'three'
 import useThree from '../hooks/useThree'
 import * as dat from 'dat.gui'
 
@@ -17,7 +10,6 @@ export default function Moon() {
   } = useStaticQuery(graphql`
     query Moon {
       file(name: { eq: "moon_texture" }) {
-        absolutePath
         publicURL
       }
     }
@@ -76,7 +68,6 @@ export default function Moon() {
       let moon = new Mesh(geometry, material)
       moon.position.set(0, 0, 0)
 
-      canvas.appendChild(renderer.domElement)
       scene.add(moon)
       camera.updateProjectionMatrix()
 
@@ -96,7 +87,7 @@ export default function Moon() {
         // controls.update()
 
         // Render
-        renderer.render(scene, camera)
+        render()
 
         // Call tick again on the next frame
         window.requestAnimationFrame(tick)
