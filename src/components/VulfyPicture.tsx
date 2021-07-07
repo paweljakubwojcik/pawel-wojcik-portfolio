@@ -1,20 +1,28 @@
 import React from 'react'
-import { StaticImage } from 'gatsby-plugin-image'
+import { GatsbyImage, StaticImage } from 'gatsby-plugin-image'
 import styled from 'styled-components'
+import { graphql, useStaticQuery } from 'gatsby'
 
 const DIFFRENCE = 20
-const SRC = '../resources/images/Me.png'
 
 export default function VulfyPicture() {
+  const { file } = useStaticQuery(graphql`
+    query Me {
+      file(name: { eq: "Me" }) {
+        childImageSharp {
+          gatsbyImageData(width: 600, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
+        }
+      }
+    }
+  `)
+
   return (
     <Wrapper>
       {[2, 1, 0].map((i) => {
         return (
-          <StaticImage
-            src={SRC}
+          <GatsbyImage
+            image={file.childImageSharp.gatsbyImageData}
             alt="Me"
-            placeholder="blurred"
-            layout="fullWidth"
             key={i}
             style={{
               position: i === 0 ? 'static' : 'absolute',

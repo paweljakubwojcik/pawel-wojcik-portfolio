@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { useTheme } from 'styled-components'
 
-import { AnimatePresence, motion, Orchestration, Variants } from 'framer-motion'
+import { AnimatePresence, motion, Variants } from 'framer-motion'
 import useScreenSize from '../hooks/useScreenSize'
 import { Link } from 'gatsby'
 import { useLocation } from '@reach/router'
@@ -61,7 +61,7 @@ const AnimationState: Variants = {
   }),
 }
 
-const ListItemsAnimation = {
+const ListItemsAnimation: Variants = {
   open: {
     opacity: 1,
   },
@@ -69,7 +69,6 @@ const ListItemsAnimation = {
     opacity: 0,
   },
 }
-
 
 export default function SideBarMenu({
   open = true,

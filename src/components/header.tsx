@@ -26,7 +26,6 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
     // when not using the mouse or touchscreen clientX is 0  (left side), it is better to have it open from right top corner
     const x = clientX ? clientX : window.innerWidth
     const y = clientY
-    console.log('toggleMenu', { x, y })
     setClickCoordinates({ x, y })
     setSideMenuOpen((v) => !v)
   }

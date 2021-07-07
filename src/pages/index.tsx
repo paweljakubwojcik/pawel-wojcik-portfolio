@@ -39,7 +39,7 @@ const IndexPage = () => {
               Hi , this is some important info about me, that recruters would like to know
             </Section.Paragraph>
           </Section.Column>
-          <MediaQuery query={`(min-width: ${breakpoints.MAX_TABLET}px)`}>
+          <MediaQuery query={`(min-width: ${breakpoints.MIN_LAPTOP}px)`}>
             <Section.Column>
               <VulfyPicture />
             </Section.Column>
