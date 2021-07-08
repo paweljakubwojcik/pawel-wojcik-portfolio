@@ -17,8 +17,8 @@
         "Google Authentication"
       ],
       "description": "",
-      "images": [],
-      "videos": []
+      "images": ["project"],
+      "videos": ["Fakebook_video"]
     },
     {
       "name": "Online sampler",
@@ -28,8 +28,8 @@
       },
       "tech": ["React", "GSAP", "Howler.js"],
       "description": "",
-      "images": [],
-      "videos": []
+      "images": ["project"],
+      "videos": ["OnlineMellotron_video"]
     },
     {
       "name": "Neural Network Training App",
@@ -39,7 +39,7 @@
       },
       "tech": ["React", "Typescript", "Tensorflow.js", "Material UI", "Styled Components"],
       "description": "Education app based on tensorflow.js API intended to help teach students about linear regression in machine learning context.",
-      "images": [],
+      "images": ["project"],
       "videos": []
     },
     {
@@ -50,8 +50,19 @@
       },
       "tech": ["React", "Gatsbyjs", "Strapi CMS", "Three.js", "SCSS"],
       "description": "Portfolio type website for a interior designer, utilizing pulling data from external cms & modyfing it through gatsby-node api",
-      "images": [],
+      "images": ["project"],
       "videos": []
+    },
+    {
+      "name": "Transition Showoff Model Site",
+      "links": {
+        "repo": "https://github.com/paweljakubwojcik/transition-showoff-site",
+        "live": "https://paweljakubwojcik.github.io/transition-showoff-site/"
+      },
+      "tech": ["React", "Gatsbyjs", "Unsplash", "Framer Motion", "Styled-Components"],
+      "description": "",
+      "images": ["project"],
+      "videos": ["Transition-showoff_video"]
     }
   ]
 }

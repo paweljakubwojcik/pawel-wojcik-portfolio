@@ -62,13 +62,13 @@ Section.Column = styled.div`
 
 Section.Title = styled.h2`
   font-size: 4em;
-  margin: 0.4em 0;
+  /* margin: 0.4em 0; */
   width: 100%;
 `
 
 Section.SubTitle = styled.h3`
   font-size: 2em;
-  margin: 1em 0.1rem;
+ /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
 `
 

@@ -4,4 +4,43 @@
  * See: https://www.gatsbyjs.com/docs/node-apis/
  */
 
-// You can delete this file if you're not using it
+const path = require(`path`)
+const fs = require('fs')
+
+const basePath = 'projects'
+
+exports.createPages = async ({ actions, graphql }) => {
+  const { createPage } = actions
+
+  try {
+    const {
+      data: {
+        allGraphCmsProject: { nodes: projects },
+      },
+    } = await graphql(`
+      query Projects {
+        allGraphCmsProject {
+          nodes {
+            name
+          }
+        }
+      }
+    `)
+
+    const pageTemplate = path.resolve(`src/templates/ProjectPage.tsx`)
+
+    projects.forEach(({ name }) => {
+      createPage({
+        path: `/${basePath}/${name}`,
+        component: pageTemplate,
+        context: {
+          name,
+        },
+      })
+    })
+
+    console.log(`created ${projects.length} pages`)
+  } catch (e) {
+    console.log(e)
+  }
+}

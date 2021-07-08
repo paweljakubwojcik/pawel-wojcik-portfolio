@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import VulfyPicture from '../components/VulfyPicture'
 import Moon from '../components/Moon'
 import MediaQuery from '../components/MediaQuery'
+import ProjectsSection from '../components/ProjectsSection'
 import { useTheme } from 'styled-components'
 
 const IndexPage = () => {
@@ -27,10 +28,7 @@ const IndexPage = () => {
           <Moon />
         </Section>
         <Section id="Projects">
-          <Section.Column>
-            <Section.Title>My projects</Section.Title>
-            <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
-          </Section.Column>
+          <ProjectsSection />
         </Section>
         <Section id="About">
           <Section.Column>
