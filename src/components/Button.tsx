@@ -33,4 +33,9 @@ const StyledButton = styled.button`
 
   border-radius: 0.1em;
   color: inherit;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+  transition: filter 0.4s;
 `
