@@ -150,10 +150,13 @@ const ImagesWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  height: 200px;
-  margin: 2em;
+  height: 300px;
+  padding-left: 100px;
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
-    margin: 1em 0;
+    padding-left: 0;
+  }
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_MOBILE}px) {
+    height: 49vw;
   }
 `
 

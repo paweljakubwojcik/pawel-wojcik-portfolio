@@ -5,11 +5,12 @@ import { useLocation } from '@reach/router'
 import { navigate } from 'gatsby'
 import { SectionActiveContext } from './SnapScrollContainer'
 import { useContext } from 'react'
+import { motion, MotionProps } from 'framer-motion'
 
 export type SectionProps = {
   id: string
   children: React.ReactNode
-}
+} & MotionProps
 
 const DEFAULT_HASH = '#Home'
 
@@ -30,6 +31,8 @@ export default function Section({ children, id, ...props }: SectionProps) {
     { threshold: 0.2 }
   )
 
+  const inView = active === `#${id}`
+
   return (
     <Container ref={setRef} id={id} {...props}>
       {children}
@@ -37,12 +40,13 @@ export default function Section({ children, id, ...props }: SectionProps) {
   )
 }
 
-const Container = styled.section`
+const Container = styled(motion.section)`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   height: 100%;
   padding-left: 9em;
+  padding-right: var(--content-global-padding);
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     padding-left: 7em;
     flex-direction: column;
@@ -56,7 +60,6 @@ Section.Column = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: left;
-  flex-grow: 1;
   width: 100%;
 `
 

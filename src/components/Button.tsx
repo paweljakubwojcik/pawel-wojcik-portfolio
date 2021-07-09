@@ -1,11 +1,17 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { DefaultTheme, StyledComponentProps } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
-export default function Button({ children, icon, ...props }) {
+type ButtonProps = {
+  icon?: IconProp
+  children: React.ReactNode
+} & StyledComponentProps<any, DefaultTheme, {}, never>
+
+export default function Button({ children, icon, ...props }: ButtonProps) {
   return (
     <StyledButton {...props}>
-      <FontAwesomeIcon icon={icon} style={{ fontSize: '1.5em', marginRight: '.2em' }} />
+      {icon && <FontAwesomeIcon icon={icon} style={{ fontSize: '1.5em', marginRight: '.2em' }} />}
       {children}
     </StyledButton>
   )
@@ -24,6 +30,7 @@ const StyledButton = styled.button`
   );
 
   padding: 0.5em;
+
   border-radius: 0.1em;
   color: inherit;
 `
