@@ -47,6 +47,7 @@ const Container = styled(motion.section)`
   height: 100%;
   padding-left: 9em;
   padding-right: var(--content-global-padding);
+
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     padding-left: 7em;
     flex-direction: column;
@@ -64,19 +65,22 @@ Section.Column = styled.div`
 `
 
 Section.Title = styled.h2`
-
   font-size: 4em;
   /* margin: 0.4em 0; */
   width: 100%;
+
+  pointer-events: none;
 `
 
 Section.SubTitle = styled.h3`
   font-size: 2em;
   /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
+  pointer-events: none;
 `
 
 Section.Paragraph = styled.p`
   font-weight: 100;
   margin: 1em 0.1rem;
+  pointer-events: none;
 `

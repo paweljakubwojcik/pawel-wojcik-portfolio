@@ -89,7 +89,7 @@ export default function ProjectsSection() {
 
   return (
     <>
-      <Section.Column style={{ zIndex: 1 }}>
+      <Section.Column style={{ zIndex: 1, pointerEvents: 'none' }}>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
       </Section.Column>
@@ -124,8 +124,11 @@ const ImagesList = styled.div`
   display: flex;
   position: relative;
   z-index: 0;
+
+  min-width: 350px;
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
-    margin: 3em;
-    max-width: 500px;
+    margin: 3em 0;
+    max-width: 100%;
+    min-width: 200px;
   }
 `
