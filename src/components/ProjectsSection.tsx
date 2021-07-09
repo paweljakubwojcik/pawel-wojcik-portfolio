@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Section from './Section'
 import styled from 'styled-components'
 import { graphql, Link, useStaticQuery } from 'gatsby'
 import { GatsbyImage, StaticImage } from 'gatsby-plugin-image'
+import { PATH } from '../templates/ProjectPage'
+import getRandomElement from '../utils/getRandomElement'
+import { useRef } from 'react'
 
 export default function ProjectsSection() {
   const {
     allGraphCmsProject: { nodes: projects },
-  } = useStaticQuery(graphql`
+  } = useStaticQuery<{ allGraphCmsProject: { nodes: { name: string; images: { gatsbyImageData: any }[] }[] } }>(graphql`
     query ProjectsQuery {
       allGraphCmsProject {
         nodes {
@@ -23,19 +26,14 @@ export default function ProjectsSection() {
 
   return (
     <>
-      <Section.Column>
+      <Section.Column style={{ flexGrow: 0, width: 'initial' }}>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
       </Section.Column>
-      <Section.Column>
+      <Section.Column style={{ paddingRight: '2em', flexGrow: 1 }}>
         <ImagesList>
-          {projects.map((project) => (
-            <Link to={`/projects/${project.name}`}>
-              <ImageWrapper key={project.name}>
-                <Image image={getRandomElement(project.images).gatsbyImageData} alt={project.name} />
-                <NameOverlay>{project.name}</NameOverlay>
-              </ImageWrapper>
-            </Link>
+          {projects.map(({ name, images }) => (
+            <Project name={name} images={images} />
           ))}
         </ImagesList>
       </Section.Column>
@@ -43,9 +41,17 @@ export default function ProjectsSection() {
   )
 }
 
-function getRandomElement(array: Array<any>) {
-  const index = Math.floor(Math.random() * array.length)
-  return array[index]
+const Project = ({ name, images }: { name: string; images: { gatsbyImageData: any }[] }) => {
+  const image = useRef(getRandomElement(images).gatsbyImageData)
+
+  return (
+    <Link to={`${PATH}${name}`}>
+      <ImageWrapper key={name}>
+        <Image image={image.current} alt={name} />
+        <NameOverlay>{name}</NameOverlay>
+      </ImageWrapper>
+    </Link>
+  )
 }
 
 const ImagesList = styled.div`
@@ -57,7 +63,9 @@ const ImagesList = styled.div`
 
 const ImageWrapper = styled.div`
   position: relative;
-  width: 300px;
+  top: 0;
+  left: 0;
+  width: 250px;
   margin: 0.5em;
 
   color: ${(props) => props.theme.colors.font.main};
@@ -81,5 +89,5 @@ const NameOverlay = styled.div`
 `
 
 const Image = styled(GatsbyImage)`
-  box-shadow: ${(props) => props.theme.shadows.medium};
+  box-shadow: ${(props) => props.theme.shadows.hard};
 `

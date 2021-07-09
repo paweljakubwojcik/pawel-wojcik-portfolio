@@ -9,6 +9,7 @@ const GlobalStyle = createGlobalStyle`
     background: ${(props) => props.theme.colors.background};
     background-attachment:fixed;
     min-height: 100vh;
+    overflow-x: hidden;
     font-family: 'Montserrat', sans-serif;
     font-weight: normal;
     word-wrap: break-word;
@@ -28,6 +29,9 @@ const GlobalStyle = createGlobalStyle`
 
     transition: font-size .2s;
 
+
+    
+
   }
 
 
@@ -36,6 +40,23 @@ const GlobalStyle = createGlobalStyle`
     -webkit-text-size-adjust: 100%;
     font: 112.5%/1.45em georgia, serif, sans-serif;
     box-sizing: border-box;
+
+
+      scrollbar-width: thin;
+      scrollbar-color: ${(props) =>
+        `${props.theme.colors.palette.violet.light} ${props.theme.colors.palette.violet.dark}`}; /* scroll thumb & track */
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+      &::-webkit-scrollbar-track {
+        background: ${(props) => props.theme.colors.palette.violet.dark};
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: ${(props) => props.theme.colors.palette.violet.light};
+        border-radius: 20px;
+        width: 12px;
+        opacity: 0.5;
+      }
 
   }
 

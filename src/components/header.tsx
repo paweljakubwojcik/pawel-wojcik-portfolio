@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
 
 const StyledHeader = styled.header`
   background: transparent;
-  position: sticky;
+  position: relative;
   z-index: 1;
   top: 0;
 `

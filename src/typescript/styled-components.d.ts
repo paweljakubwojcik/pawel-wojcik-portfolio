@@ -9,6 +9,7 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     shadows: {
       medium: string
+      hard: string
     }
     colors: {
       font: {

@@ -7,7 +7,7 @@
 const path = require(`path`)
 const fs = require('fs')
 
-const basePath = 'projects'
+const PROJECTS_PATH = '/projects/'
 
 exports.createPages = async ({ actions, graphql }) => {
   const { createPage } = actions
@@ -31,7 +31,7 @@ exports.createPages = async ({ actions, graphql }) => {
 
     projects.forEach(({ name }) => {
       createPage({
-        path: `/${basePath}/${name}`,
+        path: `${PROJECTS_PATH}${name}`,
         component: pageTemplate,
         context: {
           name,

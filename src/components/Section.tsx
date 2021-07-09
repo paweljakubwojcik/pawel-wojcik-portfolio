@@ -22,7 +22,7 @@ export default function Section({ children, id, ...props }: SectionProps) {
     (entry) => {
       if (!visible) {
         if (locationHash === active) {
-          navigate(`#${id}` !== DEFAULT_HASH ? `/#${id}` : '/')
+          navigate(`#${id}` !== DEFAULT_HASH ? `/#${id}` : '/', { replace: true })
         }
         setActive(`#${id}`)
       }
@@ -68,7 +68,7 @@ Section.Title = styled.h2`
 
 Section.SubTitle = styled.h3`
   font-size: 2em;
- /*  margin: 1em 0.1rem; */
+  /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
 `
 

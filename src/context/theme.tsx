@@ -5,6 +5,7 @@ import '../typescript'
 const theme: DefaultTheme = {
   shadows: {
     medium: ' rgba(0, 0, 0, 0.24) 0px 3px 8px;',
+    hard: 'rgba(0,0,0,0.5) 0px 9px 7px -2px',
   },
   colors: {
     font: {
