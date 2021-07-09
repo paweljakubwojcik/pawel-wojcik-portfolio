@@ -10,29 +10,13 @@ import Button from '../components/Button'
 
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
+import { ProjectType } from '../typescript'
 
 export const PATH = '/projects/'
 
 type ProjectPageProps = {
   data: {
-    project: {
-      name: string
-      description: string
-      brief: string
-      link: string
-      repository: string
-      images: {
-        id: string
-        url: string
-        gatsbyImageData: IGatsbyImageData
-      }[]
-      skills: {
-        name: string
-        icon: {
-          url: string
-        }
-      }[]
-    }
+    project: ProjectType
     otherProjectPages: {
       nodes: {
         name: string

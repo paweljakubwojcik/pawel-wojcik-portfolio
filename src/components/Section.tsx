@@ -64,6 +64,7 @@ Section.Column = styled.div`
 `
 
 Section.Title = styled.h2`
+
   font-size: 4em;
   /* margin: 0.4em 0; */
   width: 100%;
