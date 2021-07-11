@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
-import { Scene, PerspectiveCamera, WebGLRenderer, Clock } from 'three'
+import { Scene, PerspectiveCamera, WebGLRenderer, Clock, TextureLoader } from 'three'
 
 const fov = 50
 const aspectRatio = typeof window !== `undefined` ? window.innerWidth / window.innerHeight : undefined
@@ -14,6 +14,7 @@ export default function useThree() {
   )
   const renderer = useMemo(() => (typeof window !== `undefined` ? new WebGLRenderer({ alpha: true }) : null), [])
   const clock = useMemo(() => (typeof window !== `undefined` ? new Clock() : null), [])
+  const textureLoader = useMemo(() => new TextureLoader(), [])
 
   const render = useCallback(() => {
     requestAnimationFrame(() => renderer.render(scene, camera))
@@ -41,5 +42,5 @@ export default function useThree() {
     }
   }, [canvas])
 
-  return { scene, camera, renderer, render, canvas, canvasRef, clock }
+  return { scene, camera, renderer, render, canvas, canvasRef, clock, textureLoader }
 }

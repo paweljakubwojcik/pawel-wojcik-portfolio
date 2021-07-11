@@ -73,7 +73,7 @@ export default function ProjectsSection() {
     clearInterval()
     animationInterval.current = setInterval(() => {
       dispatch({ type: 'increment', payload: null })
-    }, 5000)
+    }, 5 * 10e3)
   }
 
   const stopAnimation = () => {
@@ -84,8 +84,6 @@ export default function ProjectsSection() {
     startAnimation()
     return () => stopAnimation()
   }, [])
-
-  console.log(animationInterval.current)
 
   return (
     <>

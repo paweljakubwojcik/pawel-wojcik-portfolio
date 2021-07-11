@@ -33,29 +33,6 @@ const POSITIONS = [
   },
 ]
 
-const MOBILE_POSITIONS = [
-  {
-    x: '-30%',
-    y: '30%',
-    scale: 0.5,
-  },
-  {
-    x: '30%',
-    y: '30%',
-    scale: 0.5,
-  },
-  {
-    x: '-30%',
-    y: '-30%',
-    scale: 0.5,
-  },
-  {
-    x: '30%',
-    y: '-30%',
-    scale: 0.5,
-  },
-]
-
 const ProjectVariants: Variants = {
   active: () => ({
     x: 0,
@@ -68,7 +45,6 @@ const ProjectVariants: Variants = {
   }),
   inactive: (index) => ({
     ...POSITIONS[index],
-    position: 'absolute',
     zIndex: 0,
   }),
 }
@@ -76,6 +52,7 @@ const ProjectVariants: Variants = {
 const ProjectIconsVariants: Variants = {
   active: {
     opacity: 1,
+    pointerEvents: 'all',
   },
   inactive: {
     opacity: 0,
@@ -86,6 +63,7 @@ const ProjectIconsVariants: Variants = {
 const TitleVariants: Variants = {
   active: {
     y: '0%',
+    filter: 'brightness(1)',
   },
   inactive: {
     y: '50%',
@@ -112,15 +90,19 @@ export default function ProjectLink({
     <ImageWrapper
       variants={ProjectVariants}
       animate={active ? 'active' : 'inactive'}
+      initial={'inactive'}
       custom={index}
       transition={{ duration: 0.6, bounce: 0.4, type: 'spring' }}
+      active={active}
       {...rest}
     >
-      <Image image={image.current} alt={name} blurred={active} />
+      <BlurOverlay blurred={active}>
+        <Image image={image.current} alt={name} />
+      </BlurOverlay>
 
       <NameOverlay>
-        <motion.div variants={TitleVariants} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ fontSize: '2em', margin: '0.5em', textAlign: 'center' }}>{name}</div>
+        <motion.div variants={TitleVariants} style={{}}>
+          <div style={{ fontSize: '1.9em', margin: '0.2em', textAlign: 'center' }}>{name}</div>
           <div>{brief}</div>
         </motion.div>
 
@@ -142,8 +124,8 @@ export default function ProjectLink({
   )
 }
 
-const ImageWrapper = styled(motion.div)`
-  position: relative;
+const ImageWrapper = styled(motion.div)<{ active?: boolean }>`
+  position: ${(props) => (props.active ? 'relative' : 'absolute')};
   top: 0;
   left: 0;
   height: fit-content;
@@ -163,6 +145,13 @@ const NameOverlay = styled.div`
   justify-content: center;
   align-items: center;
 
+  & > * {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
   width: 100%;
   height: 100%;
 
@@ -171,11 +160,19 @@ const NameOverlay = styled.div`
   }
 `
 
-const Image = styled(GatsbyImage)<{ blurred: boolean }>`
-  img {
-    filter: blur(1px) brightness(0.3);
-    ${(props) => (props.blurred ? 'filter: blur(0) brightness(0.5)' : '')};
-  }
+const BlurOverlay = styled.div<{ blurred: boolean }>`
+  display: block;
 
+  overflow: hidden;
+
+  width: 100%;
+  height: 100%;
+
+  filter: blur(1px) brightness(0.3);
+  ${(props) => (props.blurred ? 'filter: blur(0) brightness(0.5)' : '')};
+  transition: 0.3s 0.3s filter;
+`
+
+const Image = styled(GatsbyImage)`
   box-shadow: ${(props) => props.theme.shadows.hard};
 `

@@ -6,7 +6,7 @@ import Section from '../components/Section'
 import SnapScrollContainer from '../components/SnapScrollContainer'
 import { useEffect } from 'react'
 import VulfyPicture from '../components/VulfyPicture'
-import Moon from '../components/Moon'
+import Canvas from '../components/ThreeJS/Canvas'
 import MediaQuery from '../components/MediaQuery'
 import ProjectsSection from '../components/ProjectsSection'
 import { useTheme } from 'styled-components'
@@ -25,7 +25,7 @@ const IndexPage = () => {
             <Section.Paragraph>Take your ideas to the moon 🚀</Section.Paragraph>
           </Section.Column>
 
-          <Moon />
+          <Canvas />
         </Section>
         <Section id="Projects">
           <ProjectsSection />
