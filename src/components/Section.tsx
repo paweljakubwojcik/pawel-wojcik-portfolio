@@ -34,7 +34,13 @@ export default function Section({ children, id, ...props }: SectionProps) {
   const inView = active === `#${id}`
 
   return (
-    <Container ref={setRef} id={id} {...props}>
+    <Container
+      ref={setRef}
+      id={id}
+      animate={inView ? 'inView' : 'notInView'}
+      transition={{ delayChildren: 1 }}
+      {...props}
+    >
       {children}
     </Container>
   )
@@ -70,6 +76,8 @@ Section.Title = styled.h2`
   width: 100%;
 
   pointer-events: none;
+  position: relative;
+  z-index: 1;
 `
 
 Section.SubTitle = styled.h3`
@@ -77,10 +85,14 @@ Section.SubTitle = styled.h3`
   /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
   pointer-events: none;
+  position: relative;
+  z-index: 1;
 `
 
 Section.Paragraph = styled.p`
   font-weight: 100;
   margin: 1em 0.1rem;
   pointer-events: none;
+  position: relative;
+  z-index: 1;
 `

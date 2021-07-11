@@ -90,7 +90,7 @@ export default function ProjectLink({
     <ImageWrapper
       variants={ProjectVariants}
       animate={active ? 'active' : 'inactive'}
-      initial={'inactive'}
+      initial={'active'}
       custom={index}
       transition={{ duration: 0.6, bounce: 0.4, type: 'spring' }}
       active={active}
@@ -130,7 +130,11 @@ const ImageWrapper = styled(motion.div)<{ active?: boolean }>`
   left: 0;
   height: fit-content;
 
+  border-radius: 0.75em;
+  overflow: hidden;
+
   color: ${(props) => props.theme.colors.font.main};
+  box-shadow: ${(props) => props.theme.shadows.hard};
 `
 
 const NameOverlay = styled.div`
@@ -173,6 +177,4 @@ const BlurOverlay = styled.div<{ blurred: boolean }>`
   transition: 0.3s 0.3s filter;
 `
 
-const Image = styled(GatsbyImage)`
-  box-shadow: ${(props) => props.theme.shadows.hard};
-`
+const Image = styled(GatsbyImage)``

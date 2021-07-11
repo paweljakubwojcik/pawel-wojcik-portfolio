@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react'
+import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
 
 import styled from 'styled-components'
 import { graphql, useStaticQuery } from 'gatsby'
@@ -73,7 +73,7 @@ export default function ProjectsSection() {
     clearInterval()
     animationInterval.current = setInterval(() => {
       dispatch({ type: 'increment', payload: null })
-    }, 5 * 10e3)
+    }, 3000)
   }
 
   const stopAnimation = () => {
@@ -87,7 +87,7 @@ export default function ProjectsSection() {
 
   return (
     <>
-      <Section.Column style={{ zIndex: 1, pointerEvents: 'none' }}>
+      <Section.Column>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
       </Section.Column>
@@ -111,8 +111,18 @@ export default function ProjectsSection() {
               }
             />
           ))}
-          <div style={{ display: 'block' }}></div>
         </ImagesList>
+        <Indicator>
+          {projects.map((v, i) => (
+            <Dot
+              active={i === active}
+              key={i}
+              onClick={() => {
+                dispatch({ type: 'set', payload: i })
+              }}
+            />
+          ))}
+        </Indicator>
       </Section.Column>
     </>
   )
@@ -129,4 +139,29 @@ const ImagesList = styled.div`
     max-width: 100%;
     min-width: 200px;
   }
+`
+
+const Indicator = styled.div`
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`
+
+const Dot = styled.button<{ active: boolean }>`
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 1em;
+
+  border-radius: 50%;
+  border-width: 2px;
+  border-style: solid;
+  border-color: ${(props) => props.theme.colors.font.main};
+
+  background-color: ${(props) => (props.active ? props.theme.colors.font.main : 'transparent')};
+
+  transition: background-color 0.3s;
 `

@@ -43,6 +43,7 @@ const Conatiner = styled(motion.div)`
   justify-content: space-evenly;
 
   position: relative;
+  z-index: 2;
 
   width: 30px;
   height: 30px;
