@@ -70,7 +70,7 @@ export default function ProjectsSection() {
   })
 
   const startAnimation = () => {
-    clearInterval()
+    clearInterval(animationInterval.current)
     animationInterval.current = setInterval(() => {
       dispatch({ type: 'increment', payload: null })
     }, 3000)
@@ -118,6 +118,7 @@ export default function ProjectsSection() {
               active={i === active}
               key={i}
               onClick={() => {
+                startAnimation()
                 dispatch({ type: 'set', payload: i })
               }}
             />
@@ -164,4 +165,9 @@ const Dot = styled.button<{ active: boolean }>`
   background-color: ${(props) => (props.active ? props.theme.colors.font.main : 'transparent')};
 
   transition: background-color 0.3s;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+    width: 20px;
+    height: 20px;
+  }
 `

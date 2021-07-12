@@ -20,7 +20,7 @@ export const SectionActiveContext = createContext<{
 export default function SnapScrollContainer({ children }: SnapScrollContainerProps) {
   const location = useLocation()
   const { breakpoints } = useTheme()
-  const keys = (children as Array<JSX.Element>).map(({ props }) => props.id)
+  const keys = (children as Array<JSX.Element>).map(({ props }) => props._id)
 
   const [active, setActive] = useState<string>(`#${keys[0]}`)
 

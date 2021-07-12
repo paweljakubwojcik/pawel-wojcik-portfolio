@@ -8,13 +8,13 @@ import { useContext } from 'react'
 import { motion, MotionProps } from 'framer-motion'
 
 export type SectionProps = {
-  id: string
+  _id: string
   children: React.ReactNode
 } & MotionProps
 
 const DEFAULT_HASH = '#Home'
 
-export default function Section({ children, id, ...props }: SectionProps) {
+export default function Section({ children, _id, ...props }: SectionProps) {
   const { hash } = useLocation()
   const locationHash = hash || DEFAULT_HASH
   const { active, setActive } = useContext(SectionActiveContext)
@@ -23,20 +23,20 @@ export default function Section({ children, id, ...props }: SectionProps) {
     (entry) => {
       if (!visible) {
         if (locationHash === active) {
-          navigate(`#${id}` !== DEFAULT_HASH ? `/#${id}` : '/', { replace: true })
+          navigate(`#${_id}` !== DEFAULT_HASH ? `/#${_id}` : '/', { replace: true })
         }
-        setActive(`#${id}`)
+        setActive(`#${_id}`)
       }
     },
     { threshold: 0.2 }
   )
 
-  const inView = active === `#${id}`
+  const inView = active === `#${_id}`
 
   return (
     <Container
       ref={setRef}
-      id={id}
+      id={_id}
       animate={inView ? 'inView' : 'notInView'}
       transition={{ delayChildren: 1 }}
       {...props}

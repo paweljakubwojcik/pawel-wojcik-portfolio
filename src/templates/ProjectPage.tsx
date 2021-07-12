@@ -11,6 +11,7 @@ import Button from '../components/Button'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 import { ProjectType } from '../typescript'
+import Seo from '../components/Seo'
 
 export const PATH = '/projects/'
 
@@ -34,6 +35,7 @@ export default function ProjectPage({ data: { project, otherProjectPages } }: Pr
 
   return (
     <Wrapper>
+      <Seo title={`${project.name}`} description={project.brief} />
       <SectionName>My projects</SectionName>
       <BackgroundImage
         image={project.images[0].gatsbyImageData}
@@ -71,7 +73,7 @@ export default function ProjectPage({ data: { project, otherProjectPages } }: Pr
       <SectionName>Other projects</SectionName>
       <section style={{ display: 'felx', margin: '1em 0' }}>
         {otherProjectPages.nodes.map((node, i) => (
-          <Link to={PATH + node.name} key={i}>
+          <Link to={PATH + node.name} key={i} style={{ margin: '0.4em', display: 'block' }}>
             {node.name}
           </Link>
         ))}

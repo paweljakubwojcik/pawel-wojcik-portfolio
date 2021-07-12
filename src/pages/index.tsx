@@ -10,6 +10,7 @@ import Canvas from '../components/ThreeJS/Canvas'
 import MediaQuery from '../components/MediaQuery'
 import ProjectsSection from '../components/ProjectsSection'
 import { useTheme } from 'styled-components'
+import ContactSection from '../components/ContactSection'
 
 const IndexPage = () => {
   const { breakpoints } = useTheme()
@@ -18,7 +19,7 @@ const IndexPage = () => {
     <>
       <Seo title="Home" />
       <SnapScrollContainer>
-        <Section id="Home">
+        <Section _id="Home">
           <Section.Column>
             <Section.Title>Paweł Wójcik</Section.Title>
             <Section.SubTitle>Web Developer</Section.SubTitle>
@@ -27,10 +28,10 @@ const IndexPage = () => {
 
           <Canvas />
         </Section>
-        <Section id="Projects">
+        <Section _id="Projects">
           <ProjectsSection />
         </Section>
-        <Section id="About">
+        <Section _id="About">
           <Section.Column>
             <Section.Title>About Me</Section.Title>
             <Section.Paragraph>
@@ -43,11 +44,8 @@ const IndexPage = () => {
             </Section.Column>
           </MediaQuery>
         </Section>
-        <Section id="Contact">
-          <Section.Column>
-            <Section.Title>Contact</Section.Title>
-          </Section.Column>
-        </Section>
+
+        <ContactSection _id={'Contact'} />
       </SnapScrollContainer>
     </>
   )
