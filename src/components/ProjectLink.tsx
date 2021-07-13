@@ -38,14 +38,14 @@ const ProjectVariants: Variants = {
     x: 0,
     y: 0,
     scale: 1,
-    zIndex: 1,
+    zIndex: 2,
     transition: {
       delayChildren: 0.3,
     },
   }),
   inactive: (index) => ({
     ...POSITIONS[index],
-    zIndex: 0,
+    zIndex: 1,
   }),
 }
 
