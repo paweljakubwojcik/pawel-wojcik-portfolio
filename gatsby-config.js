@@ -33,6 +33,7 @@ module.exports = {
         // Add any options here
       },
     },
+    `gatsby-plugin-fontawesome-css`,
 
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
