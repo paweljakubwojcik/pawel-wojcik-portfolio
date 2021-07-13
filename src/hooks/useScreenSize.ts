@@ -1,20 +1,29 @@
 import { useEffect, useState } from 'react'
 
+const isBrowser = typeof window !== 'undefined'
+
 export default function useScreenSize() {
-  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight })
+  const [size, setSize] = useState(
+    isBrowser
+      ? {
+          width: window?.innerWidth,
+          height: window?.innerHeight,
+        }
+      : { width: 1400, height: 800 }
+  )
 
   const updateSizes = () => {
     setSize({
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: window?.innerWidth,
+      height: window?.innerHeight,
     })
   }
 
   useEffect(() => {
-    window.addEventListener('resize', updateSizes)
+    if (isBrowser) window.addEventListener('resize', updateSizes)
 
     return () => {
-      window.removeEventListener('resize', updateSizes)
+      if (isBrowser) window.removeEventListener('resize', updateSizes)
     }
   }, [])
 

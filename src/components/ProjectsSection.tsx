@@ -81,7 +81,7 @@ export default function ProjectsSection() {
   }
 
   useEffect(() => {
-    startAnimation()
+    /* startAnimation() */
     return () => stopAnimation()
   }, [])
 
@@ -104,34 +104,34 @@ export default function ProjectsSection() {
               active={i === active}
               key={i}
               index={positionMap[i] - 1}
-              onClick={
-                i === active
-                  ? () => dispatch({ type: 'increment', payload: null })
-                  : () => dispatch({ type: 'set', payload: i })
-              }
+              onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
             />
           ))}
+          <Indicator>
+            {projects.map((v, i) => (
+              <Dot
+                active={i === active}
+                key={i}
+                onClick={() => {
+                  startAnimation()
+                  dispatch({ type: 'set', payload: i })
+                }}
+              />
+            ))}
+          </Indicator>
         </ImagesList>
-        <Indicator>
-          {projects.map((v, i) => (
-            <Dot
-              active={i === active}
-              key={i}
-              onClick={() => {
-                startAnimation()
-                dispatch({ type: 'set', payload: i })
-              }}
-            />
-          ))}
-        </Indicator>
       </Section.Column>
     </>
   )
 }
 
 const ImagesList = styled.div`
-  display: flex;
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+
   z-index: 0;
 
   min-width: 350px;
@@ -149,6 +149,8 @@ const Indicator = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+
+  margin-top: 2em;
 `
 
 const Dot = styled.button<{ active: boolean }>`
@@ -156,6 +158,7 @@ const Dot = styled.button<{ active: boolean }>`
   width: 10px;
   height: 10px;
   margin: 1em;
+  padding: 0;
 
   border-radius: 50%;
   border-width: 2px;

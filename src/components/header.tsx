@@ -8,6 +8,7 @@ import MediaQuery from './MediaQuery'
 import IconButton from './IconButton'
 import { useRef } from 'react'
 import SocialLinks from './SocialLinks'
+import useScreenSize from '../hooks/useScreenSize'
 
 type HeaderProps = {
   siteTitle?: string
@@ -19,12 +20,13 @@ const Header: React.FC<HeaderProps> = ({ siteTitle = '' }) => {
   } = useTheme()
   const [sideMenuOpen, setSideMenuOpen] = useState(false)
   const [clickCoordinates, setClickCoordinates] = useState({ x: 0, y: 0 })
+  const { width } = useScreenSize()
 
   const toggleSideMenu: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.currentTarget.blur()
     const { clientX, clientY } = e
     // when not using the mouse or touchscreen clientX is 0  (left side), it is better to have it open from right top corner
-    const x = clientX ? clientX : window.innerWidth
+    const x = clientX ? clientX : width
     const y = clientY
     setClickCoordinates({ x, y })
     setSideMenuOpen((v) => !v)

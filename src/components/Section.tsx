@@ -54,6 +54,8 @@ const Container = styled(motion.section)`
   padding-left: 9em;
   padding-right: var(--content-global-padding);
 
+  overflow: hidden;
+
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     padding-left: 7em;
     flex-direction: column;

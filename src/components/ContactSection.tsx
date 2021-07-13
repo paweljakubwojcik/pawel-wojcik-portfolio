@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Section from './Section'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -23,11 +23,15 @@ export default function ContactSection({ _id }) {
 
 const ContactField = ({ children, icon }: { children: string; icon: IconDefinition }) => {
   const field = useRef<HTMLInputElement>()
+  const [copied, setCopied] = useState<boolean>()
 
   const copyToClipboard = () => {
     field.current.select()
     document.execCommand('copy')
     field.current.blur()
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+    console.log('copied to clipboard')
   }
 
   return (
@@ -35,7 +39,13 @@ const ContactField = ({ children, icon }: { children: string; icon: IconDefiniti
       <FontAwesomeIcon icon={icon} />
 
       <OnlyReadInput value={children} readOnly ref={field} />
-      <Button title={'copy to clipboard'} icon={faCopy} style={{ fontSize: '0.7rem' }} onClick={copyToClipboard}>
+      <Button
+        title={'copy to clipboard'}
+        icon={faCopy}
+        style={{ fontSize: '0.7rem' }}
+        onClick={copyToClipboard}
+        clicked={copied}
+      >
         {'Copy'}
       </Button>
     </Container>

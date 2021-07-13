@@ -50,7 +50,6 @@ export default function Cnavas() {
   } = useTheme()
 
   const { canvas, canvasRef, camera, renderer, render, scene, clock, textureLoader } = useThree()
-  renderer.localClippingEnabled = true
 
   const createMoon = () => {
     const geometry = new SphereBufferGeometry(1, 128, 128)

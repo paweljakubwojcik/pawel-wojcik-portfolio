@@ -2,16 +2,24 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { GatsbyImage, GatsbyImageProps } from 'gatsby-plugin-image'
 
+const isBrowser = typeof window !== 'undefined'
+
 export default function ParallaxGatsbyImage({ image, alt, ...props }: GatsbyImageProps) {
   const [translateY, setTranslateY] = useState(0)
 
   const handleScroll = () => {
-    setTranslateY(window.scrollY)
+    setTranslateY(isBrowser ? window.scrollY : 0)
   }
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    if (isBrowser) {
+      window.addEventListener('scroll', handleScroll)
+    }
+    return () => {
+      if (isBrowser) {
+        window.removeEventListener('scroll', handleScroll)
+      }
+    }
   }, [])
 
   return (

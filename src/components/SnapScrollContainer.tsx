@@ -12,6 +12,8 @@ type SnapScrollContainerProps = {
   children: React.ReactNode
 }
 
+const isBrowser = typeof window !== 'undefined'
+
 export const SectionActiveContext = createContext<{
   active: string
   setActive: React.Dispatch<React.SetStateAction<string>>
@@ -34,9 +36,27 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
     }
   }, [location.hash])
 
+  const wrapperRef = useRef<HTMLElement>()
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      wrapperRef.current.scrollBy(0, 1000)
+    }
+    if (e.key === 'ArrowUp') {
+      wrapperRef.current.scrollBy(0, -1000)
+    }
+  }
+
+  useEffect(() => {
+    if (isBrowser) window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      if (isBrowser) window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   return (
     <SectionActiveContext.Provider value={{ active, setActive }}>
-      <Wrapper>
+      <Wrapper ref={wrapperRef as any}>
         <>{children}</>
       </Wrapper>
       <MediaQuery query={`(min-width: ${breakpoints.MIN_TABLET}px)`}>

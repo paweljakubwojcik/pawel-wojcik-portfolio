@@ -2,13 +2,14 @@ import { Link } from 'gatsby'
 import React from 'react'
 import { useEffect } from 'react'
 import styled from 'styled-components'
+import { useLocation } from '@reach/router'
 
 type NavigatorProps = {
   keys: string[]
 }
 
 export default function Navigator({ keys }: NavigatorProps) {
-  const location = window.location.hash
+  const location = useLocation()
 
   return (
     <Wrapper>
@@ -18,7 +19,7 @@ export default function Navigator({ keys }: NavigatorProps) {
           <NavigatorElement
             key={key}
             to={hash}
-            $isActive={location === hash || (i === 0 && !location)}
+            $isActive={location.hash === hash || (i === 0 && !location.hash)}
             title={key}
           />
         )
