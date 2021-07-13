@@ -3,7 +3,7 @@ require('dotenv').config()
 module.exports = {
   siteMetadata: {
     title: `Paweł Wójcik's portfolio site`,
-    description: ``,
+    description: `My name is Pawel, and I'm a web developer. See my work and feel free to hit me if you need help with your project`,
     author: `pawel.jakub.wojcik@gmail.com`,
     siteUrl: `https://localhost:8000/`,
   },
@@ -25,6 +25,12 @@ module.exports = {
       options: {
         endpoint: process.env.GRAPHCMS_ENDPOINT,
         token: process.env.GRAPHCMS_TOKEN,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-styled-components`,
+      options: {
+        // Add any options here
       },
     },
 
