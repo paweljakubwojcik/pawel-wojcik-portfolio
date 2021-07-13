@@ -9,6 +9,11 @@ import ProjectsSection from '../components/ProjectsSection'
 import { useTheme } from 'styled-components'
 import ContactSection from '../components/ContactSection'
 
+import smoothscroll from 'smoothscroll-polyfill'
+
+// pollyfill for safari, and other browsers that doesn't support smooth scroll
+smoothscroll.polyfill()
+
 const IndexPage = () => {
   const { breakpoints } = useTheme()
 
