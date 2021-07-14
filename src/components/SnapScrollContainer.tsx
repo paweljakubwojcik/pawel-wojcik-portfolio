@@ -66,6 +66,10 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
   )
 }
 
+const SnapScrollSection = ()=>{
+  
+}
+
 const Wrapper = styled.div`
   display: block;
   position: absolute;

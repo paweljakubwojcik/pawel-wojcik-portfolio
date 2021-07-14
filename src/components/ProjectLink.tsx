@@ -36,8 +36,8 @@ const POSITIONS = [
 
 const ProjectVariants: Variants = {
   active: () => ({
-    x: 0,
-    y: 0,
+    x: '0%',
+    y: '0%',
     scale: 1,
     cursor: 'default',
     transition: {
@@ -91,7 +91,7 @@ export default function ProjectLink({
   return (
     <ImageWrapper
       variants={ProjectVariants}
-      animate={inView ? (active ? 'active' : 'inactive') : 'outOfView'}
+      animate={inView ? (active ? 'active' : 'inactive') : 'active'}
       initial={'active'}
       custom={index}
       transition={{ duration: 0.6, bounce: 0.4, type: 'spring' }}
@@ -132,6 +132,7 @@ const ImageWrapper = styled(motion.div)<{ active?: boolean }>`
   left: 0;
   height: fit-content;
   z-index: ${(props) => (props.active ? 2 : 1)};
+  transform: translate(0%, 0%);
 
   border-radius: 0.75em;
   overflow: hidden;

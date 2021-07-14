@@ -12,6 +12,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 import { ProjectType } from '../typescript'
 import Seo from '../components/Seo'
+import { useEffect } from 'react'
 
 export const PATH = '/projects/'
 
@@ -31,7 +32,6 @@ type ProjectPageProps = {
 
 export default function ProjectPage({ data: { project, otherProjectPages } }: ProjectPageProps) {
   const [{ height: backgroundImageHeight }, headerRef] = useElementSize({ height: '8em' })
-  const { breakpoints } = useTheme()
 
   return (
     <Wrapper>

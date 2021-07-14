@@ -1,8 +1,9 @@
 import { Link } from 'gatsby'
 import React from 'react'
 import { useEffect } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useLocation } from '@reach/router'
+import { motion } from 'framer-motion'
 
 type NavigatorProps = {
   keys: string[]
@@ -21,6 +22,8 @@ export default function Navigator({ keys }: NavigatorProps) {
             to={hash}
             $isActive={location.hash === hash || (i === 0 && !location.hash)}
             title={key}
+            animate={{ scaleX: 1, transition: { delay: 1 } }}
+            initial={{ scaleX: 0 }}
           />
         )
       })}
@@ -37,7 +40,7 @@ const Wrapper = styled.div`
   flex-direction: column;
 `
 
-const NavigatorElement = styled(Link)<{ $isActive: boolean }>`
+const NavigatorElement = styled(motion(Link))<{ $isActive: boolean }>`
   display: block;
   height: 0.4em;
   width: ${(props) => (props.$isActive ? '4em' : '2.5em')};
@@ -46,6 +49,7 @@ const NavigatorElement = styled(Link)<{ $isActive: boolean }>`
   margin: 0.5em 0;
 
   background-color: ${(props) => props.theme.colors.font.main};
-
   transition: width 0.5s;
+  transform: scaleX(0);
+  transform-origin: left;
 `

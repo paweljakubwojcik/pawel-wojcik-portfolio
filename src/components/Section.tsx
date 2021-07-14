@@ -18,7 +18,7 @@ const OpacityVariants = {
     opacity: 1,
   },
   outOfView: {
-    opacity: 0,
+    opacity: 1,
   },
 }
 
@@ -42,22 +42,22 @@ export default function Section({ children, _id, ...props }: SectionProps) {
   const { setRef, visible } = useIntersectionObserver(
     (entry) => {
       if (!visible) {
-        if (locationHash === active) {
-          navigate(`#${_id}` !== DEFAULT_HASH ? `/#${_id}` : '/', { replace: true })
-        }
+        navigate(`#${_id}` !== DEFAULT_HASH ? `/#${_id}` : '/', { replace: true })
+
         setActive(`#${_id}`)
+        setWholeView(false)
       } else {
-        setWholeView(entry.intersectionRatio > 0.7)
+        setWholeView(true)
       }
     },
-    { threshold: [0.2, 0.8] }
+    { threshold: [1] }
   )
 
   const childrenWithProps = React.Children.map(children, (child) => {
     // Checking isValidElement is the safe way and avoids a typescript
     // error too.
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { visible, wholeView })
+      return React.cloneElement(child, { visible, wholeView: visible })
     }
     return child
   })
@@ -70,7 +70,7 @@ export default function Section({ children, _id, ...props }: SectionProps) {
       animate={visible ? 'inView' : 'outOfView'}
       exit={'outOfView'}
       variants={OpacityVariants}
-      transition={{ delay: 0.2 }}
+      transition={{}}
       {...props}
     >
       {childrenWithProps}
@@ -86,7 +86,7 @@ const Container = styled(motion.section)`
   padding-left: 9em;
   padding-right: var(--content-global-padding);
 
-  overflow: hidden;
+  overflow-x: hidden;
 
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     padding-left: 7em;

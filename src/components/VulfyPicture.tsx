@@ -2,8 +2,19 @@ import React from 'react'
 import { GatsbyImage, StaticImage } from 'gatsby-plugin-image'
 import styled from 'styled-components'
 import { graphql, useStaticQuery } from 'gatsby'
+import { motion, Variant, Variants } from 'framer-motion'
 
 const DIFFRENCE = 20
+
+const ImageVariants: Variants = {
+  visible: (i) => ({ x: i * DIFFRENCE * 1.2, y: -i * DIFFRENCE, transition: { delay: 0.5 } }),
+  hidden: { x: 0, y: 0 },
+}
+
+const PseudoElementVariants: Variants = {
+  visible: { height: '112.5%', opacity: 1, transition: { delay: 0.2 } },
+  hidden: { height: '0%', opacity: 1 },
+}
 
 export default function VulfyPicture({ visible }) {
   const { file } = useStaticQuery(graphql`
@@ -17,29 +28,20 @@ export default function VulfyPicture({ visible }) {
   `)
 
   return (
-    <Wrapper visible={visible}>
+    <Wrapper animate={visible ? 'visible' : 'hidden'}>
+      <PseudoBefore variants={PseudoElementVariants} />
       {[2, 1, 0].map((i) => {
         return (
-          <div
-            style={{
-              position: i === 0 ? 'static' : 'absolute',
-              top: 0,
-              left: 0,
-              transform: visible ? `translate(${i * DIFFRENCE * 1.2}px, -${i * DIFFRENCE}px)` : 'translate(0px , 0px)',
-              opacity: 1 - i * 0.2,
-              width: '100%',
-              transition: 'transform .4s 0.4s cubic-bezier(.5,.23,.37,1.39)',
-            }}
-          >
-            <GatsbyImage image={file.childImageSharp.gatsbyImageData} alt="Me" key={i} style={{}} />
-          </div>
+          <SingleImageWrapper i={i} custom={i} variants={ImageVariants} key={i}>
+            <GatsbyImage image={file.childImageSharp.gatsbyImageData} alt="Me" />
+          </SingleImageWrapper>
         )
       })}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ visible: boolean }>`
+const Wrapper = styled(motion.div)`
   position: relative;
   width: 100%;
   min-width: 300px;
@@ -47,16 +49,21 @@ const Wrapper = styled.div<{ visible: boolean }>`
 
   transform: translateX(-10%);
   z-index: -1;
+`
 
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 5%;
-    left: 25%;
-    width: 87.5%;
-    height: ${(props) => (props.visible ? '112.5%' : '0%')};
-    transition: height 0.5s cubic-bezier(0.5, 0.23, 0.37, 1.39);
-    background-color: ${(props) => props.theme.colors.palette.pink.light};
-  }
+const PseudoBefore = styled(motion.div)`
+  display: block;
+  position: absolute;
+  top: 5%;
+  left: 25%;
+  width: 87.5%;
+  background-color: ${(props) => props.theme.colors.palette.pink.light};
+`
+
+const SingleImageWrapper = styled(motion.div)<{ i: number }>`
+  position: ${(props) => (props.i === 0 ? 'static' : 'absolute')};
+  top: 0;
+  left: 0;
+  opacity: ${(props) => 1 - props.i * 0.2};
+  width: 100%;
 `

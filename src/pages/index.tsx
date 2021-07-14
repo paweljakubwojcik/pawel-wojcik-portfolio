@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') smoothscroll.polyfill()
 const IndexPage = () => {
   return (
     <>
-      <Seo title="Home" />
+      <Seo title="Portfolio" />
       <SnapScrollContainer>
         <Section _id="Home">
           <Section.Column>

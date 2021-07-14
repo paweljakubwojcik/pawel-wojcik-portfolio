@@ -34,6 +34,9 @@ function reducer({ active, positionMap }, { type, payload }) {
 
   positionMap[oldActiveIndex] = newActive
   positionMap[newActiveIndex] = oldActive
+
+  console.log('change')
+
   return { active: newIndex, positionMap }
 }
 
@@ -85,6 +88,11 @@ export default function ProjectsSection({ visible, wholeView }: { visible?: bool
     /* startAnimation() */
     return () => stopAnimation()
   }, [])
+
+  useEffect(() => {
+    if (visible) startAnimation()
+    else stopAnimation()
+  }, [visible])
 
   return (
     <>
