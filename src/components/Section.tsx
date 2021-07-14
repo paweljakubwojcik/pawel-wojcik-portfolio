@@ -47,10 +47,10 @@ export default function Section({ children, _id, ...props }: SectionProps) {
         }
         setActive(`#${_id}`)
       } else {
-        setWholeView(entry.intersectionRatio === 1)
+        setWholeView(entry.intersectionRatio > 0.7)
       }
     },
-    { threshold: [0.2, 1] }
+    { threshold: [0.2, 0.8] }
   )
 
   const childrenWithProps = React.Children.map(children, (child) => {
