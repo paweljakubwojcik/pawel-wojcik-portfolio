@@ -2,18 +2,15 @@ import * as React from 'react'
 import Seo from '../components/Seo'
 import Section from '../components/Section'
 import SnapScrollContainer from '../components/SnapScrollContainer'
-import VulfyPicture from '../components/VulfyPicture'
 import Canvas from '../components/ThreeJS/Canvas'
-import MediaQuery from '../components/MediaQuery'
 import ProjectsSection from '../components/ProjectsSection'
-import { useTheme } from 'styled-components'
 import ContactSection from '../components/ContactSection'
 
 import smoothscroll from 'smoothscroll-polyfill'
 import AboutSection from '../components/AboutSection'
 
 // pollyfill for safari, and other browsers that doesn't support smooth scroll
-smoothscroll.polyfill()
+if (typeof window !== 'undefined') smoothscroll.polyfill()
 
 const IndexPage = () => {
   return (
