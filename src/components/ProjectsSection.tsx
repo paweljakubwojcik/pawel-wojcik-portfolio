@@ -7,6 +7,7 @@ import Section from './Section'
 
 import { ProjectType } from '../typescript'
 import ProjectLink from './ProjectLink'
+import { AnimatePresence } from 'framer-motion'
 
 type ProjectSectionQuery = {
   allGraphCmsProject: {
@@ -36,7 +37,7 @@ function reducer({ active, positionMap }, { type, payload }) {
   return { active: newIndex, positionMap }
 }
 
-export default function ProjectsSection() {
+export default function ProjectsSection({ visible, wholeView }: { visible?: boolean; wholeView?: boolean }) {
   const {
     allGraphCmsProject: { nodes: projects },
   } = useStaticQuery<ProjectSectionQuery>(graphql`
@@ -92,34 +93,37 @@ export default function ProjectsSection() {
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
       </Section.Column>
       <Section.Column>
-        <ImagesList
-          onFocusCapture={stopAnimation}
-          onBlur={startAnimation}
-          onMouseEnter={stopAnimation}
-          onMouseLeave={startAnimation}
-        >
-          {projects.map((project, i) => (
-            <ProjectLink
-              project={project}
-              active={i === active}
-              key={i}
-              index={positionMap[i] - 1}
-              onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
-            />
-          ))}
-          <Indicator>
-            {projects.map((v, i) => (
-              <Dot
+        <AnimatePresence>
+          <ImagesList
+            onFocusCapture={stopAnimation}
+            onBlur={startAnimation}
+            onMouseEnter={stopAnimation}
+            onMouseLeave={startAnimation}
+          >
+            {projects.map((project, i) => (
+              <ProjectLink
+                project={project}
                 active={i === active}
                 key={i}
-                onClick={() => {
-                  startAnimation()
-                  dispatch({ type: 'set', payload: i })
-                }}
+                index={positionMap[i] - 1}
+                onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
+                inView={wholeView}
               />
             ))}
-          </Indicator>
-        </ImagesList>
+            <Indicator>
+              {projects.map((v, i) => (
+                <Dot
+                  active={i === active}
+                  key={i}
+                  onClick={() => {
+                    startAnimation()
+                    dispatch({ type: 'set', payload: i })
+                  }}
+                />
+              ))}
+            </Indicator>
+          </ImagesList>
+        </AnimatePresence>
       </Section.Column>
     </>
   )

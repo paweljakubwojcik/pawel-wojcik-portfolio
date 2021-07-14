@@ -10,13 +10,12 @@ import { useTheme } from 'styled-components'
 import ContactSection from '../components/ContactSection'
 
 import smoothscroll from 'smoothscroll-polyfill'
+import AboutSection from '../components/AboutSection'
 
 // pollyfill for safari, and other browsers that doesn't support smooth scroll
 smoothscroll.polyfill()
 
 const IndexPage = () => {
-  const { breakpoints } = useTheme()
-
   return (
     <>
       <Seo title="Home" />
@@ -34,17 +33,7 @@ const IndexPage = () => {
           <ProjectsSection />
         </Section>
         <Section _id="About">
-          <Section.Column>
-            <Section.Title>About Me</Section.Title>
-            <Section.Paragraph>
-              Hi , this is some important info about me, that recruters would like to know
-            </Section.Paragraph>
-          </Section.Column>
-          <MediaQuery query={`(min-width: ${breakpoints.MIN_LAPTOP}px)`}>
-            <Section.Column>
-              <VulfyPicture />
-            </Section.Column>
-          </MediaQuery>
+          <AboutSection />
         </Section>
 
         <ContactSection _id={'Contact'} />

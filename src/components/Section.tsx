@@ -5,12 +5,31 @@ import { useLocation } from '@reach/router'
 import { navigate } from 'gatsby'
 import { SectionActiveContext } from './SnapScrollContainer'
 import { useContext } from 'react'
-import { motion, MotionProps } from 'framer-motion'
+import { AnimatePresence, motion, MotionProps } from 'framer-motion'
+import { useState } from 'react'
 
 export type SectionProps = {
   _id: string
   children: React.ReactNode
 } & MotionProps
+
+const OpacityVariants = {
+  inView: {
+    opacity: 1,
+  },
+  outOfView: {
+    opacity: 0,
+  },
+}
+
+const TitleVariants = {
+  inView: {
+    opacity: 1,
+  },
+  outOfView: {
+    opacity: 0,
+  },
+}
 
 const DEFAULT_HASH = '#Home'
 
@@ -18,6 +37,7 @@ export default function Section({ children, _id, ...props }: SectionProps) {
   const { hash } = useLocation()
   const locationHash = hash || DEFAULT_HASH
   const { active, setActive } = useContext(SectionActiveContext)
+  const [wholeView, setWholeView] = useState(false)
 
   const { setRef, visible } = useIntersectionObserver(
     (entry) => {
@@ -26,22 +46,34 @@ export default function Section({ children, _id, ...props }: SectionProps) {
           navigate(`#${_id}` !== DEFAULT_HASH ? `/#${_id}` : '/', { replace: true })
         }
         setActive(`#${_id}`)
+      } else {
+        setWholeView(entry.intersectionRatio === 1)
       }
     },
-    { threshold: 0.2 }
+    { threshold: [0.2, 1] }
   )
 
-  const inView = active === `#${_id}`
+  const childrenWithProps = React.Children.map(children, (child) => {
+    // Checking isValidElement is the safe way and avoids a typescript
+    // error too.
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { visible, wholeView })
+    }
+    return child
+  })
 
   return (
     <Container
       ref={setRef}
       id={_id}
-      animate={inView ? 'inView' : 'notInView'}
-      transition={{ delayChildren: 1 }}
+      initial={'outOfView'}
+      animate={visible ? 'inView' : 'outOfView'}
+      exit={'outOfView'}
+      variants={OpacityVariants}
+      transition={{ delay: 0.2 }}
       {...props}
     >
-      {children}
+      {childrenWithProps}
     </Container>
   )
 }
@@ -72,12 +104,11 @@ Section.Column = styled.div`
   width: 100%;
 `
 
-Section.Title = styled.h2`
+Section.Title = styled(motion.h2)`
   font-size: 4em;
   /* margin: 0.4em 0; */
   width: 100%;
 
-  pointer-events: none;
   position: relative;
   z-index: 1;
 `
@@ -86,7 +117,6 @@ Section.SubTitle = styled.h3`
   font-size: 2em;
   /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
-  pointer-events: none;
   position: relative;
   z-index: 1;
 `
@@ -94,7 +124,6 @@ Section.SubTitle = styled.h3`
 Section.Paragraph = styled.p`
   font-weight: 100;
   margin: 1em 0.1rem;
-  pointer-events: none;
   position: relative;
   z-index: 1;
 `

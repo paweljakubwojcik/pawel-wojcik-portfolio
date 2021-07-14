@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion, Variants } from 'framer-motion'
 import Button from './Button'
 import { ProjectType } from '../typescript'
+import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
 const POSITIONS = [
   {
@@ -38,14 +39,14 @@ const ProjectVariants: Variants = {
     x: 0,
     y: 0,
     scale: 1,
-    zIndex: 2,
+    cursor: 'default',
     transition: {
       delayChildren: 0.3,
     },
   }),
   inactive: (index) => ({
     ...POSITIONS[index],
-    zIndex: 1,
+    cursor: 'pointer',
   }),
 }
 
@@ -75,13 +76,14 @@ type PojectLinkProps = {
   project: ProjectType
   active?: boolean
   index: number
-  onClick: () => void
-}
+  inView?: boolean
+} & ReactBaseProps
 
 export default function ProjectLink({
   project: { images, name, skills, link, repository, brief },
   active = false,
   index,
+  inView,
   ...rest
 }: PojectLinkProps) {
   const image = useRef(getRandomElement(images).gatsbyImageData)
@@ -89,7 +91,7 @@ export default function ProjectLink({
   return (
     <ImageWrapper
       variants={ProjectVariants}
-      animate={active ? 'active' : 'inactive'}
+      animate={inView ? (active ? 'active' : 'inactive') : 'outOfView'}
       initial={'active'}
       custom={index}
       transition={{ duration: 0.6, bounce: 0.4, type: 'spring' }}
@@ -129,6 +131,7 @@ const ImageWrapper = styled(motion.div)<{ active?: boolean }>`
   top: 0;
   left: 0;
   height: fit-content;
+  z-index: ${(props) => (props.active ? 2 : 1)};
 
   border-radius: 0.75em;
   overflow: hidden;
