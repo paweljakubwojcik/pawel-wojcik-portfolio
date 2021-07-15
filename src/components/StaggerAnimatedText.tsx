@@ -1,30 +1,29 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 type StaggerAnimationTextProps = {
   children: string
-  visible: boolean
 }
 
-export default ({ children, visible }: StaggerAnimationTextProps) => {
+export default forwardRef<any, StaggerAnimationTextProps>(({ children, ...props }, ref) => {
   return (
-    <Container variants={containerAnim} animate={visible ? 'animate' : 'exit'}>
+    <Container variants={containerAnim} ref={ref} {...props}>
       {children.split(' ').map((word, i) => (
         <React.Fragment key={i}>
-          <div key={i}>
+          <h2 key={i}>
             {word.split('').map((letter, i) => (
               <Span key={i} variants={spanAnim}>
                 {letter}
               </Span>
             ))}
             <Span> </Span>
-          </div>
+          </h2>
         </React.Fragment>
       ))}
     </Container>
   )
-}
+})
 
 const Container = styled(motion.div)`
   overflow: hidden;
@@ -38,19 +37,17 @@ const Span = styled(motion.span)`
 `
 
 const containerAnim = {
-  animate: {
-    x: 0,
+  inView: {
     transition: {
-      duration: 0.6,
+      duration: 0,
       staggerChildren: 0.08,
-      when: 'beforeChildren',
+
       staggerDirection: -1,
     },
   },
-  exit: {
-    x: 0,
+  outOfView: {
     transition: {
-      staggerChildren: 1,
+      staggerChildren: 0.2,
     },
   },
 }
@@ -59,17 +56,17 @@ const spanAnim = {
   initial: {
     y: '200%',
   },
-  animate: {
+  inView: {
     y: 0,
     transition: {
       duration: 0.8,
     },
   },
-  exit: {
+  outOfView: {
     y: '200%',
     transition: {
       duration: 0.5,
-      delay: 0.5,
+      delay: 0.2,
     },
   },
 }

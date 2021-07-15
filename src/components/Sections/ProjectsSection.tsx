@@ -3,11 +3,12 @@ import React, { useContext, useEffect, useReducer, useRef, useState } from 'reac
 import styled from 'styled-components'
 import { graphql, useStaticQuery } from 'gatsby'
 
-import Section from './Section'
+import Section from '../Section'
 
-import { ProjectType } from '../typescript'
-import ProjectLink from './ProjectLink'
+import { ProjectType, PropsFromSnapscrollSection } from '../../typescript'
+import ProjectLink from '../ProjectLink'
 import { AnimatePresence } from 'framer-motion'
+import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
 type ProjectSectionQuery = {
   allGraphCmsProject: {
@@ -40,7 +41,7 @@ function reducer({ active, positionMap }, { type, payload }) {
   return { active: newIndex, positionMap }
 }
 
-export default function ProjectsSection({ visible, wholeView }: { visible?: boolean; wholeView?: boolean }) {
+export default function ProjectsSection({ visible, wholeView, ...rest }: PropsFromSnapscrollSection & ReactBaseProps) {
   const {
     allGraphCmsProject: { nodes: projects },
   } = useStaticQuery<ProjectSectionQuery>(graphql`
@@ -95,7 +96,7 @@ export default function ProjectsSection({ visible, wholeView }: { visible?: bool
   }, [visible])
 
   return (
-    <>
+    <Section visible={visible} {...rest}>
       <Section.Column>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
@@ -133,7 +134,7 @@ export default function ProjectsSection({ visible, wholeView }: { visible?: bool
           </ImagesList>
         </AnimatePresence>
       </Section.Column>
-    </>
+    </Section>
   )
 }
 

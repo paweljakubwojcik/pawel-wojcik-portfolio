@@ -1,13 +1,15 @@
 import * as React from 'react'
-import Section from '../components/Section'
-import VulfyPicture from '../components/VulfyPicture'
-import MediaQuery from '../components/MediaQuery'
+import Section from '../Section'
+import VulfyPicture from '../VulfyPicture'
+import MediaQuery from '../MediaQuery'
 import { useTheme } from 'styled-components'
+import { PropsFromSnapscrollSection } from '../../typescript'
+import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
-export default function AboutSection({ wholeView }: { wholeView?: boolean }) {
+export default function AboutSection({ visible, wholeView, ...rest }: PropsFromSnapscrollSection & ReactBaseProps) {
   const { breakpoints } = useTheme()
   return (
-    <>
+    <Section {...rest}>
       <Section.Column>
         <Section.Title>About Me</Section.Title>
         <Section.Paragraph>
@@ -19,6 +21,6 @@ export default function AboutSection({ wholeView }: { wholeView?: boolean }) {
           <VulfyPicture visible={wholeView} />
         </Section.Column>
       </MediaQuery>
-    </>
+    </Section>
   )
 }

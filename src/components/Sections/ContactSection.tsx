@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Section from './Section'
+import Section from '../Section'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faEnvelope, faPhone, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import Button from './Button'
+import Button from '../Button'
 import { useRef } from 'react'
+import { PropsFromSnapscrollSection } from '../../typescript'
+import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
-export default function ContactSection({ _id }) {
+export default function ContactSection({ visible, wholeView, ...rest }: PropsFromSnapscrollSection & ReactBaseProps) {
   return (
-    <CustomSection _id={_id}>
+    <CustomSection {...rest}>
       <Section.Column>
         <Section.Title>Contact</Section.Title>
         <Section.Paragraph>Get in touch</Section.Paragraph>

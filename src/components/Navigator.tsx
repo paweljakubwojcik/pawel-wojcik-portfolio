@@ -7,20 +7,19 @@ import { motion } from 'framer-motion'
 
 type NavigatorProps = {
   keys: string[]
+  active: string
 }
 
-export default function Navigator({ keys }: NavigatorProps) {
-  const location = useLocation()
-
+export default function Navigator({ keys, active }: NavigatorProps) {
   return (
     <Wrapper>
       {keys.map((key, i) => {
-        const hash = i !== 0 ? `#${key}` : '/'
+        const hash = i !== 0 ? `#${key}` : ''
         return (
           <NavigatorElement
             key={key}
-            to={hash}
-            $isActive={location.hash === hash || (i === 0 && !location.hash)}
+            to={hash || '/'}
+            $isActive={active === key}
             title={key}
             animate={{ scaleX: 1, transition: { delay: 1 } }}
             initial={{ scaleX: 0 }}
@@ -42,7 +41,7 @@ const Wrapper = styled.div`
 
 const NavigatorElement = styled(motion(Link))<{ $isActive: boolean }>`
   display: block;
-  height: 0.4em;
+  height: 0.6em;
   width: ${(props) => (props.$isActive ? '4em' : '2.5em')};
   border-radius: 1000px;
 

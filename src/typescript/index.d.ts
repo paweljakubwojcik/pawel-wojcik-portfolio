@@ -18,3 +18,8 @@ export type ProjectType = {
     }
   }[]
 }
+
+type PropsFromSnapscrollSection = {
+  visible?: boolean
+  wholeView?: boolean
+}

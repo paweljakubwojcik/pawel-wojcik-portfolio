@@ -3,14 +3,14 @@ import styled from 'styled-components'
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
 import { useLocation } from '@reach/router'
 import { navigate } from 'gatsby'
-import { SectionActiveContext } from './SnapScrollContainer'
+import { SectionActiveContext } from './SnapScroll/SnapScrollContainer'
 import { useContext } from 'react'
 import { AnimatePresence, motion, MotionProps } from 'framer-motion'
 import { useState } from 'react'
 
 export type SectionProps = {
-  _id: string
   children: React.ReactNode
+  visible?: boolean
 } & MotionProps
 
 const OpacityVariants = {
@@ -31,15 +31,8 @@ const TitleVariants = {
   },
 }
 
-const DEFAULT_HASH = '#Home'
-
-export default function Section({ children, _id, ...props }: SectionProps) {
-  const { hash } = useLocation()
-  const locationHash = hash || DEFAULT_HASH
-  const { active, setActive } = useContext(SectionActiveContext)
-  const [wholeView, setWholeView] = useState(false)
-
-  const { setRef, visible } = useIntersectionObserver(
+export default function Section({ children, visible = true, ...props }: SectionProps) {
+  /*   const { setRef, visible } = useIntersectionObserver(
     (entry) => {
       if (!visible) {
         navigate(`#${_id}` !== DEFAULT_HASH ? `/#${_id}` : '/', { replace: true })
@@ -51,21 +44,19 @@ export default function Section({ children, _id, ...props }: SectionProps) {
       }
     },
     { threshold: [1] }
-  )
+  ) */
 
-  const childrenWithProps = React.Children.map(children, (child) => {
+  /*   const childrenWithProps = React.Children.map(children, (child) => {
     // Checking isValidElement is the safe way and avoids a typescript
     // error too.
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { visible, wholeView: visible })
     }
     return child
-  })
+  }) */
 
   return (
     <Container
-      ref={setRef}
-      id={_id}
       initial={'outOfView'}
       animate={visible ? 'inView' : 'outOfView'}
       exit={'outOfView'}
@@ -73,7 +64,7 @@ export default function Section({ children, _id, ...props }: SectionProps) {
       transition={{}}
       {...props}
     >
-      {childrenWithProps}
+      {children}
     </Container>
   )
 }
@@ -83,6 +74,7 @@ const Container = styled(motion.section)`
   justify-content: center;
   align-items: center;
   height: 100%;
+  width: 100%;
   padding-left: 9em;
   padding-right: var(--content-global-padding);
 

@@ -1,12 +1,13 @@
-import React, { useRef } from 'react'
+import React, { Children, useRef } from 'react'
 import { createContext } from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import styled, { useTheme } from 'styled-components'
-import MediaQuery from './MediaQuery'
-import Navigator from './Navigator'
+import MediaQuery from '../MediaQuery'
+import Navigator from '../Navigator'
 import { useLocation } from '@reach/router'
 import { navigate } from 'gatsby'
+import SnapScrollSection from './SnapScrollSection'
 
 type SnapScrollContainerProps = {
   children: React.ReactNode
@@ -17,27 +18,53 @@ const isBrowser = typeof window !== 'undefined'
 export const SectionActiveContext = createContext<{
   active: string
   setActive: React.Dispatch<React.SetStateAction<string>>
-}>({ active: '', setActive: () => {} })
+  target: string
+  setTarget: React.Dispatch<React.SetStateAction<string>>
+  hashToKey: (hash: string) => string
+}>({ active: '', setActive: () => {}, target: '', setTarget: () => {}, hashToKey: (string) => string })
 
 export default function SnapScrollContainer({ children }: SnapScrollContainerProps) {
   const location = useLocation()
   const { breakpoints } = useTheme()
-  const keys = (children as Array<JSX.Element>).map(({ props }) => props._id)
+  const keys = (children as Array<JSX.Element>).map(({ props }) => props.id)
 
-  const [active, setActive] = useState<string>(`#${keys[0]}`)
+  const hashToKey = (hash: string) => (hash ? hash.replace('#', '') : keys[0])
+  const keyToHash = (key: string) => (key === keys[0] ? '' : `#${key}`)
 
+  const [active, setActive] = useState<string>(hashToKey(location.hash))
+  const [target, setTarget] = useState<string>(hashToKey(location.hash))
+
+  console.log({ active, target, hash: location.hash })
+
+  //reacting to changing hash
   useEffect(() => {
     if (!location.hash) {
+      // handling #Home, and all hashes that aren`t in keys
       document.getElementById(keys[0]).scrollIntoView()
     } else {
       if (!keys.includes(location.hash.replace('#', ''))) {
         navigate('/', { replace: true })
       }
     }
+    if (location.hash !== `#${active}`) {
+      setTarget(hashToKey(location.hash))
+    }
   }, [location.hash])
 
-  const wrapperRef = useRef<HTMLElement>()
+  useEffect(() => {
+    if (active === target && active !== hashToKey(location.hash)) {
+      navigate(keyToHash(active) || '/', { replace: true })
+    }
+  }, [active, target])
 
+  useEffect(() => {
+    if (active !== target) {
+      document.querySelector(`#${target}`).scrollIntoView()
+    }
+  }, [target])
+
+  // handling scrolling with keys
+  const wrapperRef = useRef<HTMLElement>()
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       wrapperRef.current.scrollBy(0, 1000)
@@ -55,12 +82,14 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
   }, [])
 
   return (
-    <SectionActiveContext.Provider value={{ active, setActive }}>
+    <SectionActiveContext.Provider value={{ active, setActive, target, setTarget, hashToKey }}>
       <Wrapper ref={wrapperRef as any}>
-        <>{children}</>
+        {Children.map(children, (child, i) => (
+          <SnapScrollSection id={keys[i]}>{child}</SnapScrollSection>
+        ))}
       </Wrapper>
       <MediaQuery query={`(min-width: ${breakpoints.MIN_TABLET}px)`}>
-        <Navigator keys={keys} />
+        <Navigator keys={keys} active={target} />
       </MediaQuery>
     </SectionActiveContext.Provider>
   )
@@ -76,7 +105,7 @@ const Wrapper = styled.div`
 
   overflow: scroll;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
 
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
