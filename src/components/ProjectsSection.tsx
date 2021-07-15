@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
 
 import styled from 'styled-components'
-import { graphql, useStaticQuery } from 'gatsby'
+import { graphql, Link, useStaticQuery } from 'gatsby'
 
 import Section from './Section'
 
 import { ProjectType } from '../typescript'
 import ProjectLink from './ProjectLink'
 import { AnimatePresence } from 'framer-motion'
+import Button from './Button'
 
 type ProjectSectionQuery = {
   allGraphCmsProject: {
@@ -99,6 +100,11 @@ export default function ProjectsSection({ visible, wholeView }: { visible?: bool
       <Section.Column>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
+        <ButtonWrapper>
+          <Button as={Link} to={'projects'}>
+            View full list
+          </Button>
+        </ButtonWrapper>
       </Section.Column>
       <Section.Column>
         <AnimatePresence>
@@ -184,5 +190,11 @@ const Dot = styled.button<{ active: boolean }>`
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     width: 20px;
     height: 20px;
+  }
+`
+
+const ButtonWrapper = styled.div`
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+    margin: auto;
   }
 `
