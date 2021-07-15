@@ -54,6 +54,7 @@ const Wrapper = styled(motion.div)`
 const PseudoBefore = styled(motion.div)`
   display: block;
   position: absolute;
+  z-index: -1;
   top: 5%;
   left: 25%;
   width: 87.5%;

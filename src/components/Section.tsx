@@ -42,7 +42,9 @@ export default function Section({ children, _id, ...props }: SectionProps) {
   const { setRef, visible } = useIntersectionObserver(
     (entry) => {
       if (!visible) {
-        navigate(`#${_id}` !== DEFAULT_HASH ? `/#${_id}` : '/', { replace: true })
+        if (active === locationHash) {
+          navigate(`#${_id}` !== DEFAULT_HASH ? `/#${_id}` : '/', { replace: true })
+        }
 
         setActive(`#${_id}`)
         setWholeView(false)
@@ -50,7 +52,7 @@ export default function Section({ children, _id, ...props }: SectionProps) {
         setWholeView(true)
       }
     },
-    { threshold: [1] }
+    { threshold: [0.9] }
   )
 
   const childrenWithProps = React.Children.map(children, (child) => {
@@ -84,9 +86,10 @@ const Container = styled(motion.section)`
   align-items: center;
   height: 100%;
   padding-left: 9em;
+  padding-top: 3em;
   padding-right: var(--content-global-padding);
 
-  overflow-x: hidden;
+  overflow: hidden;
 
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     padding-left: 7em;

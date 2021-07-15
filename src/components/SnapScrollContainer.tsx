@@ -24,9 +24,10 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
   const { breakpoints } = useTheme()
   const keys = (children as Array<JSX.Element>).map(({ props }) => props._id)
 
-  const [active, setActive] = useState<string>(`#${keys[0]}`)
+  const [active, setActive] = useState<string>(location.hash)
 
   useEffect(() => {
+    if (location.pathname !== '/') return
     if (!location.hash) {
       document.getElementById(keys[0]).scrollIntoView()
     } else {
