@@ -23,6 +23,7 @@ export default function Navigator({ keys }: NavigatorProps) {
             $isActive={location.hash === hash || (i === 0 && !location.hash)}
             title={key}
             animate={{ scaleX: 1, transition: { delay: 1 } }}
+            exit={{ scaleX: 0 }}
             initial={{ scaleX: 0 }}
           />
         )

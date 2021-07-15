@@ -13,9 +13,24 @@ import GlobalStyles from './GlobalStyles'
 import ThemeProvider from '../context/theme'
 import './resets.css'
 import styled from 'styled-components'
+import { AnimatePresence, motion } from 'framer-motion'
 
 type LayoutProps = {
   children: React.ReactNode
+}
+
+const ContainerVariants = {
+  exit: {
+    opacity: 0,
+    transition: { when: 'afterChildren' },
+  },
+  animate: {
+    opacity: 1,
+    transition: { when: 'beforeChildren' },
+  },
+  initial: {
+    opacity: 0,
+  },
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -34,8 +49,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Container>
         <GlobalStyles />
         <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-
-        <main>{children}</main>
+        <AnimatePresence exitBeforeEnter initial={false}>
+          <motion.main
+            key={location?.pathname}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={ContainerVariants}
+          >
+            {children}
+          </motion.main>
+        </AnimatePresence>
         <Footer>
           © {new Date().getFullYear()}, Built with
           <a href="https://www.gatsbyjs.com">Gatsby</a>
@@ -45,7 +69,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   )
 }
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   margin: 0 var(--content-global-padding);
 `
 
