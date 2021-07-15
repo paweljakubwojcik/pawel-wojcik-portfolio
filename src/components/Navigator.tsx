@@ -43,7 +43,7 @@ const Wrapper = styled.div`
 
 const NavigatorElement = styled(motion(Link))<{ $isActive: boolean }>`
   display: block;
-  height: 0.4em;
+  height: 0.6em;
   width: ${(props) => (props.$isActive ? '4em' : '2.5em')};
   border-radius: 1000px;
 

@@ -19,6 +19,7 @@ import { useTheme } from 'styled-components'
 import IconSatelite from './IconSatelite'
 
 // TODO: Split up threejs elements into canvas, light, moons and other stuff
+// TODO: refactor this ^^^^
 
 export default function Cnavas() {
   const {
@@ -82,7 +83,7 @@ export default function Cnavas() {
       displacementMap: moonDisp,
       displacementScale: 0.02,
       map: moonTexture,
-     /*  clippingPlanes: clipPlanes,
+      /*  clippingPlanes: clipPlanes,
       clipIntersection: true, */
       side: DoubleSide,
     })
