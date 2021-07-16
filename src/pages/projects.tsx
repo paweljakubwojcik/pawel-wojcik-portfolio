@@ -22,7 +22,6 @@ export default function projects() {
           images {
             id
             url
-            gatsbyImageData(placeholder: BLURRED, aspectRatio: 1.77)
           }
           link
           repository
