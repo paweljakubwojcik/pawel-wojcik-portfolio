@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
-
+import { useLocation } from '@reach/router'
 import Header from './Header'
 import GlobalStyles from './GlobalStyles'
 import ThemeProvider from '../context/theme'
@@ -43,6 +43,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       }
     }
   `)
+
+  const location = useLocation()
 
   return (
     <ThemeProvider>
