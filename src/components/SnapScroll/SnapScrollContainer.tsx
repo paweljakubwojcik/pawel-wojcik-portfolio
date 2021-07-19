@@ -1,4 +1,4 @@
-import React, { Children, useRef } from 'react'
+import React, { Children, useCallback, useRef } from 'react'
 import { createContext } from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -18,23 +18,28 @@ const isBrowser = typeof window !== 'undefined'
 export const SectionActiveContext = createContext<{
   active: string
   setActive: React.Dispatch<React.SetStateAction<string>>
-  target: string
-  setTarget: React.Dispatch<React.SetStateAction<string>>
   hashToKey: (hash: string) => string
-}>({ active: '', setActive: () => {}, target: '', setTarget: () => {}, hashToKey: (string) => string })
+  keyToHash: (key: string) => string
+}>({
+  active: '',
+  setActive: () => {},
+  hashToKey: (string) => string,
+  keyToHash: (string) => string,
+})
 
 export default function SnapScrollContainer({ children }: SnapScrollContainerProps) {
   const location = useLocation()
   const { breakpoints } = useTheme()
   const keys = (children as Array<JSX.Element>).map(({ props }) => props.id)
 
-  const hashToKey = (hash: string) => (hash ? hash.replace('#', '') : keys[0])
-  const keyToHash = (key: string) => (key === keys[0] ? '' : `#${key}`)
+  // helper functions that transform hash into active id ( hash is ex. '#hashId', equivalent ctive id is 'hashId')
+  // exeption is first key, that has empty string as corresponding hash
+  const hashToKey = useCallback((hash: string) => (hash ? hash.replace('#', '') : keys[0]), [keys])
+  const keyToHash = useCallback((key: string) => (key === keys[0] ? '' : `#${key}`), [keys])
 
   const [active, setActive] = useState<string>(hashToKey(location.hash))
-  const [target, setTarget] = useState<string>(hashToKey(location.hash))
 
-  console.log({ active, target, hash: location.hash })
+  console.log({ active, hash: location.hash })
 
   //reacting to changing hash
   useEffect(() => {
@@ -43,27 +48,28 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
       // handling #Home, and all hashes that aren`t in keys
       document.getElementById(keys[0]).scrollIntoView()
     } else {
-      if (!keys.includes(location.hash.replace('#', ''))) {
+      // when target hash doesn't exist on page
+      if (!keys.includes(hashToKey(location.hash))) {
         navigate('/', { replace: true })
       }
     }
-    if (location.hash !== `#${active}`) {
-      setTarget(hashToKey(location.hash))
-    }
+    /*  if (location.hash !== keyToHash(active)) {
+      setActive(hashToKey(location.hash))
+    } */
   }, [location.hash])
 
   useEffect(() => {
-    if (active === target && active !== hashToKey(location.hash)) {
+    if (active !== hashToKey(location.hash)) {
       navigate(keyToHash(active) || '/', { replace: true })
     }
-  }, [active, target])
+  }, [active])
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (active !== target) {
       document.querySelector(`#${target}`).scrollIntoView()
     }
   }, [target])
-
+ */
   // handling scrolling with keys
   const wrapperRef = useRef<HTMLElement>()
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -83,14 +89,14 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
   }, [])
 
   return (
-    <SectionActiveContext.Provider value={{ active, setActive, target, setTarget, hashToKey }}>
+    <SectionActiveContext.Provider value={{ active, setActive, hashToKey, keyToHash }}>
       <Wrapper ref={wrapperRef as any}>
         {Children.map(children, (child, i) => (
           <SnapScrollSection id={keys[i]}>{child}</SnapScrollSection>
         ))}
       </Wrapper>
       <MediaQuery query={`(min-width: ${breakpoints.MIN_TABLET}px)`}>
-        <Navigator keys={keys} active={target} />
+        <Navigator keys={keys} active={active} />
       </MediaQuery>
     </SectionActiveContext.Provider>
   )
@@ -106,7 +112,7 @@ const Wrapper = styled.div`
 
   overflow: scroll;
   scroll-snap-type: y mandatory;
-  /* scroll-behavior: smooth; */
+  scroll-behavior: smooth;
 
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

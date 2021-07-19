@@ -15,10 +15,10 @@ type SnapScrollSectionProps = {
 
 export default function SnapScrollSection({ children, id, ...props }: SnapScrollSectionProps) {
   const { hash } = useLocation()
-  const { active, target, setTarget, setActive, hashToKey } = useContext(SectionActiveContext)
+  const { active, setActive, keyToHash } = useContext(SectionActiveContext)
   const [intersectionRatio, setIntersectionRatio] = useState(0)
 
-  const { setRef, visible } = useIntersectionObserver(
+  /*   const { setRef, visible } = useIntersectionObserver(
     (entry) => {
       if (!visible && entry.intersectionRatio < 0.1 && active === hashToKey(hash)) {
         setTarget(id)
@@ -28,6 +28,19 @@ export default function SnapScrollSection({ children, id, ...props }: SnapScroll
       }
     },
     { threshold: [0.01, 0.9] }
+  )
+ */
+  const { setRef, visible } = useIntersectionObserver(
+    (entry) => {
+      if (!visible) {
+        if (keyToHash(active) === hash) {
+          navigate(keyToHash(id) || '/', { replace: true })
+        }
+      } else {
+        setActive(id)
+      }
+    },
+    { threshold: [0.9] }
   )
 
   const childrenWithProps = React.Children.map(children, (child) => {
