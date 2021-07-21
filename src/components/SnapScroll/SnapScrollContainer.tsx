@@ -8,6 +8,8 @@ import Navigator from '../Navigator'
 import { useLocation } from '@reach/router'
 import { navigate } from 'gatsby'
 import SnapScrollSection from './SnapScrollSection'
+import useScreenSize from '../../hooks/useScreenSize'
+import { useElementScroll } from 'framer-motion'
 
 type SnapScrollContainerProps = {
   children: React.ReactNode
@@ -30,6 +32,12 @@ export const SectionActiveContext = createContext<{
 export default function SnapScrollContainer({ children }: SnapScrollContainerProps) {
   const location = useLocation()
   const { breakpoints } = useTheme()
+  const { height: screenHeight } = useScreenSize()
+
+  const wrapperRef = useRef<HTMLElement>()
+
+  const { scrollYProgress } = useElementScroll(wrapperRef)
+
   const keys = (children as Array<JSX.Element>).map(({ props }) => props.id)
 
   // helper functions that transform hash into active id ( hash is ex. '#hashId', equivalent ctive id is 'hashId')
@@ -53,34 +61,24 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
         navigate('/', { replace: true })
       }
     }
-    /*  if (location.hash !== keyToHash(active)) {
-      setActive(hashToKey(location.hash))
-    } */
   }, [location.hash])
 
+  // handling changing active
   useEffect(() => {
     if (active !== hashToKey(location.hash)) {
       navigate(keyToHash(active) || '/', { replace: true })
     }
   }, [active])
 
-  /* useEffect(() => {
-    if (active !== target) {
-      document.querySelector(`#${target}`).scrollIntoView()
-    }
-  }, [target])
- */
   // handling scrolling with keys
-  const wrapperRef = useRef<HTMLElement>()
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
-      wrapperRef.current.scrollBy(0, 1000)
+      wrapperRef.current.scrollBy(0, screenHeight)
     }
     if (e.key === 'ArrowUp') {
-      wrapperRef.current.scrollBy(0, -1000)
+      wrapperRef.current.scrollBy(0, -screenHeight)
     }
   }
-
   useEffect(() => {
     if (isBrowser) window.addEventListener('keydown', handleKeyDown)
     return () => {
@@ -92,7 +90,9 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
     <SectionActiveContext.Provider value={{ active, setActive, hashToKey, keyToHash }}>
       <Wrapper ref={wrapperRef as any}>
         {Children.map(children, (child, i) => (
-          <SnapScrollSection id={keys[i]}>{child}</SnapScrollSection>
+          <SnapScrollSection id={keys[i]} scrollYProgress={scrollYProgress} index={i} numberOfSiblings={keys.length}>
+            {child}
+          </SnapScrollSection>
         ))}
       </Wrapper>
       <MediaQuery query={`(min-width: ${breakpoints.MIN_TABLET}px)`}>

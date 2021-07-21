@@ -1,3 +1,4 @@
+import { MotionValue } from 'framer-motion'
 import { IGatsbyImageData } from 'gatsby-plugin-image'
 
 export type ProjectType = {
@@ -22,4 +23,5 @@ export type ProjectType = {
 type PropsFromSnapscrollSection = {
   visible?: boolean
   wholeView?: boolean
+  motionValue?: MotionValue
 }

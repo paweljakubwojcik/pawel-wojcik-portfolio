@@ -42,7 +42,12 @@ function changeTileReducer({ active, positionMap }, { type, payload }) {
   return { active: newIndex, positionMap }
 }
 
-export default function ProjectsSection({ visible, wholeView, ...rest }: PropsFromSnapscrollSection & ReactBaseProps) {
+export default function ProjectsSection({
+  visible,
+  wholeView,
+  motionValue,
+  ...rest
+}: PropsFromSnapscrollSection & ReactBaseProps) {
   const {
     allGraphCmsProject: { nodes: projects },
   } = useStaticQuery<ProjectSectionQuery>(graphql`
@@ -86,10 +91,10 @@ export default function ProjectsSection({ visible, wholeView, ...rest }: PropsFr
     clearInterval(animationInterval.current)
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     startAnimation()
     return () => stopAnimation()
-  }, [])
+  }, []) */
 
   useEffect(() => {
     if (visible) startAnimation()
@@ -120,9 +125,10 @@ export default function ProjectsSection({ visible, wholeView, ...rest }: PropsFr
                 project={project}
                 active={i === active}
                 key={i}
-                index={positionMap[i] - 1}
+                index={positionMap[i]}
                 onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
                 inView={wholeView}
+                motionValue={motionValue}
               />
             ))}
             <Indicator>

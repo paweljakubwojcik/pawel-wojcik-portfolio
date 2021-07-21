@@ -18,9 +18,9 @@ export default function IndexPage() {
       <SnapScrollContainer>
         <HomeSection id={'Home'} />
 
-        <ProjectsSection id="Projects" />
+        <ProjectsSection id={'Projects'} />
 
-        <AboutSection id="About" />
+        <AboutSection id={'About'} />
 
         <ContactSection id={'Contact'} />
       </SnapScrollContainer>

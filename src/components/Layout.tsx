@@ -22,7 +22,7 @@ type LayoutProps = {
 const ContainerVariants = {
   exit: {
     opacity: 0,
-    transition: { when: 'afterChildren' },
+    transition: { when: 'afterChildren', delay: 0.5 },
   },
   animate: {
     opacity: 1,

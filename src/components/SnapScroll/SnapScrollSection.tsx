@@ -5,31 +5,41 @@ import { useLocation } from '@reach/router'
 import { navigate } from 'gatsby'
 import { SectionActiveContext } from './SnapScrollContainer'
 import { useContext } from 'react'
-import { AnimatePresence, motion, MotionProps } from 'framer-motion'
-import { useState } from 'react'
+import { MotionValue, useTransform } from 'framer-motion'
 
 type SnapScrollSectionProps = {
   children: React.ReactNode
   id: string
+  scrollYProgress: MotionValue
+  index: number
+  numberOfSiblings: number
 }
 
-export default function SnapScrollSection({ children, id, ...props }: SnapScrollSectionProps) {
+export default function SnapScrollSection({
+  children,
+  id,
+  scrollYProgress,
+  index,
+  numberOfSiblings,
+  ...props
+}: SnapScrollSectionProps) {
   const { hash } = useLocation()
   const { active, setActive, keyToHash } = useContext(SectionActiveContext)
-  const [intersectionRatio, setIntersectionRatio] = useState(0)
 
-  /*   const { setRef, visible } = useIntersectionObserver(
-    (entry) => {
-      if (!visible && entry.intersectionRatio < 0.1 && active === hashToKey(hash)) {
-        setTarget(id)
-      }
-      if (entry.intersectionRatio > 0.9 && target === id) {
-        setActive(id)
-      }
-    },
-    { threshold: [0.01, 0.9] }
-  )
- */
+  /**
+   * mapping :
+   * 0: [0, 0.33, 0.66 , 1] => [1,0,0,0]
+   * 1: [0, 0.33, 0.66 , 1] => [0,1,0,0]
+   * 2: [0, 0.33, 0.66 , 1] => [0,0,1,0]
+   * 3: [0, 0.33, 0.66 , 1] => [0,0,0,1]
+   *
+   */
+
+  const inputValues = new Array(numberOfSiblings).fill(0).map((v, i) => i / (numberOfSiblings - 1))
+  const outputValues = new Array(numberOfSiblings).fill(0).map((v, i) => (i === index ? 1 : 0))
+
+  const motionValue = useTransform(scrollYProgress, inputValues, outputValues)
+
   const { setRef, visible } = useIntersectionObserver(
     (entry) => {
       if (!visible) {
@@ -45,7 +55,7 @@ export default function SnapScrollSection({ children, id, ...props }: SnapScroll
 
   const childrenWithProps = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { visible, wholeView: visible })
+      return React.cloneElement(child, { visible, wholeView: visible, motionValue })
     }
     return child
   })
