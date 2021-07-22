@@ -96,7 +96,7 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
         ))}
       </Wrapper>
       <MediaQuery query={`(min-width: ${breakpoints.MIN_TABLET}px)`}>
-        <Navigator keys={keys} active={active} />
+        <Navigator keys={keys} progress={scrollYProgress} />
       </MediaQuery>
     </SectionActiveContext.Provider>
   )

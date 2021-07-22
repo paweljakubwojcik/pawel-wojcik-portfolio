@@ -91,11 +91,6 @@ export default function ProjectsSection({
     clearInterval(animationInterval.current)
   }
 
-  /* useEffect(() => {
-    startAnimation()
-    return () => stopAnimation()
-  }, []) */
-
   useEffect(() => {
     if (visible) startAnimation()
     else stopAnimation()

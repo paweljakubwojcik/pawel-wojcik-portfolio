@@ -6,6 +6,7 @@ import { navigate } from 'gatsby'
 import { SectionActiveContext } from './SnapScrollContainer'
 import { useContext } from 'react'
 import { MotionValue, useTransform } from 'framer-motion'
+import getScrollMapping from '../../utils/getScrollMapping'
 
 type SnapScrollSectionProps = {
   children: React.ReactNode
@@ -26,18 +27,7 @@ export default function SnapScrollSection({
   const { hash } = useLocation()
   const { active, setActive, keyToHash } = useContext(SectionActiveContext)
 
-  /**
-   * mapping :
-   * 0: [0, 0.33, 0.66 , 1] => [1,0,0,0]
-   * 1: [0, 0.33, 0.66 , 1] => [0,1,0,0]
-   * 2: [0, 0.33, 0.66 , 1] => [0,0,1,0]
-   * 3: [0, 0.33, 0.66 , 1] => [0,0,0,1]
-   *
-   */
-
-  const inputValues = new Array(numberOfSiblings).fill(0).map((v, i) => i / (numberOfSiblings - 1))
-  const outputValues = new Array(numberOfSiblings).fill(0).map((v, i) => (i === index ? 1 : 0))
-
+  const { inputValues, outputValues } = getScrollMapping(index, numberOfSiblings)
   const motionValue = useTransform(scrollYProgress, inputValues, outputValues)
 
   const { setRef, visible } = useIntersectionObserver(
@@ -50,7 +40,7 @@ export default function SnapScrollSection({
         setActive(id)
       }
     },
-    { threshold: [0.9] }
+    { threshold: [1], rootMargin: '20% 0%' }
   )
 
   const childrenWithProps = React.Children.map(children, (child) => {

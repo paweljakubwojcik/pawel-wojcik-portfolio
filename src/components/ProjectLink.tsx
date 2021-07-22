@@ -155,7 +155,7 @@ const Wrapper = styled(motion.div)`
   overflow: hidden;
   box-shadow: ${(props) => props.theme.shadows.hard};
 
-  transition: transform 0.2s;
+/*   transition: transform 0.2s; */
 `
 
 const ImageWrapper = styled(motion.div)<{ active?: boolean }>`
