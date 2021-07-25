@@ -21,7 +21,7 @@ import IconSatelite from './IconSatelite'
 // TODO: Split up threejs elements into canvas, light, moons and other stuff
 // TODO: refactor this ^^^^
 
-export default function Cnavas() {
+export default function Canvas() {
   const {
     texture: { publicURL: MOON_TEXTURE },
     displaycment: { publicURL: DISPLAYCMENT_MAP },
@@ -72,8 +72,6 @@ export default function Cnavas() {
         throw error
       }
     )
-
-    const group = new Group()
 
     /* const clipPlanes = [new Plane(new Vector3(0, up ? -1 : 1, 0), -0.01)] */
 

@@ -40,7 +40,7 @@ export default function SnapScrollSection({
         setActive(id)
       }
     },
-    { threshold: [1], rootMargin: '20% 0%' }
+    { threshold: [1], rootMargin: '50% 0%' }
   )
 
   const childrenWithProps = React.Children.map(children, (child) => {

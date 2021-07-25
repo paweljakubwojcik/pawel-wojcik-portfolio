@@ -6,11 +6,10 @@ import { faCopy, faEnvelope, faPhone, IconDefinition } from '@fortawesome/free-s
 import Button from '../Button'
 import { useRef } from 'react'
 import { PropsFromSnapscrollSection } from '../../typescript'
-import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
-export default function ContactSection({ visible, wholeView, ...rest }: PropsFromSnapscrollSection & ReactBaseProps) {
+export default function ContactSection({ visible, wholeView, motionValue, ...rest }: PropsFromSnapscrollSection) {
   return (
-    <CustomSection {...rest}>
+    <CustomSection progress={motionValue} {...rest}>
       <Section.Column>
         <Section.Title>Contact</Section.Title>
         <Section.Paragraph>Get in touch</Section.Paragraph>

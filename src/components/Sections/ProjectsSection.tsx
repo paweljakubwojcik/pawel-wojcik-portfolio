@@ -9,7 +9,6 @@ import { ProjectType, PropsFromSnapscrollSection } from '../../typescript'
 import ProjectLink from '../ProjectLink'
 import { AnimatePresence } from 'framer-motion'
 import Button from '../Button'
-import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
 type ProjectSectionQuery = {
   allGraphCmsProject: {
@@ -17,7 +16,7 @@ type ProjectSectionQuery = {
   }
 }
 
-function changeTileReducer({ active, positionMap }, { type, payload }) {
+function changeTileReducer({ active, positionMap }: { active: number; positionMap: number[] }, { type, payload }) {
   let newIndex: number
   switch (type) {
     case 'set':
@@ -37,17 +36,10 @@ function changeTileReducer({ active, positionMap }, { type, payload }) {
   positionMap[oldActiveIndex] = newActive
   positionMap[newActiveIndex] = oldActive
 
-  console.log('change')
-
   return { active: newIndex, positionMap }
 }
 
-export default function ProjectsSection({
-  visible,
-  wholeView,
-  motionValue,
-  ...rest
-}: PropsFromSnapscrollSection & ReactBaseProps) {
+export default function ProjectsSection({ visible, wholeView, motionValue, ...rest }: PropsFromSnapscrollSection) {
   const {
     allGraphCmsProject: { nodes: projects },
   } = useStaticQuery<ProjectSectionQuery>(graphql`
@@ -97,7 +89,7 @@ export default function ProjectsSection({
   }, [visible])
 
   return (
-    <Section visible={visible} {...rest}>
+    <Section visible={visible} progress={motionValue} {...rest}>
       <Section.Column>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>

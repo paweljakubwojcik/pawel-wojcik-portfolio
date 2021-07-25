@@ -21,6 +21,7 @@ export type ProjectType = {
 }
 
 type PropsFromSnapscrollSection = {
+  id: string
   visible?: boolean
   wholeView?: boolean
   motionValue?: MotionValue

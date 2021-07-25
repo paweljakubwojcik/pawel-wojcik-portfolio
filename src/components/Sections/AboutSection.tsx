@@ -4,10 +4,9 @@ import VulfyPicture from '../VulfyPicture'
 import MediaQuery from '../MediaQuery'
 import { useTheme } from 'styled-components'
 import { PropsFromSnapscrollSection } from '../../typescript'
-import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 import { graphql, useStaticQuery } from 'gatsby'
 
-export default function AboutSection({ visible, wholeView, ...rest }: PropsFromSnapscrollSection & ReactBaseProps) {
+export default function AboutSection({ visible, wholeView, motionValue, ...rest }: PropsFromSnapscrollSection) {
   const { breakpoints } = useTheme()
 
   const {
@@ -22,7 +21,7 @@ export default function AboutSection({ visible, wholeView, ...rest }: PropsFromS
   `)
 
   return (
-    <Section {...rest}>
+    <Section progress={motionValue} {...rest}>
       <Section.Column>
         <Section.Title>About Me</Section.Title>
         <Section.Paragraph>{content}</Section.Paragraph>

@@ -7,12 +7,13 @@ import styled from 'styled-components'
 import Button from '../components/Button'
 import IconButton from '../components/IconButton'
 import ParallaxGatsbyImage from '../components/ParallaxGatsbyImage'
-import useElementSize from '../hooks/useElementSize'
+import Seo from '../components/Seo'
+import { ProjectType } from '../typescript'
 
 export default function projects() {
   const {
     allGraphCmsProject: { nodes: projects },
-  } = useStaticQuery(graphql`
+  } = useStaticQuery<{ allGraphCmsProject: { nodes: ProjectType[] } }>(graphql`
     query AllProjects {
       allGraphCmsProject {
         nodes {
@@ -37,20 +38,23 @@ export default function projects() {
   `)
 
   return (
-    <Wrapper>
-      <GridWrapper>
-        {projects.map((project) => (
-          <Project project={project} key={project.name} />
-        ))}
-      </GridWrapper>
-    </Wrapper>
+    <>
+      <Seo title={'Projects'} />
+      <Wrapper>
+        <GridWrapper>
+          {projects.map((project) => (
+            <Project project={project} key={project.name} />
+          ))}
+        </GridWrapper>
+      </Wrapper>
+    </>
   )
 }
 
-const Project = ({ project }) => {
+const Project = ({ project }: { project: ProjectType }) => {
   return (
     <>
-      <Title style={{}}>
+      <Title>
         <h3 style={{ fontSize: '2em' }}>{project.name} </h3>
         <p style={{ margin: 0 }}>{project.brief}</p>
       </Title>

@@ -1,10 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { motion, MotionProps } from 'framer-motion'
+import { motion, MotionProps, MotionValue, useMotionTemplate, useTransform } from 'framer-motion'
+import { createContext } from 'react'
+import { useContext } from 'react'
 
 export type SectionProps = {
   children: React.ReactNode
   visible?: boolean
+  progress: MotionValue
 } & MotionProps
 
 const OpacityVariants = {
@@ -25,18 +28,24 @@ const TitleVariants = {
   },
 }
 
-export default function Section({ children, visible = true, ...props }: SectionProps) {
+const ProgressContext = createContext<{ progress: MotionValue }>({
+  progress: null,
+})
+
+export default function Section({ children, visible = true, progress, ...props }: SectionProps) {
   return (
-    <Container
-      initial={'outOfView'}
-      animate={visible ? 'inView' : 'outOfView'}
-      exit={'outOfView'}
-      variants={OpacityVariants}
-      transition={{}}
-      {...props}
-    >
-      {children}
-    </Container>
+    <ProgressContext.Provider value={{ progress }}>
+      <Container
+        initial={'outOfView'}
+        animate={'inView'}
+        exit={'outOfView'}
+        variants={OpacityVariants}
+        transition={{}}
+        {...props}
+      >
+        {children}
+      </Container>
+    </ProgressContext.Provider>
   )
 }
 
@@ -68,14 +77,24 @@ Section.Column = styled.div`
   width: 100%;
 `
 
-Section.Title = styled(motion.h2)`
+const Title = ({ children }) => {
+  const { progress } = useContext(ProgressContext)
+  const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
+
+  return <StyledTitle style={{ opacity }}>{children}</StyledTitle>
+}
+
+const StyledTitle = styled(motion.h2)`
   font-size: 4em;
   /* margin: 0.4em 0; */
   width: 100%;
+  transition: opacity 0.2s;
 
   position: relative;
   z-index: 1;
 `
+
+Section.Title = Title
 
 Section.SubTitle = styled.h3`
   font-size: 2em;

@@ -55,11 +55,11 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
     if (!location.hash) {
       // handling #Home, and all hashes that aren`t in keys
       document.getElementById(keys[0]).scrollIntoView()
-    } else {
-      // when target hash doesn't exist on page
-      if (!keys.includes(hashToKey(location.hash))) {
-        navigate('/', { replace: true })
-      }
+      return
+    }
+    // when target hash doesn't exist on page
+    if (!keys.includes(hashToKey(location.hash))) {
+      navigate('/', { replace: true })
     }
   }, [location.hash])
 

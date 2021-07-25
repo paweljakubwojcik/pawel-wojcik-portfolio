@@ -1,10 +1,11 @@
 import React from 'react'
 import Section from '../Section'
 import Canvas from '../ThreeJS/Canvas'
+import { PropsFromSnapscrollSection } from '../../typescript'
 
-export default function HomeSection({ ...props }) {
+export default function HomeSection({ motionValue, ...props }: PropsFromSnapscrollSection) {
   return (
-    <Section {...props}>
+    <Section progress={motionValue} {...props}>
       <Section.Column>
         <Section.Title>Paweł Wójcik</Section.Title>
         <Section.SubTitle>Web Developer</Section.SubTitle>
