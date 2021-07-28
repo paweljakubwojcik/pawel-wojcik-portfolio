@@ -1,6 +1,6 @@
 import React from 'react'
 import Section from '../Section'
-import Canvas from '../ThreeJS/Canvas'
+import Scene from '../ThreeJS/Scene'
 import { PropsFromSnapscrollSection } from '../../typescript'
 
 export default function HomeSection({ motionValue, ...props }: PropsFromSnapscrollSection) {
@@ -12,7 +12,7 @@ export default function HomeSection({ motionValue, ...props }: PropsFromSnapscro
         <Section.Paragraph>Take your ideas to the moon 🚀</Section.Paragraph>
       </Section.Column>
 
-      <Canvas />
+      <Scene />
     </Section>
   )
 }

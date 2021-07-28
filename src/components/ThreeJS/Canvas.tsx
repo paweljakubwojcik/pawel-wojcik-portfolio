@@ -1,5 +1,5 @@
 import { graphql, useStaticQuery } from 'gatsby'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Mesh,
   SphereBufferGeometry,
@@ -7,9 +7,14 @@ import {
   MeshStandardMaterial,
   PointLight,
   Plane,
+  Scene,
   Vector3,
   Group,
   DoubleSide,
+  PerspectiveCamera,
+  WebGLRenderer,
+  Clock,
+  TextureLoader,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
@@ -17,12 +22,18 @@ import useThree from '../../hooks/useThree'
 import * as dat from 'dat.gui'
 import { useTheme } from 'styled-components'
 import IconSatelite from './IconSatelite'
+import { SceneContextProvider } from './SceneContext'
 
 // TODO: Split up threejs elements into canvas, light, moons and other stuff
 // TODO: refactor this ^^^^
+const isBrowser = typeof window !== `undefined`
+const fov = 50
+const aspectRatio = isBrowser ? window.innerWidth / window.innerHeight : undefined
+const near = 0.1
+const far = 10e4
 
-export default function Canvas() {
-  const {
+export default function Canvas({ children, ...props }: { children: React.ReactNode }) {
+  /*   const {
     texture: { publicURL: MOON_TEXTURE },
     displaycment: { publicURL: DISPLAYCMENT_MAP },
     skills: { nodes: icons },
@@ -42,7 +53,7 @@ export default function Canvas() {
         }
       }
     }
-  `)
+  `) */
 
   const {
     colors: {
@@ -50,46 +61,47 @@ export default function Canvas() {
     },
   } = useTheme()
 
-  const { canvas, canvasRef, camera, renderer, render, scene, clock, textureLoader } = useThree()
+  const [canvas, canvasRef] = useState<HTMLElement>()
+  const scene = useMemo(() => (isBrowser ? new Scene() : null), [])
+  const camera = useMemo(() => (isBrowser ? new PerspectiveCamera(fov, aspectRatio, near, far) : null), [])
+  const renderer = useMemo(() => (isBrowser ? new WebGLRenderer({ alpha: true }) : null), [])
+  const clock = useMemo(() => (isBrowser ? new Clock() : null), [])
+  const textureLoader = useMemo(() => new TextureLoader(), [])
 
-  const createMoon = () => {
-    const geometry = new SphereBufferGeometry(1, 128, 128)
+  const render = useCallback(() => {
+    requestAnimationFrame(() => renderer.render(scene, camera))
+  }, [scene, camera, renderer])
 
-    // texture loader is async, so it takes callback
-    const moonTexture = textureLoader.load(
-      MOON_TEXTURE,
-      () => render(),
-      () => {},
-      (error) => {
-        throw error
-      }
-    )
-    const moonDisp = textureLoader.load(
-      DISPLAYCMENT_MAP,
-      () => render(),
-      () => {},
-      (error) => {
-        throw error
-      }
-    )
-
-    /* const clipPlanes = [new Plane(new Vector3(0, up ? -1 : 1, 0), -0.01)] */
-
-    // Materials
-    const material = new MeshStandardMaterial({
-      color: new Color('#ffffff'),
-      displacementMap: moonDisp,
-      displacementScale: 0.02,
-      map: moonTexture,
-      /*  clippingPlanes: clipPlanes,
-      clipIntersection: true, */
-      side: DoubleSide,
-    })
-
-    const moon = new Mesh(geometry, material)
-
-    return moon
+  const setCanvasSize = () => {
+    camera.aspect = window?.innerWidth / window?.innerHeight
+    renderer.setSize(window?.innerWidth, window?.innerHeight)
+    camera.updateProjectionMatrix()
   }
+
+  const resize = useCallback(() => {
+    setCanvasSize()
+    render()
+  }, [camera, renderer, render])
+
+  //on Mount
+  useEffect(() => {
+    if (isBrowser) {
+      setCanvasSize()
+    }
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('resize', resize)
+    return () => {
+      window.removeEventListener('resize', resize)
+    }
+  }, [resize])
+
+  useEffect(() => {
+    if (canvas) {
+      canvas.appendChild(renderer.domElement)
+    }
+  }, [canvas])
 
   useEffect(() => {
     if (canvas) {
@@ -112,21 +124,8 @@ export default function Canvas() {
       pinkLight.shadow.camera.near = 0.5 // default
       pinkLight.shadow.camera.far = 500 // default
 
-      // helpers
-      /* const gui = new dat.GUI() */
-
-      /* gui.add(camera.position, 'x', -10, 100, 1)
-      gui.add(camera.position, 'y', -10, 100, 1)
-      gui.add(camera.position, 'z', -10, 100, 1)
-      gui.add(camera, 'fov', -10, 10000, 100)
-      gui.add(camera, 'far', -10, 10000, 10)
-      gui.add(camera, 'near', -10, 10, 0.1)
- */
-
-      const group = new Group()
+      /* const group = new Group()
       const moon = createMoon()
-      const moon2 = createMoon()
-      moon.receiveShadow = true
       group.add(moon)
       //group.add(moon2)
       const iconsSatelites: IconSatelite[] = icons.map((icon) => new IconSatelite(icon.icon.url, {}))
@@ -150,15 +149,12 @@ export default function Canvas() {
 
         // Update objects
         moon.rotation.y = 0.05 * elapsedTime
-        moon2.rotation.y = -0.05 * elapsedTime
         iconsSatelites.forEach((iconSatelite) => iconSatelite.updatePosition(elapsedTime))
 
         moon.position.x += 0.05 * (targetPosition.x - moon.position.x)
         moon.position.z += 0.05 * (targetPosition.z - moon.position.z)
 
         group.position.y += 0.05 * (targetPosition.y - group.position.y)
-        moon2.position.x += 0.05 * (-targetPosition.x - moon2.position.x)
-        moon2.position.z += 0.05 * (targetPosition.z - moon2.position.z)
 
         // Render
         render()
@@ -166,18 +162,23 @@ export default function Canvas() {
         // Call tick again on the next frame
         window.requestAnimationFrame(tick)
       }
-      tick()
+      tick() */
     }
   }, [canvas, camera, renderer, render, scene])
 
   return (
-    <div
-      ref={canvasRef}
-      style={{
-        position: 'absolute',
-        zIndex: 0,
-        left: 0,
-      }}
-    ></div>
+    <SceneContextProvider value={{ scene, render, clock, textureLoader }}>
+      <div
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          zIndex: 0,
+          left: 0,
+        }}
+        {...props}
+      >
+        {children}
+      </div>
+    </SceneContextProvider>
   )
 }
