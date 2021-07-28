@@ -17,20 +17,16 @@ export default function Group({ children }) {
         const x = (e.clientX - window.innerWidth / 2) * 0.0001
         const y = (e.clientY - window.innerHeight / 2) * 0.0001
 
-        targetPosition = { x: 1 + x, y: 0 - y, z: 0 }
+        targetPosition = { x: 1 - x, y: 0 + y, z: 0 }
       })
 
-      const tick = () => {
+      sceneContext.animateFrame(() => {
         // Update objects
         group.current.position.x += 0.05 * (targetPosition.x - group.current.position.x)
         group.current.position.z += 0.05 * (targetPosition.z - group.current.position.z)
 
         group.current.position.y += 0.05 * (targetPosition.y - group.current.position.y)
-
-        // Call tick again on the next frame
-        window.requestAnimationFrame(tick)
-      }
-      tick()
+      })
     })()
   }, [])
 

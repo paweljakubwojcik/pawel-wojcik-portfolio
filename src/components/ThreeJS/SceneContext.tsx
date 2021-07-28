@@ -6,7 +6,7 @@ const SceneContext = createContext<{
   scene?: Scene | Group
   render?: () => void
   textureLoader?: TextureLoader
-  clock?: Clock
+  animateFrame?: (callback: (clock: Clock) => void) => void
 }>({})
 const SceneContextProvider = SceneContext.Provider
 const useSceneContext = () => useContext(SceneContext)
