@@ -30,7 +30,7 @@ export default function SnapScrollSection({
   const { inputValues, outputValues } = getScrollMapping(index, numberOfSiblings)
   const motionValue = useTransform(scrollYProgress, inputValues, outputValues)
 
-  const { setRef, visible } = useIntersectionObserver(
+  const { setRef, visible: wholeView } = useIntersectionObserver(
     (entry) => {
       if (!visible) {
         if (keyToHash(active) === hash) {
@@ -43,15 +43,25 @@ export default function SnapScrollSection({
     { threshold: [1], rootMargin: '50% 0%' }
   )
 
+  const { setRef: setRef2, visible } = useIntersectionObserver(() => {}, {
+    threshold: [0.1],
+  })
+
   const childrenWithProps = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { visible, wholeView: visible, motionValue })
+      return React.cloneElement(child, { visible, wholeView, motionValue })
     }
     return child
   })
 
   return (
-    <Container ref={setRef} {...props}>
+    <Container
+      ref={(reference) => {
+        setRef(reference)
+        setRef2(reference)
+      }}
+      {...props}
+    >
       {childrenWithProps}
     </Container>
   )

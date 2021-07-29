@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { PointLight, Scene, PerspectiveCamera, WebGLRenderer, Clock, TextureLoader } from 'three'
+import { PointLight, Scene, PerspectiveCamera, WebGLRenderer, Clock, TextureLoader, LoadingManager } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import * as dat from 'dat.gui'
@@ -13,7 +13,13 @@ const aspectRatio = isBrowser ? window.innerWidth / window.innerHeight : undefin
 const near = 0.1
 const far = 10e4
 
-export default function Canvas({ children, ...props }) {
+type CanvasProp = {
+  animation?: boolean
+  children: React.ReactNode
+  [key: string]: any
+}
+
+export default function Canvas({ children, animation, ...props }: CanvasProp) {
   const {
     colors: {
       palette: { green, pink },
@@ -25,7 +31,7 @@ export default function Canvas({ children, ...props }) {
   const camera = useMemo(() => (isBrowser ? new PerspectiveCamera(fov, aspectRatio, near, far) : null), [])
   const renderer = useMemo(() => (isBrowser ? new WebGLRenderer({ alpha: true }) : null), [])
   const clock = useMemo(() => (isBrowser ? new Clock() : null), [])
-  const textureLoader = useMemo(() => new TextureLoader(), [])
+  const textureLoader = useMemo(() => new TextureLoader(new LoadingManager(() => render())), [])
 
   const render = useCallback(() => {
     requestAnimationFrame(() => renderer.render(scene, camera))
@@ -49,6 +55,8 @@ export default function Canvas({ children, ...props }) {
     }
   }, [])
 
+  console.log(animation)
+
   useEffect(() => {
     window.addEventListener('resize', resize)
     return () => {
@@ -68,14 +76,22 @@ export default function Canvas({ children, ...props }) {
     animationCallbacks.current.push(callback)
   }
 
+  const animationHandle = useRef<number>()
+
   useEffect(() => {
     const animate = () => {
       animationCallbacks.current.forEach((callback) => callback(clock))
       render()
-      requestAnimationFrame(animate)
+      animationHandle.current = requestAnimationFrame(animate)
     }
-    animate()
-  }, [animationCallbacks])
+    if (animation) {
+      animate()
+      console.log(animationHandle.current)
+    } else {
+      console.log(animationHandle.current)
+      cancelAnimationFrame(animationHandle.current)
+    }
+  }, [animationCallbacks, animation])
 
   useEffect(() => {
     console.log('creating view')

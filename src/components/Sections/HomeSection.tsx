@@ -3,7 +3,7 @@ import Section from '../Section'
 import Scene from '../ThreeJS/Scene'
 import { PropsFromSnapscrollSection } from '../../typescript'
 
-export default function HomeSection({ motionValue, ...props }: PropsFromSnapscrollSection) {
+export default function HomeSection({ motionValue, visible, ...props }: PropsFromSnapscrollSection) {
   return (
     <Section progress={motionValue} {...props}>
       <Section.Column>
@@ -12,7 +12,7 @@ export default function HomeSection({ motionValue, ...props }: PropsFromSnapscro
         <Section.Paragraph>Take your ideas to the moon 🚀</Section.Paragraph>
       </Section.Column>
 
-      <Scene />
+      <Scene animation={visible} />
     </Section>
   )
 }

@@ -4,7 +4,7 @@ import Moon from './Moon'
 import Group from './Group'
 import Satelites from './Satelites'
 
-export default function Scene() {
+export default function Scene({ animation }) {
   return (
     <Canvas
       style={{
@@ -12,6 +12,7 @@ export default function Scene() {
         zIndex: 0,
         left: 0,
       }}
+      animation={animation}
     >
       <Group>
         <Moon />

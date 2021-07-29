@@ -23,7 +23,6 @@ const InnerElement = ({ name, i, keys, progress }) => {
   const hash = i !== 0 ? `#${name}` : ''
 
   const { inputValues, outputValues } = getScrollMapping(i, keys.length)
-  console.log({ inputValues, outputValues })
   const motionValue = useTransform(progress, inputValues, outputValues)
   const width: any = useTransform(motionValue, [0, 1], ['2.5em', '4em'])
   return (
