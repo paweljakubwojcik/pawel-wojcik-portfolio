@@ -6,6 +6,10 @@ type StaggerAnimationTextProps = {
   children: string
 }
 
+
+/**
+ * @warning : NOT IN USE
+ */
 export default forwardRef<any, StaggerAnimationTextProps>(({ children, ...props }, ref) => {
   return (
     <Container variants={containerAnim} ref={ref} {...props}>

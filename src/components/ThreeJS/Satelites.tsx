@@ -5,6 +5,14 @@ import { useEffect } from 'react'
 import { DoubleSide, MathUtils, Mesh, MeshStandardMaterial, PlaneBufferGeometry } from 'three'
 import { useSceneContext } from './SceneContext'
 
+// config
+const MAX_TILT = 30,
+  MIN_TILT = 20,
+  ORBIT_RADIUS = 1.1,
+  ORBIT_VELOCITY = 0.5,
+  SPINNING_VEL_MIN = 3,
+  SPINNING_VEL_MAX = 6
+
 export default function Satelites() {
   const {
     skills: { nodes: icons },
@@ -28,10 +36,10 @@ function Satelite({ texture }) {
 
   const icon = useRef<Mesh<PlaneBufferGeometry, MeshStandardMaterial>>()
 
-  const spinningVelocity = MathUtils.randFloat(3, 6)
-  const orbitVelocity = 0.5
-  const orbitRadius = 1.1
-  const tilt = MathUtils.randFloat(20, 30)
+  const spinningVelocity = MathUtils.randFloat(SPINNING_VEL_MIN, SPINNING_VEL_MAX)
+  const orbitVelocity = ORBIT_VELOCITY
+  const orbitRadius = ORBIT_RADIUS
+  const tilt = MathUtils.randFloat(MIN_TILT, MAX_TILT)
   const margin = MathUtils.randFloat(0, MathUtils.degToRad(360))
 
   useEffect(() => {
