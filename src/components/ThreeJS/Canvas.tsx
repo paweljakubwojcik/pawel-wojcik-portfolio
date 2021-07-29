@@ -20,12 +20,6 @@ type CanvasProp = {
 }
 
 export default function Canvas({ children, animation, ...props }: CanvasProp) {
-  const {
-    colors: {
-      palette: { green, pink },
-    },
-  } = useTheme()
-
   const [canvas, canvasRef] = useState<HTMLElement>()
   const scene = useMemo(() => (isBrowser ? new Scene() : null), [])
   const camera = useMemo(() => (isBrowser ? new PerspectiveCamera(fov, aspectRatio, near, far) : null), [])
@@ -54,8 +48,6 @@ export default function Canvas({ children, animation, ...props }: CanvasProp) {
       setCanvasSize()
     }
   }, [])
-
-  console.log(animation)
 
   useEffect(() => {
     window.addEventListener('resize', resize)
@@ -86,9 +78,9 @@ export default function Canvas({ children, animation, ...props }: CanvasProp) {
     }
     if (animation) {
       animate()
-      console.log(animationHandle.current)
+      console.log('starting animation')
     } else {
-      console.log(animationHandle.current)
+      console.log('stoping animation')
       cancelAnimationFrame(animationHandle.current)
     }
   }, [animationCallbacks, animation])
@@ -98,14 +90,6 @@ export default function Canvas({ children, animation, ...props }: CanvasProp) {
 
     camera.position.set(0, 0, 3)
     renderer.setSize(window?.innerWidth, window?.innerHeight)
-
-    const pointLight = new PointLight('#ffffff', 0.6)
-    pointLight.position.set(0, -1, 7)
-    scene.add(pointLight)
-
-    const pinkLight = new PointLight(pink.main, 0.9)
-    pinkLight.position.set(-2, -3, 10)
-    scene.add(pinkLight)
   }, [])
 
   return (

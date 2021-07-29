@@ -3,6 +3,7 @@ import Canvas from './Canvas'
 import Moon from './Moon'
 import Group from './Group'
 import Satelites from './Satelites'
+import Ligths from './Ligths'
 
 export default function Scene({ animation }) {
   return (
@@ -14,6 +15,7 @@ export default function Scene({ animation }) {
       }}
       animation={animation}
     >
+      <Ligths />
       <Group>
         <Moon />
         <Satelites />
