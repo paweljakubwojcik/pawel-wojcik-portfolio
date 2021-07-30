@@ -27,7 +27,7 @@ export default function AboutSection({ visible, wholeView, motionValue, ...rest 
         <Section.Paragraph>{content}</Section.Paragraph>
       </Section.Column>
       <MediaQuery query={`(min-width: ${breakpoints.MIN_LAPTOP}px)`}>
-        <Section.Column>
+        <Section.Column style={{ alignItems: 'center' }}>
           <VulfyPicture visible={wholeView} />
         </Section.Column>
       </MediaQuery>

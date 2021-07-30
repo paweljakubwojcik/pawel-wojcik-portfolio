@@ -48,31 +48,39 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <ThemeProvider>
-      <Container>
-        <GlobalStyles />
-        <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-        <AnimatePresence exitBeforeEnter initial={false}>
-          <motion.main
-            key={location?.pathname}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={ContainerVariants}
-          >
-            {children}
-          </motion.main>
-        </AnimatePresence>
-        <Footer>
-          © {new Date().getFullYear()}, Built with
-          <a href="https://www.gatsbyjs.com">Gatsby</a>
-        </Footer>
-      </Container>
+      <Wrapper>
+        <Container>
+          <GlobalStyles />
+          <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
+          <AnimatePresence exitBeforeEnter initial={false}>
+            <motion.main
+              key={location?.pathname}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={ContainerVariants}
+            >
+              {children}
+            </motion.main>
+          </AnimatePresence>
+          <Footer>
+            © {new Date().getFullYear()}, Built with
+            <a href="https://www.gatsbyjs.com">Gatsby</a>
+          </Footer>
+        </Container>
+      </Wrapper>
     </ThemeProvider>
   )
 }
 
 const Container = styled(motion.div)`
   margin: 0 var(--content-global-padding);
+`
+
+const Wrapper = styled.div`
+  max-width: 2000px;
+  margin: auto;
+  position: relative;
 `
 
 const Footer = styled.footer`

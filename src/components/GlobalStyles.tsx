@@ -19,6 +19,8 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
     font-feature-settings: "kern", "liga", "clig", "calt";
 
+   
+
     /* variables that changes globally with screen size */
     --content-global-padding: 2em;
     

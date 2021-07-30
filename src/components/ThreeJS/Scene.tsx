@@ -5,7 +5,7 @@ import Group from './Group'
 import Satelites from './Satelites'
 import Ligths from './Ligths'
 
-export default function Scene({ animation }) {
+export default function Scene({ animation, ...rest }) {
   return (
     <Canvas
       style={{
@@ -14,6 +14,7 @@ export default function Scene({ animation }) {
         left: 0,
       }}
       animation={animation}
+      {...rest}
     >
       <Ligths />
       <Group>

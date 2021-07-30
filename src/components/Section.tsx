@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { forwardRef, RefObject } from 'react'
+import styled, { StyledComponent } from 'styled-components'
 import { motion, MotionProps, MotionValue, useMotionTemplate, useTransform } from 'framer-motion'
 import { createContext } from 'react'
 import { useContext } from 'react'
@@ -32,7 +32,7 @@ const ProgressContext = createContext<{ progress: MotionValue }>({
   progress: null,
 })
 
-export default function Section({ children, visible = true, progress, ...props }: SectionProps) {
+const Section = ({ children, visible = true, progress, ...props }, forwardedRef) => {
   return (
     <ProgressContext.Provider value={{ progress }}>
       <Container
@@ -40,7 +40,7 @@ export default function Section({ children, visible = true, progress, ...props }
         animate={'inView'}
         exit={'outOfView'}
         variants={OpacityVariants}
-        transition={{}}
+        ref={forwardedRef}
         {...props}
       >
         {children}
@@ -48,6 +48,8 @@ export default function Section({ children, visible = true, progress, ...props }
     </ProgressContext.Provider>
   )
 }
+
+/* sub components */
 
 const Container = styled(motion.section)`
   display: flex;
@@ -69,7 +71,8 @@ const Container = styled(motion.section)`
     padding-left: var(--content-global-padding);
   }
 `
-Section.Column = styled.div`
+
+const Column = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -94,9 +97,7 @@ const StyledTitle = styled(motion.h2)`
   z-index: 1;
 `
 
-Section.Title = Title
-
-Section.SubTitle = styled.h3`
+const SubTitle = styled.h3`
   font-size: 2em;
   /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
@@ -104,9 +105,11 @@ Section.SubTitle = styled.h3`
   z-index: 1;
 `
 
-Section.Paragraph = styled.p`
+const Paragraph = styled.p`
   font-weight: 100;
   margin: 1em 0.1rem;
   position: relative;
   z-index: 1;
 `
+
+export default Object.assign(forwardRef<HTMLElement, SectionProps>(Section), { Column, Title, Paragraph, SubTitle })

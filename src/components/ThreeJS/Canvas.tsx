@@ -16,10 +16,11 @@ const far = 10e4
 type CanvasProp = {
   animation?: boolean
   children: React.ReactNode
+  parent?: HTMLElement
   [key: string]: any
 }
 
-export default function Canvas({ children, animation, ...props }: CanvasProp) {
+export default function Canvas({ children, animation, parent, ...props }: CanvasProp) {
   const [canvas, canvasRef] = useState<HTMLElement>()
   const scene = useMemo(() => (isBrowser ? new Scene() : null), [])
   const camera = useMemo(() => (isBrowser ? new PerspectiveCamera(fov, aspectRatio, near, far) : null), [])
@@ -32,22 +33,28 @@ export default function Canvas({ children, animation, ...props }: CanvasProp) {
   }, [scene, camera, renderer])
 
   const setCanvasSize = () => {
-    camera.aspect = window?.innerWidth / window?.innerHeight
-    renderer.setSize(window?.innerWidth, window?.innerHeight)
+    if (parent) {
+      camera.aspect = parent.clientWidth / parent.clientHeight
+      renderer.setSize(parent.clientWidth, parent.clientHeight)
+    } else {
+      camera.aspect = window?.innerWidth / window?.innerHeight
+      renderer.setSize(window?.innerWidth, window?.innerHeight)
+    }
+
     camera.updateProjectionMatrix()
   }
 
   const resize = useCallback(() => {
     setCanvasSize()
     render()
-  }, [camera, renderer, render])
+  }, [camera, renderer, render, parent])
 
   //on Mount
   useEffect(() => {
     if (isBrowser) {
       setCanvasSize()
     }
-  }, [])
+  }, [parent])
 
   useEffect(() => {
     window.addEventListener('resize', resize)
@@ -89,7 +96,6 @@ export default function Canvas({ children, animation, ...props }: CanvasProp) {
     console.log('creating view')
 
     camera.position.set(0, 0, 3)
-    renderer.setSize(window?.innerWidth, window?.innerHeight)
   }, [])
 
   return (
