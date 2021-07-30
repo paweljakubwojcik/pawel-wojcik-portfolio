@@ -45,7 +45,7 @@ const Wrapper = styled(motion.div)`
   position: relative;
   width: 100%;
   min-width: 300px;
-  max-width: 500px;
+  max-width: 450px;
 
   transform: translateX(-10%);
   z-index: -1;

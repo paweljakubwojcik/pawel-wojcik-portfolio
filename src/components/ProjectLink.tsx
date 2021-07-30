@@ -123,7 +123,7 @@ export default function ProjectLink({
         </BlurOverlay>
 
         <NameOverlay>
-          <motion.div variants={TitleVariants} style={{}}>
+          <motion.div variants={TitleVariants}>
             <div style={{ fontSize: '1.9em', margin: '0.2em', textAlign: 'center' }}>{name}</div>
             <div>{brief}</div>
           </motion.div>
@@ -155,7 +155,7 @@ const Wrapper = styled(motion.div)`
   overflow: hidden;
   box-shadow: ${(props) => props.theme.shadows.hard};
 
-/*   transition: transform 0.2s; */
+  /*   transition: transform 0.2s; */
 `
 
 const ImageWrapper = styled(motion.div)<{ active?: boolean }>`

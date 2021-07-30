@@ -110,6 +110,8 @@ const Paragraph = styled.p`
   margin: 1em 0.1rem;
   position: relative;
   z-index: 1;
+  max-width: 500px;
+  text-align: justify;
 `
 
 export default Object.assign(forwardRef<HTMLElement, SectionProps>(Section), { Column, Title, Paragraph, SubTitle })

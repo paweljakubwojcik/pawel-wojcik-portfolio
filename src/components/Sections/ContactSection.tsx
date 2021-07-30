@@ -6,6 +6,7 @@ import { faCopy, faEnvelope, faPhone, IconDefinition } from '@fortawesome/free-s
 import Button from '../Button'
 import { useRef } from 'react'
 import { PropsFromSnapscrollSection } from '../../typescript'
+import { motion, MotionValue, useTransform } from 'framer-motion'
 
 export default function ContactSection({ visible, wholeView, motionValue, ...rest }: PropsFromSnapscrollSection) {
   return (
@@ -15,16 +16,29 @@ export default function ContactSection({ visible, wholeView, motionValue, ...res
         <Section.Paragraph>Get in touch</Section.Paragraph>
       </Section.Column>
       <Section.Column>
-        <ContactField icon={faEnvelope}>{'pawel.jakub.wojcik@gmail.com'}</ContactField>
-        <ContactField icon={faPhone}>{'724848174'}</ContactField>
+        <ContactField icon={faEnvelope} progress={motionValue}>
+          {'pawel.jakub.wojcik@gmail.com'}
+        </ContactField>
+        <ContactField icon={faPhone} progress={motionValue}>
+          {'724848174'}
+        </ContactField>
       </Section.Column>
     </CustomSection>
   )
 }
 
-const ContactField = ({ children, icon }: { children: string; icon: IconDefinition }) => {
+const ContactField = ({
+  children,
+  icon,
+  progress,
+}: {
+  children: string
+  icon: IconDefinition
+  progress: MotionValue
+}) => {
   const field = useRef<HTMLInputElement>()
   const [copied, setCopied] = useState<boolean>()
+  const width = useTransform(progress, [0, 0.7, 1], ['0em', '0em', '13em'])
 
   const copyToClipboard = () => {
     field.current.select()
@@ -49,6 +63,7 @@ const ContactField = ({ children, icon }: { children: string; icon: IconDefiniti
       >
         {'Copy'}
       </Button>
+      <After style={{ width }} />
     </Container>
   )
 }
@@ -61,18 +76,17 @@ const Container = styled.div`
   margin: 1em;
 
   position: relative;
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 13em;
-    height: 0.3em;
-    border-radius: 1000px;
-    /* transform: translateY(-100%); */
-    background-color: ${(props) => props.theme.colors.palette.pink.main};
-  }
+`
+const After = styled(motion.div)`
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 13em;
+  height: 0.3em;
+  border-radius: 1000px;
+  /* transform: translateY(-100%); */
+  background-color: ${(props) => props.theme.colors.palette.pink.main};
 `
 
 const OnlyReadInput = styled.input`
