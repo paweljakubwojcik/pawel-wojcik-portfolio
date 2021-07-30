@@ -22,6 +22,7 @@ type State = {
     [key: string]: DOMRect
   }
   active: number
+  containerWidth: number
 }
 
 type projectsPageProps = {
@@ -58,8 +59,6 @@ export default function projects({ location: { state } }: projectsPageProps) {
     }
   `)
 
-  console.log(state)
-
   return (
     <>
       <Seo title={'Projects'} />
@@ -77,17 +76,24 @@ const TileVariants: Variants = {
     x: 0,
     y: 0,
     scale: 1,
+    fontSize: '1em',
     transition: {
-      delay: 0.5,
+      delay: 0.1,
       type: 'spring',
-      duration: 1,
+      duration: 0.7,
     },
   },
-  initial: ({ initialPosition, currentPosition }) => ({
-    x: initialPosition.x - currentPosition?.x,
-    y: initialPosition.y - currentPosition?.y,
-    scale: currentPosition ? initialPosition.width / currentPosition.width : 1,
-  }),
+  initial: ({ initialPosition, currentPosition, containerWidth }) => {
+    const scaleFactor = initialPosition.width / currentPosition.width
+    const fontScaleFactor = containerWidth / currentPosition.width
+
+    return {
+      x: initialPosition.x - currentPosition?.x,
+      y: initialPosition.y - currentPosition?.y,
+      scale: scaleFactor,
+      fontSize: `${1 / fontScaleFactor}em`,
+    }
+  },
 }
 
 const Tile = ({ project, state, active }: { project: ProjectType; state: State; active: boolean }) => {
@@ -100,18 +106,25 @@ const Tile = ({ project, state, active }: { project: ProjectType; state: State; 
   }, [tileRefPosition.current])
 
   const initialPosition = state ? state.positions[project.name] : undefined
+  const containerWidth = state ? state.containerWidth : 0
 
   const { width } = useScreenSize()
   const { breakpoints } = useTheme()
   const isMobile = width <= breakpoints.MAX_TABLET
 
+  /**
+   * to properly animate from previous position to current grid we need to know elements' boundingRect,
+   * which we get by useRef
+   * to do this we first render placeholder elements that have the same sizes and opacity:0 (to prevent gliches),
+   *  and then from their positions we calculate proper animation
+   */
   return (
     <WrapperWrapper ref={tileRefPosition} style={{ zIndex: active ? 1 : 0 }}>
       {''}
       {currentPosition ? (
         <TileWrapper
           variants={TileVariants}
-          custom={{ initialPosition, currentPosition }}
+          custom={{ initialPosition, currentPosition, containerWidth }}
           initial={initialPosition ? ['initial', 'inactive'] : ['grid', 'inactive']}
           animate={['grid', isMobile || clicked ? 'active' : 'inactive']}
           exit={'inactive'}

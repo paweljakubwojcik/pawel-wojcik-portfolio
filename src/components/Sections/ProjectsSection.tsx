@@ -10,6 +10,7 @@ import ProjectLink from '../ProjectLink'
 import { AnimatePresence, motion } from 'framer-motion'
 import Button from '../Button'
 import ProjectTile from '../ProjectTile'
+import useElementSize from '../../hooks/useElementSize'
 
 type ProjectSectionQuery = {
   allGraphCmsProject: {
@@ -89,6 +90,7 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
     else stopAnimation()
   }, [visible])
 
+  const imageContainerRef = useRef<HTMLDivElement>()
   const imageRefList = useRef<{ [key: string]: HTMLElement }>({})
 
   const handleGoToProjects = (e) => {
@@ -101,6 +103,7 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
           Object.entries(imageRefList.current).map(([key, element]) => [key, element.getBoundingClientRect()])
         ),
         active,
+        containerWidth: imageContainerRef.current.getBoundingClientRect().width,
       },
     })
   }
@@ -110,7 +113,7 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
       <Section.Column>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
-        <ButtonWrapper exit={{ y: '100%', opacity: 0 }}>
+        <ButtonWrapper exit={{ opacity: 0 }}>
           <Button onClick={handleGoToProjects} as={Link} to="projects">
             View full list
           </Button>
@@ -122,6 +125,7 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
           onBlur={startAnimation}
           onMouseEnter={stopAnimation}
           onMouseLeave={startAnimation}
+          ref={imageContainerRef as any}
         >
           {projects.map((project, i) => (
             <ProjectLink
@@ -139,7 +143,7 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
               />
             </ProjectLink>
           ))}
-          <Indicator>
+          <Indicator exit={{ opacity: 0 }}>
             {projects.map((v, i) => (
               <Dot
                 active={i === active}
@@ -174,7 +178,7 @@ const ImagesList = styled.div`
   }
 `
 
-const Indicator = styled.div`
+const Indicator = styled(motion.div)`
   position: relative;
   z-index: 1;
 

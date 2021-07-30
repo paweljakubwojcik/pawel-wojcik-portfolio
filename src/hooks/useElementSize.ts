@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react'
 type Size = {
   width?: string
   height?: string
+  rect?: DOMRect
 }
 
 const getStringifiedProperties = (element: HTMLElement) => ({
   height: `${element.clientHeight}px`,
   width: `${element.clientWidth}px`,
-  top: `${element.clientTop}px`,
-  left: `${element.clientLeft}px`,
+  rect: element.getBoundingClientRect(),
 })
 
 export default function useElementSize(initialSize: Size): [size: Size, ref: React.MutableRefObject<HTMLElement>] {

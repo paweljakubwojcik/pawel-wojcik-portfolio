@@ -60,7 +60,7 @@ const Title = ({ children }) => {
   const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
 
   return (
-    <StyledTitle style={{ opacity }} exit={{ opacity: 0 }}>
+    <StyledTitle style={{ opacity }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.5, delay: 0.4 }}>
       {children}
     </StyledTitle>
   )
@@ -70,13 +70,16 @@ const StyledTitle = styled(motion.h2)`
   font-size: 4em;
   /* margin: 0.4em 0; */
   width: 100%;
-  transition: opacity 0.2s;
 
   position: relative;
   z-index: 1;
 `
 const SubTitle = ({ children }) => {
-  return <StyledSubTitle exit={{ opacity: 0 }}>{children}</StyledSubTitle>
+  return (
+    <StyledSubTitle exit={{ opacity: 0, y: '175%' }} transition={{ duration: 0.5 }}>
+      {children}
+    </StyledSubTitle>
+  )
 }
 
 const StyledSubTitle = styled(motion.h3)`
@@ -88,7 +91,11 @@ const StyledSubTitle = styled(motion.h3)`
 `
 
 const Paragraph = ({ children }) => {
-  return <StyledParagraph exit={{ opacity: 0 }}>{children}</StyledParagraph>
+  return (
+    <StyledParagraph exit={{ opacity: 0, y: '150%' }} transition={{ duration: 0.5, delay: 0.2 }}>
+      {children}
+    </StyledParagraph>
+  )
 }
 
 const StyledParagraph = styled(motion.p)`

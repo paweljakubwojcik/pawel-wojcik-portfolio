@@ -3,7 +3,6 @@ import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { motion, MotionValue, useMotionTemplate, useTransform, Variants } from 'framer-motion'
-import { ProjectType } from '../typescript'
 import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
 const POSITIONS = [
@@ -58,6 +57,18 @@ export default forwardRef<HTMLDivElement, PojectLinkProps>(function ProjectLink(
   { active = false, index, inView, motionValue, children, ...rest },
   ref
 ) {
+  /**
+   * every project tile has two wrappers -  one is responsible for interaction with scroll value,
+   * another tranlates active/inactive tiles into their places.
+   *
+   * ImageWrapper - active/inactcive
+   * Wrapper - scroll animation
+   *
+   * Wrapper is hiding inactive tiles behind active one by negating ImageWrapper's transformation
+   * that's what final scalew and transform values are for
+   *
+   */
+
   const finalScale = useMemo(() => 1 / POSITIONS[index].scale, [index])
   const finalTransfromX = useMemo(() => `${-POSITIONS[index].x * finalScale}%`, [index])
   const finalTransfromY = useMemo(() => `${-POSITIONS[index].y * finalScale}%`, [index])
@@ -72,7 +83,7 @@ export default forwardRef<HTMLDivElement, PojectLinkProps>(function ProjectLink(
       variants={ProjectVariants}
       animate={active ? 'active' : 'inactive'}
       initial={'inactive'}
-      
+      exit={'inactive'}
       custom={{ index }}
       transition={{ duration: 0.6, bounce: 0.4, type: 'spring' }}
       active={active}
