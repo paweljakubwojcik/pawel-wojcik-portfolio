@@ -1,16 +1,37 @@
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { motion, Variants } from 'framer-motion'
 import { graphql, Link, useStaticQuery } from 'gatsby'
 import React from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { useRef } from 'react'
 import styled from 'styled-components'
-import Button from '../components/Button'
-import IconButton from '../components/IconButton'
-import ParallaxGatsbyImage from '../components/ParallaxGatsbyImage'
+import ProjectTile from '../components/ProjectTile'
 import Seo from '../components/Seo'
 import { ProjectType } from '../typescript'
 
-export default function projects() {
+// on transition get all positions of images and store them in map/object where keys are names of projects
+
+type State = {
+  positions: {
+    [key: string]: {
+      x: number
+      y: number
+      width: number
+      height: number
+    }
+  }
+}
+
+type projectsPageProps = {
+  location: {
+    state: State
+  }
+}
+
+export default function projects({ location: { state } }: projectsPageProps) {
   const {
     allGraphCmsProject: { nodes: projects },
   } = useStaticQuery<{ allGraphCmsProject: { nodes: ProjectType[] } }>(graphql`
@@ -23,6 +44,7 @@ export default function projects() {
           images {
             id
             url
+            gatsbyImageData(placeholder: BLURRED, aspectRatio: 1.77)
           }
           link
           repository
@@ -37,100 +59,97 @@ export default function projects() {
     }
   `)
 
+  console.log(state)
+
   return (
     <>
       <Seo title={'Projects'} />
-      <Wrapper>
-        <GridWrapper>
-          {projects.map((project) => (
-            <Project project={project} key={project.name} />
-          ))}
-        </GridWrapper>
-      </Wrapper>
+      <TilesContainer>
+        {projects.map((project) => (
+          <Tile project={project} state={state} key={project.name} />
+        ))}
+      </TilesContainer>
     </>
   )
 }
 
-const Project = ({ project }: { project: ProjectType }) => {
+const TileVariants: Variants = {
+  grid: {
+    x: 0,
+    y: 0,
+    scale: 1,
+  },
+  inactive: ({ initialPosition, currentPosition }) => ({
+    x: initialPosition.x - currentPosition?.x,
+    y: initialPosition.y - currentPosition?.y,
+    scale: currentPosition ? initialPosition.width / currentPosition.width : 1,
+  }),
+}
+
+const Tile = ({ project, state }: { project: ProjectType; state: State }) => {
+  const tileRefPosition = useRef<HTMLDivElement>()
+  const [currentPosition, setCurrentPosition] = useState<DOMRect>()
+
+  useEffect(() => {
+    if (tileRefPosition.current) setCurrentPosition(tileRefPosition.current.getBoundingClientRect())
+  }, [tileRefPosition.current])
+
+  const initialPosition = state.positions[project.name]
+
+  // initial position is statePosition - currentPosition
+
+  console.log({ project: project.name, position: initialPosition, position2: currentPosition })
+
   return (
-    <>
-      <Title>
-        <h3 style={{ fontSize: '2em' }}>{project.name} </h3>
-        <p style={{ margin: 0 }}>{project.brief}</p>
-      </Title>
-      <FlexContainer>
-        <Button as={Link} to={`${project.name}`} style={{ margin: '0.3em' }}>
-          Read more
-        </Button>
-        <div style={{ display: 'flex', fontSize: '1.5em' }}>
-          <IconButton as={'a'} href={project.repository}>
-            <FontAwesomeIcon icon={faGithub} />
-          </IconButton>
-          <IconButton as={'a'} href={project.link}>
-            <FontAwesomeIcon icon={faLink} />
-          </IconButton>
-        </div>
-      </FlexContainer>
-    </>
+    <WrapperWrapper ref={tileRefPosition}>
+      {''}
+      {currentPosition ? (
+        <TileWrapper
+          variants={TileVariants}
+          custom={{ initialPosition, currentPosition }}
+          initial={'inactive'}
+          animate={'grid'}
+          exit={'inactive'}
+          whileHover={'active'}
+        >
+          <ProjectTile project={project} />
+        </TileWrapper>
+      ) : (
+        <ProjectTile project={project} style={{ opacity: 0 }} />
+      )}
+    </WrapperWrapper>
   )
 }
 
-const Title = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
-    margin-top: 3em;
-  }
-`
-
-const Wrapper = styled.div`
-  display: flex;
-
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-
+const WrapperWrapper = styled.div`
+  max-width: 450px;
+  min-width: 250px;
   width: 100%;
+  margin: 1em;
 `
 
-const GridWrapper = styled.div`
+const TilesContainer = styled(motion.div)`
   display: grid;
-  grid-template-columns: 1fr auto;
+  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 0.5em;
+
   width: 100%;
-  max-width: 800px;
 
-  margin: 3em 0;
-
-  grid-gap: 1em;
-  row-gap: 3em;
-
-  align-items: center;
-
-  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_MOBILE}px) {
     grid-template-columns: 1fr;
-    row-gap: 0em;
   }
 `
 
-const FlexContainer = styled.div`
+const TileWrapper = styled(motion.div)`
   display: flex;
-  align-items: center;
-`
 
-const ProjectWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  position: relative;
+  max-width: 450px;
+  min-width: 250px;
   width: 100%;
-  padding: 2em 0;
-  max-width: 800px;
-`
+  flex-shrink: 1;
 
-const BackgroundImage = styled(ParallaxGatsbyImage)`
-  width: 100%;
-  height: 8em;
-  position: absolute;
-  left: 0;
+  transform-origin: top left;
 `

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
 
 import styled from 'styled-components'
-import { graphql, Link, useStaticQuery } from 'gatsby'
+import { graphql, Link, navigate, useStaticQuery } from 'gatsby'
 
 import Section from '../Section'
 
@@ -9,11 +9,29 @@ import { ProjectType, PropsFromSnapscrollSection } from '../../typescript'
 import ProjectLink from '../ProjectLink'
 import { AnimatePresence } from 'framer-motion'
 import Button from '../Button'
+import ProjectTile from '../ProjectTile'
 
 type ProjectSectionQuery = {
   allGraphCmsProject: {
     nodes: ProjectType[]
   }
+}
+
+const getElementPosition = (element: HTMLElement) => {
+  return element.getBoundingClientRect()
+
+  /* return {
+    x:
+      element.offsetLeft +
+      (element.offsetParent
+        ? getElementPosition(element.offsetParent as HTMLElement).x - element.offsetParent.scrollLeft
+        : 0),
+    y:
+      element.offsetTop +
+      (element.offsetParent
+        ? getElementPosition(element.offsetParent as HTMLElement).y - element.offsetParent.scrollTop
+        : 0),
+  } */
 }
 
 function changeTileReducer({ active, positionMap }: { active: number; positionMap: number[] }, { type, payload }) {
@@ -88,13 +106,27 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
     else stopAnimation()
   }, [visible])
 
+  const imageRefList = useRef<{ [key: string]: HTMLElement }>({})
+
+  const handleGoToProjects = (e) => {
+    e.preventDefault()
+
+    navigate(`projects`, {
+      state: {
+        positions: Object.fromEntries(
+          Object.entries(imageRefList.current).map(([key, value]) => [key, getElementPosition(value)])
+        ),
+      },
+    })
+  }
+
   return (
     <Section visible={visible} progress={motionValue} {...rest}>
       <Section.Column>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
         <ButtonWrapper>
-          <Button as={Link} to={'projects'}>
+          <Button onClick={handleGoToProjects} as={Link} to="projects">
             View full list
           </Button>
         </ButtonWrapper>
@@ -109,14 +141,15 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
           >
             {projects.map((project, i) => (
               <ProjectLink
-                project={project}
                 active={i === active}
                 key={i}
                 index={positionMap[i]}
                 onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
                 inView={wholeView}
                 motionValue={motionValue}
-              />
+              >
+                <ProjectTile project={project} ref={(element) => (imageRefList.current[project.name] = element)} />
+              </ProjectLink>
             ))}
             <Indicator>
               {projects.map((v, i) => (
