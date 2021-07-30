@@ -9,20 +9,19 @@ import { useState } from 'react'
 import { useRef } from 'react'
 import styled from 'styled-components'
 import ProjectTile from '../components/ProjectTile'
+import Section from '../components/Section'
 import Seo from '../components/Seo'
+import { useTheme } from '../context/theme'
+import useScreenSize from '../hooks/useScreenSize'
 import { ProjectType } from '../typescript'
 
 // on transition get all positions of images and store them in map/object where keys are names of projects
 
 type State = {
   positions: {
-    [key: string]: {
-      x: number
-      y: number
-      width: number
-      height: number
-    }
+    [key: string]: DOMRect
   }
+  active: number
 }
 
 type projectsPageProps = {
@@ -65,8 +64,8 @@ export default function projects({ location: { state } }: projectsPageProps) {
     <>
       <Seo title={'Projects'} />
       <TilesContainer>
-        {projects.map((project) => (
-          <Tile project={project} state={state} key={project.name} />
+        {projects.map((project, i) => (
+          <Tile project={project} state={state} active={i === state?.active} key={project.name} />
         ))}
       </TilesContainer>
     </>
@@ -78,39 +77,46 @@ const TileVariants: Variants = {
     x: 0,
     y: 0,
     scale: 1,
+    transition: {
+      delay: 0.5,
+      type: 'spring',
+      duration: 1,
+    },
   },
-  inactive: ({ initialPosition, currentPosition }) => ({
+  initial: ({ initialPosition, currentPosition }) => ({
     x: initialPosition.x - currentPosition?.x,
     y: initialPosition.y - currentPosition?.y,
     scale: currentPosition ? initialPosition.width / currentPosition.width : 1,
   }),
 }
 
-const Tile = ({ project, state }: { project: ProjectType; state: State }) => {
+const Tile = ({ project, state, active }: { project: ProjectType; state: State; active: boolean }) => {
   const tileRefPosition = useRef<HTMLDivElement>()
   const [currentPosition, setCurrentPosition] = useState<DOMRect>()
+  const [clicked, setClicked] = useState(false)
 
   useEffect(() => {
     if (tileRefPosition.current) setCurrentPosition(tileRefPosition.current.getBoundingClientRect())
   }, [tileRefPosition.current])
 
-  const initialPosition = state.positions[project.name]
+  const initialPosition = state ? state.positions[project.name] : undefined
 
-  // initial position is statePosition - currentPosition
-
-  console.log({ project: project.name, position: initialPosition, position2: currentPosition })
+  const { width } = useScreenSize()
+  const { breakpoints } = useTheme()
+  const isMobile = width <= breakpoints.MAX_TABLET
 
   return (
-    <WrapperWrapper ref={tileRefPosition}>
+    <WrapperWrapper ref={tileRefPosition} style={{ zIndex: active ? 1 : 0 }}>
       {''}
       {currentPosition ? (
         <TileWrapper
           variants={TileVariants}
           custom={{ initialPosition, currentPosition }}
-          initial={'inactive'}
-          animate={'grid'}
+          initial={initialPosition ? ['initial', 'inactive'] : ['grid', 'inactive']}
+          animate={['grid', isMobile || clicked ? 'active' : 'inactive']}
           exit={'inactive'}
           whileHover={'active'}
+          onClick={() => setClicked((v) => !v)}
         >
           <ProjectTile project={project} />
         </TileWrapper>

@@ -22,7 +22,7 @@ type LayoutProps = {
 const ContainerVariants = {
   exit: {
     opacity: 1,
-    transition: { when: 'afterChildren', delay: 0.5 },
+    transition: { when: 'afterChildren' },
   },
   animate: {
     opacity: 1,
@@ -53,19 +53,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <GlobalStyles />
           <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
           <AnimatePresence exitBeforeEnter initial={false}>
-            <motion.main
-              key={location?.pathname}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              variants={ContainerVariants}
-            >
+            <motion.main key={location?.pathname} initial="initial" animate="animate" exit="exit">
               {children}
             </motion.main>
           </AnimatePresence>
           <Footer>
-            © {new Date().getFullYear()}, Built with
-            <a href="https://www.gatsbyjs.com">Gatsby</a>
+            © {new Date().getFullYear()}, Built with <a href="https://www.gatsbyjs.com">Gatsby</a>
           </Footer>
         </Container>
       </Wrapper>

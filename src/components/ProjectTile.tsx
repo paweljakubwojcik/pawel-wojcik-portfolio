@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion, Variants } from 'framer-motion'
-import { Link } from 'gatsby'
+import { graphql, Link, useStaticQuery } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import React, { forwardRef, useRef } from 'react'
 import styled from 'styled-components'
@@ -46,7 +46,7 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
   { project: { images, name, skills, link, repository, brief }, active },
   forwardedRef
 ) {
-  const image = useRef(getRandomElement(images).gatsbyImageData)
+  const image = useRef(images[0].gatsbyImageData)
 
   return (
     <Tile ref={forwardedRef}>
@@ -78,11 +78,16 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
   )
 })
 
-const Tile = styled.div`
+const Tile = styled(motion.div)`
   height: fit-content;
   border-radius: 0.75em;
   overflow: hidden;
   box-shadow: ${(props) => props.theme.shadows.hard};
+  border: 2px solid transparent;
+  &:hover {
+    border: 2px solid ${(props) => props.theme.colors.palette.violet.light};
+  }
+  transition: border-color 1s;
 `
 
 const NameOverlay = styled.div`

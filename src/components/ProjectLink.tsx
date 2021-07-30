@@ -71,8 +71,8 @@ export default forwardRef<HTMLDivElement, PojectLinkProps>(function ProjectLink(
     <ImageWrapper
       variants={ProjectVariants}
       animate={active ? 'active' : 'inactive'}
-      initial={'active'}
-      exit={'active'}
+      initial={'inactive'}
+      
       custom={{ index }}
       transition={{ duration: 0.6, bounce: 0.4, type: 'spring' }}
       active={active}
@@ -88,8 +88,6 @@ export default forwardRef<HTMLDivElement, PojectLinkProps>(function ProjectLink(
 const Wrapper = styled(motion.div)`
   top: 0;
   left: 0;
-
-  /*   transition: transform 0.2s; */
 `
 
 const ImageWrapper = styled(motion.div)<{ active?: boolean }>`

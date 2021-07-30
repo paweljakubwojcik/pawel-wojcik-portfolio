@@ -10,24 +10,6 @@ export type SectionProps = {
   progress: MotionValue
 } & MotionProps
 
-const OpacityVariants = {
-  inView: {
-    opacity: 1,
-  },
-  outOfView: {
-    opacity: 1,
-  },
-}
-
-const TitleVariants = {
-  inView: {
-    opacity: 1,
-  },
-  outOfView: {
-    opacity: 0,
-  },
-}
-
 const ProgressContext = createContext<{ progress: MotionValue }>({
   progress: null,
 })
@@ -35,14 +17,7 @@ const ProgressContext = createContext<{ progress: MotionValue }>({
 const Section = ({ children, visible = true, progress, ...props }, forwardedRef) => {
   return (
     <ProgressContext.Provider value={{ progress }}>
-      <Container
-        initial={'outOfView'}
-        animate={'inView'}
-        exit={'outOfView'}
-        variants={OpacityVariants}
-        ref={forwardedRef}
-        {...props}
-      >
+      <Container ref={forwardedRef} {...props}>
         {children}
       </Container>
     </ProgressContext.Provider>
@@ -84,7 +59,11 @@ const Title = ({ children }) => {
   const { progress } = useContext(ProgressContext)
   const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
 
-  return <StyledTitle style={{ opacity }}>{children}</StyledTitle>
+  return (
+    <StyledTitle style={{ opacity }} exit={{ opacity: 0 }}>
+      {children}
+    </StyledTitle>
+  )
 }
 
 const StyledTitle = styled(motion.h2)`
@@ -96,8 +75,11 @@ const StyledTitle = styled(motion.h2)`
   position: relative;
   z-index: 1;
 `
+const SubTitle = ({ children }) => {
+  return <StyledSubTitle exit={{ opacity: 0 }}>{children}</StyledSubTitle>
+}
 
-const SubTitle = styled.h3`
+const StyledSubTitle = styled(motion.h3)`
   font-size: 2em;
   /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
@@ -105,7 +87,11 @@ const SubTitle = styled.h3`
   z-index: 1;
 `
 
-const Paragraph = styled.p`
+const Paragraph = ({ children }) => {
+  return <StyledParagraph exit={{ opacity: 0 }}>{children}</StyledParagraph>
+}
+
+const StyledParagraph = styled(motion.p)`
   font-weight: 100;
   margin: 1em 0.1rem;
   position: relative;

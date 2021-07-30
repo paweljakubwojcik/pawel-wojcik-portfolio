@@ -7,7 +7,7 @@ import Section from '../Section'
 
 import { ProjectType, PropsFromSnapscrollSection } from '../../typescript'
 import ProjectLink from '../ProjectLink'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import Button from '../Button'
 import ProjectTile from '../ProjectTile'
 
@@ -15,23 +15,6 @@ type ProjectSectionQuery = {
   allGraphCmsProject: {
     nodes: ProjectType[]
   }
-}
-
-const getElementPosition = (element: HTMLElement) => {
-  return element.getBoundingClientRect()
-
-  /* return {
-    x:
-      element.offsetLeft +
-      (element.offsetParent
-        ? getElementPosition(element.offsetParent as HTMLElement).x - element.offsetParent.scrollLeft
-        : 0),
-    y:
-      element.offsetTop +
-      (element.offsetParent
-        ? getElementPosition(element.offsetParent as HTMLElement).y - element.offsetParent.scrollTop
-        : 0),
-  } */
 }
 
 function changeTileReducer({ active, positionMap }: { active: number; positionMap: number[] }, { type, payload }) {
@@ -110,12 +93,14 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
 
   const handleGoToProjects = (e) => {
     e.preventDefault()
+    stopAnimation()
 
     navigate(`projects`, {
       state: {
         positions: Object.fromEntries(
-          Object.entries(imageRefList.current).map(([key, value]) => [key, getElementPosition(value)])
+          Object.entries(imageRefList.current).map(([key, element]) => [key, element.getBoundingClientRect()])
         ),
+        active,
       },
     })
   }
@@ -125,46 +110,48 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
       <Section.Column>
         <Section.Title>My projects</Section.Title>
         <Section.Paragraph>See what I've been building for the past year</Section.Paragraph>
-        <ButtonWrapper>
+        <ButtonWrapper exit={{ y: '100%', opacity: 0 }}>
           <Button onClick={handleGoToProjects} as={Link} to="projects">
             View full list
           </Button>
         </ButtonWrapper>
       </Section.Column>
       <Section.Column>
-        <AnimatePresence>
-          <ImagesList
-            onFocusCapture={stopAnimation}
-            onBlur={startAnimation}
-            onMouseEnter={stopAnimation}
-            onMouseLeave={startAnimation}
-          >
-            {projects.map((project, i) => (
-              <ProjectLink
+        <ImagesList
+          onFocusCapture={stopAnimation}
+          onBlur={startAnimation}
+          onMouseEnter={stopAnimation}
+          onMouseLeave={startAnimation}
+        >
+          {projects.map((project, i) => (
+            <ProjectLink
+              active={i === active}
+              key={i}
+              index={positionMap[i]}
+              onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
+              inView={wholeView}
+              motionValue={motionValue}
+            >
+              <ProjectTile
+                project={project}
+                active={i === active}
+                ref={(element) => (imageRefList.current[project.name] = element)}
+              />
+            </ProjectLink>
+          ))}
+          <Indicator>
+            {projects.map((v, i) => (
+              <Dot
                 active={i === active}
                 key={i}
-                index={positionMap[i]}
-                onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
-                inView={wholeView}
-                motionValue={motionValue}
-              >
-                <ProjectTile project={project} ref={(element) => (imageRefList.current[project.name] = element)} />
-              </ProjectLink>
+                onClick={() => {
+                  startAnimation()
+                  dispatch({ type: 'set', payload: i })
+                }}
+              />
             ))}
-            <Indicator>
-              {projects.map((v, i) => (
-                <Dot
-                  active={i === active}
-                  key={i}
-                  onClick={() => {
-                    startAnimation()
-                    dispatch({ type: 'set', payload: i })
-                  }}
-                />
-              ))}
-            </Indicator>
-          </ImagesList>
-        </AnimatePresence>
+          </Indicator>
+        </ImagesList>
       </Section.Column>
     </Section>
   )
@@ -220,7 +207,7 @@ const Dot = styled.button<{ active: boolean }>`
   }
 `
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled(motion.div)`
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     margin: auto;
   }
