@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 type Size = {
   width?: string
   height?: string
-  rect?: DOMRect
 }
 
 const getStringifiedProperties = (element: HTMLElement) => ({
@@ -11,7 +10,6 @@ const getStringifiedProperties = (element: HTMLElement) => ({
   width: `${element.clientWidth}px`,
   top: `${element.clientTop}px`,
   left: `${element.clientLeft}px`,
-  rect: element.getBoundingClientRect(),
 })
 
 export default function useElementSize(initialSize: Size): [size: Size, ref: React.MutableRefObject<HTMLElement>] {

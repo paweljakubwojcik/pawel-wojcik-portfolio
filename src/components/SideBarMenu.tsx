@@ -4,7 +4,6 @@ import styled, { useTheme } from 'styled-components'
 
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import useScreenSize from '../hooks/useScreenSize'
-import useElementSize from '../hooks/useElementSize'
 import { Link } from 'gatsby'
 import { useLocation } from '@reach/router'
 import SocialLinks from './SocialLinks'
@@ -77,7 +76,6 @@ export default function SideBarMenu({
   clickCoordinates: { x = 100, y = 100 },
 }: sideBarMenuProps) {
   const { height, width } = useScreenSize()
-  const [{ rect: { width: containerWidth = 800 } = {} }, containerRef] = useElementSize({})
   const { breakpoints } = useTheme()
   const location = useLocation()
 
@@ -89,18 +87,13 @@ export default function SideBarMenu({
   // hamburger button x coordinate is calculated from left side of the screen
   // if we skip this step, menu gonna resize properly but will not move clipPath origin point
   // also - this use of useMemo, technicaly, is illegal as useMemo should only be used for optimalization, but it takes less amount of code than useRef + useEffect
-  const XFromRight = useMemo(() => width - x, [x])
+  const XFromLeft = useMemo(() => width - x, [x])
 
   return (
     <AnimatePresence>
       {open && (
         <MenuContainer
-          ref={containerRef as any}
-          custom={{
-            x: containerWidth - XFromRight,
-            y,
-            size: Math.sqrt(containerWidth * containerWidth + height * height),
-          }}
+          custom={{ x: width - XFromLeft, y, size: Math.sqrt(width * width + height * height) }}
           variants={AnimationState}
           initial="closed"
           animate="open"
@@ -133,7 +126,6 @@ const MenuContainer = styled(motion.div)`
   z-index: -1;
 
   width: 100vw;
-  max-width: 720px;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.palette.violet.main};
   color: ${(props) => props.theme.colors.font.main};
@@ -142,10 +134,6 @@ const MenuContainer = styled(motion.div)`
   font-weight: 600;
 
   box-shadow: ${(props) => props.theme.shadows.medium};
-
-  @media (max-width: 970px) {
-    max-width: unset;
-  }
 `
 
 const List = styled.ul`
