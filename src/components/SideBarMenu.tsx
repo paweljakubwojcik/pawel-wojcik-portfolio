@@ -81,7 +81,7 @@ export default function SideBarMenu({
 
   // closing menu when location changes
   useEffect(() => {
-    if (open) toggleOpen()
+    if (open) setTimeout(toggleOpen, 300)
   }, [location])
 
   // hamburger button x coordinate is calculated from left side of the screen

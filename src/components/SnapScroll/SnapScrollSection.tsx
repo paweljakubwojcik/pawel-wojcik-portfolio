@@ -32,7 +32,7 @@ export default function SnapScrollSection({
 
   const { setRef, visible: wholeView } = useIntersectionObserver(
     (entry) => {
-      if (!visible) {
+      if (!wholeView) {
         if (keyToHash(active) === hash) {
           navigate(keyToHash(id) || '/', { replace: true })
         }

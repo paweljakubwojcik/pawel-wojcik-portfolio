@@ -47,7 +47,11 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
 
   const [active, setActive] = useState<string>(hashToKey(location.hash))
 
-  console.log({ active, hash: location.hash })
+  console.log({ active, hash: location.hash, pathname: location.pathname })
+
+  useEffect(() => {
+    document.getElementById(active).scrollIntoView()
+  }, [])
 
   //reacting to changing hash
   useEffect(() => {
