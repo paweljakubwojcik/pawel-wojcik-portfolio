@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion, Variants } from 'framer-motion'
-import { graphql, Link, useStaticQuery } from 'gatsby'
+import { graphql, Link, useStaticQuery, navigate } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import React, { forwardRef, useRef } from 'react'
 import styled from 'styled-components'
@@ -39,14 +39,21 @@ const TitleVariants: Variants = {
 type ProjectTileProps = {
   project: ProjectType
   active?: boolean
+  setClicked?: () => void
   [key: string]: any
 }
 
 export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile(
-  { project: { images, name, skills, link, repository, brief }, active },
+  { project: { images, name, skills, link, repository, brief }, active, setClicked },
   forwardedRef
 ) {
   const image = useRef(images[0].gatsbyImageData)
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    if (setClicked) setClicked()
+    navigate(`${PATH}${name}`)
+  }
 
   return (
     <Tile ref={forwardedRef}>
@@ -69,7 +76,7 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
               <FontAwesomeIcon icon={faLink} />
             </IconButton>
           </div>
-          <Button as={Link} to={`${PATH}${name}`} style={{ margin: '0.3em' }}>
+          <Button as={Link} to={`${PATH}${name}`} onClick={handleClick} style={{ margin: '0.3em' }}>
             Read more
           </Button>
         </motion.div>

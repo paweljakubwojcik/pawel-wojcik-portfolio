@@ -61,9 +61,9 @@ export default function projects({
   return (
     <PageScrollWrapper>
       <Seo title={'Projects'} />
-      <TilesContainer>
+      <TilesContainer animate={{ transition: { staggerChildren: 1 } }} exit={{ transition: { staggerChildren: 1 } }}>
         {projects.map((project, i) => (
-          <Tile project={project} state={state} active={i === state?.active} key={project.name} />
+          <Tile project={project} state={state} active={i === state?.active} key={project.name} index={i} />
         ))}
       </TilesContainer>
     </PageScrollWrapper>
@@ -71,17 +71,17 @@ export default function projects({
 }
 
 const TileVariants: Variants = {
-  grid: {
+  grid: ({ index }) => ({
     x: 0,
     y: 0,
     scale: 1,
     fontSize: '1em',
     transition: {
-      delay: 0.1,
       type: 'spring',
       duration: 0.7,
+      delay: index * 0.05 + 0.1,
     },
-  },
+  }),
   initial: ({ initialPosition, currentPosition, containerWidth }) => {
     const scaleFactor = initialPosition.width / currentPosition.width
     const fontScaleFactor = containerWidth / currentPosition.width
@@ -95,10 +95,21 @@ const TileVariants: Variants = {
   },
 }
 
-const Tile = ({ project, state, active }: { project: ProjectType; state: State; active: boolean }) => {
+const Tile = ({
+  project,
+  state,
+  active,
+  index,
+}: {
+  project: ProjectType
+  state: State
+  active: boolean
+  index: number
+}) => {
   const tileRefPosition = useRef<HTMLDivElement>()
   const [currentPosition, setCurrentPosition] = useState<DOMRect>()
   const [clicked, setClicked] = useState(false)
+  const [navigatingTo, setNavigatingTo] = useState(false)
 
   useEffect(() => {
     if (tileRefPosition.current) setCurrentPosition(tileRefPosition.current.getBoundingClientRect())
@@ -123,16 +134,17 @@ const Tile = ({ project, state, active }: { project: ProjectType; state: State; 
       {currentPosition ? (
         <TileWrapper
           variants={TileVariants}
-          custom={{ initialPosition, currentPosition, containerWidth }}
+          custom={{ initialPosition, currentPosition, containerWidth, index }}
           initial={initialPosition ? ['initial', 'inactive'] : ['grid', 'inactive']}
           animate={['grid', isMobile || clicked ? 'active' : 'inactive']}
-          exit={'inactive'}
+          exit={navigatingTo ? {} : { opacity: 0, y: '60%', transition: { duration: 0.7 } }}
           whileHover={'active'}
           onClick={() => setClicked((v) => !v)}
         >
-          <ProjectTile project={project} />
+          <ProjectTile project={project} setClicked={() => setNavigatingTo(true)} />
         </TileWrapper>
       ) : (
+        /* placeholder */
         <ProjectTile project={project} style={{ opacity: 0 }} />
       )}
     </WrapperWrapper>
@@ -154,6 +166,8 @@ const TilesContainer = styled(motion.div)`
   grid-gap: 0.5em;
 
   width: 100%;
+
+  overflow: visible;
 
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_MOBILE}px) {
     grid-template-columns: 1fr;
