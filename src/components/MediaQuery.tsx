@@ -22,5 +22,5 @@ export default function MediaQuery({ children, query }: MediaQueryProps) {
     return () => (match.onchange = null)
   })
 
-  return matches && isBrowser && <>{children}</>
+  return matches ? <>{children}</> : null
 }

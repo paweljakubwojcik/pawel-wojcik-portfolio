@@ -1,6 +1,3 @@
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import { faLink } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion, Variants } from 'framer-motion'
 import { graphql, Link, useStaticQuery } from 'gatsby'
 import React from 'react'
@@ -9,7 +6,6 @@ import { useState } from 'react'
 import { useRef } from 'react'
 import styled from 'styled-components'
 import ProjectTile from '../components/ProjectTile'
-import Section from '../components/Section'
 import Seo from '../components/Seo'
 import { useTheme } from '../context/theme'
 import useScreenSize from '../hooks/useScreenSize'
@@ -29,36 +25,38 @@ type projectsPageProps = {
   location: {
     state: State
   }
+  data: { allGraphCmsProject: { nodes: ProjectType[] } }
 }
 
-export default function projects({ location: { state } }: projectsPageProps) {
-  const {
-    allGraphCmsProject: { nodes: projects },
-  } = useStaticQuery<{ allGraphCmsProject: { nodes: ProjectType[] } }>(graphql`
-    query AllProjects {
-      allGraphCmsProject {
-        nodes {
+export const query = graphql`
+  query AllProjects {
+    allGraphCmsProject {
+      nodes {
+        name
+        description
+        brief
+        images {
+          gatsbyImageData(width: 600, placeholder: BLURRED, aspectRatio: 1.77)
+        }
+        link
+        repository
+        skills {
           name
-          description
-          brief
-          images {
-            id
+          icon {
             url
-            gatsbyImageData(placeholder: BLURRED, aspectRatio: 1.77)
-          }
-          link
-          repository
-          skills {
-            name
-            icon {
-              url
-            }
           }
         }
       }
     }
-  `)
+  }
+`
 
+export default function projects({
+  location: { state },
+  data: {
+    allGraphCmsProject: { nodes: projects },
+  },
+}: projectsPageProps) {
   return (
     <>
       <Seo title={'Projects'} />
