@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useRef } from 'react'
 import styled from 'styled-components'
 import ProjectTile from '../components/ProjectTile'
+import PageScrollWrapper from '../components/PageScrollWrapper'
 import Seo from '../components/Seo'
 import { useTheme } from '../context/theme'
 import useScreenSize from '../hooks/useScreenSize'
@@ -58,14 +59,14 @@ export default function projects({
   },
 }: projectsPageProps) {
   return (
-    <>
+    <PageScrollWrapper>
       <Seo title={'Projects'} />
       <TilesContainer>
         {projects.map((project, i) => (
           <Tile project={project} state={state} active={i === state?.active} key={project.name} />
         ))}
       </TilesContainer>
-    </>
+    </PageScrollWrapper>
   )
 }
 
