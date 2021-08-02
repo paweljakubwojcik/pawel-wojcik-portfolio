@@ -45,35 +45,29 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
   const hashToKey = useCallback((hash: string) => (hash ? hash.replace('#', '') : keys[0]), [keys])
   const keyToHash = useCallback((key: string) => (key === keys[0] ? '' : `#${key}`), [keys])
 
-  const [active, setActive] = useState<string>(hashToKey(location.hash))
+  const [active, setActive] = useState<string>(keys[0])
 
   console.log({ active, hash: location.hash, pathname: location.pathname })
-
-  useEffect(() => {
-    document.getElementById(active).scrollIntoView()
-  }, [])
 
   //reacting to changing hash
   useEffect(() => {
     if (location.pathname !== '/') return
-    if (!location.hash) {
-      // handling #Home, and all hashes that aren`t in keys
-      document.getElementById(keys[0]).scrollIntoView()
-      return
-    }
+
     // when target hash doesn't exist on page
     if (!keys.includes(hashToKey(location.hash))) {
       navigate('/', { replace: true })
+      return
     }
+    document.getElementById(hashToKey(location.hash)).scrollIntoView()
   }, [location.hash])
 
   // handling changing active
-  useEffect(() => {
+/*    useEffect(() => {
     if (active !== hashToKey(location.hash)) {
       navigate(keyToHash(active) || '/', { replace: true })
     }
   }, [active])
-
+ */
   // handling scrolling with keys
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
