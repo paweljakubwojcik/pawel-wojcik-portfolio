@@ -10,10 +10,12 @@ import { useStaticQuery, graphql } from 'gatsby'
 import { useLocation } from '@reach/router'
 import Header from './Header'
 import GlobalStyles from './GlobalStyles'
-import ThemeProvider from '../context/theme'
+import ThemeProvider, { theme } from '../context/theme'
 import './resets.css'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
+import MouseFollower from './MouseFollower'
+import MediaQuery from './MediaQuery'
 
 type LayoutProps = {
   children: React.ReactNode
@@ -48,6 +50,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <ThemeProvider>
+      <MediaQuery query={`(min-width: ${theme.breakpoints.MIN_LAPTOP}px)`}>
+        <MouseFollower />
+      </MediaQuery>
       <Wrapper>
         <Container>
           <GlobalStyles />

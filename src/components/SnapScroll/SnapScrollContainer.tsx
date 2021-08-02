@@ -61,8 +61,14 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
     document.getElementById(hashToKey(location.hash)).scrollIntoView()
   }, [location.hash])
 
+  useEffect(() => {
+    wrapperRef.current.style.scrollBehavior = 'auto'
+    document.getElementById(hashToKey(location.hash)).scrollIntoView()
+    wrapperRef.current.style.scrollBehavior = 'smooth'
+  }, [])
+
   // handling changing active
-/*    useEffect(() => {
+  /*    useEffect(() => {
     if (active !== hashToKey(location.hash)) {
       navigate(keyToHash(active) || '/', { replace: true })
     }

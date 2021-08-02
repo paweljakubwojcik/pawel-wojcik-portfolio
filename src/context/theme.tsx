@@ -2,7 +2,7 @@ import React from 'react'
 import { useContext } from 'react'
 import { ThemeContext, ThemeProvider, DefaultTheme } from 'styled-components'
 import '../typescript'
-const theme: DefaultTheme = {
+export const theme: DefaultTheme = {
   shadows: {
     medium: ' rgba(0, 0, 0, 0.24) 0px 3px 8px;',
     hard: 'rgba(0,0,0,0.5) 0px 9px 7px -2px',
