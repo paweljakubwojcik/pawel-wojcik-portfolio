@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion, Variants } from 'framer-motion'
 import { graphql, Link, useStaticQuery, navigate } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
-import React, { forwardRef, useRef } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { ProjectType } from '../typescript'
 import getRandomElement from '../utils/getRandomElement'
@@ -13,6 +13,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 
 import { PATH } from '../templates/ProjectPage'
+import useElementSize from '../hooks/useElementSize'
 
 const ProjectIconsVariants: Variants = {
   active: {
@@ -43,11 +44,31 @@ type ProjectTileProps = {
   [key: string]: any
 }
 
+const FONTSIZE = {
+  smoll: '0.7em',
+  regular: '1em',
+}
+
 export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile(
   { project: { images, name, skills, link, repository, brief }, active, setClicked },
   forwardedRef
 ) {
-  const image = useRef(images[0].gatsbyImageData)
+  const image = useRef(getRandomElement(images).gatsbyImageData)
+
+  /* container query functionality TODO: extract it to new component */
+  const [{ rect }, elementSizeRef] = useElementSize({})
+  const [fontSize, setFontSize] = useState(FONTSIZE.regular)
+
+  useEffect(() => {
+    if (rect) {
+      if (rect.width < 360 && fontSize !== FONTSIZE.smoll) {
+        setFontSize(FONTSIZE.smoll)
+      }
+      if (rect.width > 360 && fontSize !== FONTSIZE.regular) {
+        setFontSize(FONTSIZE.regular)
+      }
+    }
+  }, [rect])
 
   const handleClick = (e) => {
     e.preventDefault()
@@ -61,7 +82,7 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
         <Image image={image.current} alt={name} />
       </BlurOverlay>
 
-      <NameOverlay>
+      <NameOverlay ref={elementSizeRef as any} style={{ fontSize }}>
         <motion.div variants={TitleVariants}>
           <div style={{ fontSize: '1.9em', margin: '0.2em', textAlign: 'center' }}>{name}</div>
           <div>{brief}</div>
@@ -119,9 +140,9 @@ const NameOverlay = styled.div`
   width: 100%;
   height: 100%;
 
-  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+  /*  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     font-size: 0.8em;
-  }
+  } */
 `
 
 const BlurOverlay = styled.div<{ blurred: boolean }>`
