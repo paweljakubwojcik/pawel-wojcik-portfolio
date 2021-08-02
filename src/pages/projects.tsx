@@ -10,6 +10,7 @@ import PageScrollWrapper from '../components/PageScrollWrapper'
 import Seo from '../components/Seo'
 import { useTheme } from '../context/theme'
 import useScreenSize from '../hooks/useScreenSize'
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
 import { ProjectType } from '../typescript'
 
 // on transition get all positions of images and store them in map/object where keys are names of projects
@@ -110,6 +111,19 @@ const Tile = ({
   const [currentPosition, setCurrentPosition] = useState<DOMRect>()
   const [clicked, setClicked] = useState(false)
   const [navigatingTo, setNavigatingTo] = useState(false)
+  const [opacity, setOpacity] = useState(1)
+  const { setRef } = useIntersectionObserver(
+    (entry) => {
+      setOpacity(entry.intersectionRatio)
+    },
+    {
+      threshold: new Array(20).fill(0).map((v, i) => i / 20),
+    }
+  )
+
+  useEffect(() => {
+    if (tileRefPosition.current) setRef(tileRefPosition.current)
+  }, [tileRefPosition.current])
 
   useEffect(() => {
     if (tileRefPosition.current) setCurrentPosition(tileRefPosition.current.getBoundingClientRect())
@@ -129,7 +143,7 @@ const Tile = ({
    *  and then from their positions we calculate proper animation
    */
   return (
-    <WrapperWrapper ref={tileRefPosition} style={{ zIndex: active ? 1 : 0 }}>
+    <WrapperWrapper ref={tileRefPosition} style={{ zIndex: active ? 1 : 0, opacity }}>
       {''}
       {currentPosition ? (
         <TileWrapper

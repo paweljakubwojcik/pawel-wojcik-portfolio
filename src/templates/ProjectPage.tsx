@@ -36,11 +36,6 @@ export default function ProjectPage({ data: { project, otherProjectPages } }: Pr
     <Wrapper>
       <Seo title={`${project.name}`} description={project.brief} />
       <SectionName>My projects</SectionName>
-      <BackgroundImage
-        image={project.images[0].gatsbyImageData}
-        alt={project.name}
-        style={{ height: backgroundImageHeight }}
-      />
 
       <Header ref={headerRef}>
         <h2>{project.name}</h2>
@@ -60,13 +55,11 @@ export default function ProjectPage({ data: { project, otherProjectPages } }: Pr
           </Buttons>
         </Description>
 
-        <MediaQuery query={`(min-width: ${0}px)`}>
-          <ImagesWrapper>
-            {project.images.slice(0, 3).map(({ gatsbyImageData }, i) => (
-              <ImageElement image={gatsbyImageData} alt={project.name} index={i} key={i} />
-            ))}
-          </ImagesWrapper>
-        </MediaQuery>
+        <ImagesWrapper>
+          {project.images.slice(0, 3).map(({ gatsbyImageData }, i) => (
+            <ImageElement image={gatsbyImageData} alt={project.name} index={i} key={i} />
+          ))}
+        </ImagesWrapper>
       </ContentWrapper>
 
       <SectionName>Other projects</SectionName>
