@@ -6,6 +6,15 @@ const isBrowser = typeof window !== 'undefined'
 export default function MouseFollower() {
   const followerRef = useRef<HTMLDivElement>()
 
+  const handleExit = () => {
+    console.log('exit')
+    followerRef.current.style.opacity = '0'
+  }
+  const handleEnter = () => {
+    console.log('enter')
+    followerRef.current.style.opacity = '0.4'
+  }
+
   const handleMove = (e: MouseEvent) => {
     const { x, y } = e
     followerRef.current.style.transform = `translate(${x}px, ${y}px)`
@@ -14,8 +23,16 @@ export default function MouseFollower() {
   useEffect(() => {
     if (isBrowser) {
       window.addEventListener('mousemove', handleMove)
+      document.body.addEventListener('mouseenter', handleEnter)
+      document.body.addEventListener('mouseleave', handleExit)
     }
-    return () => window.removeEventListener('mousemove', handleMove)
+    return () => {
+      if (isBrowser) {
+        window.removeEventListener('mousemove', handleMove)
+        document.body.removeEventListener('mouseenter', handleEnter)
+        document.body.removeEventListener('mouseleave', handleExit)
+      }
+    }
   }, [])
 
   return <Follower ref={followerRef}></Follower>
@@ -38,5 +55,5 @@ const Follower = styled.div`
   opacity: 0.4;
 
   transform: translate(-100%, -100%);
-  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
 `

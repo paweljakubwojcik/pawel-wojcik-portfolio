@@ -10,7 +10,8 @@ import ProjectLink from '../ProjectLink'
 import { AnimatePresence, motion } from 'framer-motion'
 import Button from '../Button'
 import ProjectTile from '../ProjectTile'
-import useElementSize from '../../hooks/useElementSize'
+
+import { navigateDirections } from '../../typescript'
 
 type ProjectSectionQuery = {
   allGraphCmsProject: {
@@ -78,7 +79,7 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
     clearInterval(animationInterval.current)
     animationInterval.current = setInterval(() => {
       dispatch({ type: 'increment', payload: null })
-    }, 3000)
+    }, 6000)
   }
 
   const stopAnimation = () => {
@@ -108,6 +109,13 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
     })
   }
 
+  const navigateTo =
+    location.pathname.search('/projects*/') === 0
+      ? navigateDirections.SINGLE_PROJECT
+      : location.pathname === '/projects'
+      ? navigateDirections.PROJECTS
+      : navigateDirections.UNKNOWN
+
   return (
     <Section visible={visible} progress={motionValue} {...rest}>
       <Section.Column>
@@ -132,8 +140,16 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
               active={i === active}
               key={i}
               index={positionMap[i]}
-              onClick={i !== active ? () => dispatch({ type: 'set', payload: i }) : null}
+              onClick={
+                i !== active
+                  ? () => {
+                      dispatch({ type: 'set', payload: i })
+                      startAnimation()
+                    }
+                  : null
+              }
               inView={wholeView}
+              navigateTo={navigateTo}
               motionValue={motionValue}
             >
               <ProjectTile

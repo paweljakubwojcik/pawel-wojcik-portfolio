@@ -180,6 +180,7 @@ const TilesContainer = styled(motion.div)`
   grid-gap: 0.5em;
 
   width: 100%;
+  padding: 0 var(--content-global-padding);
 
   overflow: visible;
 

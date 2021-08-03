@@ -4,7 +4,6 @@ import ReactMarkdown from 'react-markdown'
 import styled, { useTheme } from 'styled-components'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import ParallaxGatsbyImage from '../components/ParallaxGatsbyImage'
-import MediaQuery from '../components/MediaQuery'
 import useElementSize from '../hooks/useElementSize'
 import Button from '../components/Button'
 
@@ -12,6 +11,9 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 import { ProjectType } from '../typescript'
 import Seo from '../components/Seo'
+import MouseActiveImages from '../components/MouseActiveImages'
+import PageScrollWrapper from '../components/PageScrollWrapper'
+import MediaQuery from '../components/MediaQuery'
 
 export const PATH = '/projects/'
 
@@ -27,24 +29,35 @@ type ProjectPageProps = {
       }[]
     }
   }
+  location: {
+    state: {
+      position: DOMRect
+    }
+  }
 }
 
-export default function ProjectPage({ data: { project, otherProjectPages } }: ProjectPageProps) {
-  const [{ height: backgroundImageHeight }, headerRef] = useElementSize({ height: '8em' })
+export default function ProjectPage({ data: { project, otherProjectPages }, location: { state } }: ProjectPageProps) {
+  console.log(state?.position)
+  const { breakpoints } = useTheme()
 
   return (
-    <Wrapper>
-      <Seo title={`${project.name}`} description={project.brief} />
-      <SectionName>My projects</SectionName>
-
-      <Header ref={headerRef}>
-        <h2>{project.name}</h2>
-        <p>{project.brief}</p>
-      </Header>
-
-      <ContentWrapper>
-        <Description>
-          <ReactMarkdown>{project.description}</ReactMarkdown>
+    <PageScrollWrapper>
+      <Wrapper>
+        <Seo title={`${project.name}`} description={project.brief} />
+        {/* <SectionName>My projects</SectionName> */}
+        <div>
+          <Header>
+            <h2>{project.name}</h2>
+            <p>{project.brief}</p>
+          </Header>
+          <MediaQuery query={`(max-width:${breakpoints.MAX_TABLET}px)`}>
+            <MouseActiveImages images={project.images} />
+          </MediaQuery>
+          <Skills>
+            {project.skills.map((skill) => (
+              <Badge>{skill.name}</Badge>
+            ))}
+          </Skills>
           <Buttons>
             <Button icon={faGithub} as={'a'} href={project.repository} target="_blank">
               Code
@@ -53,42 +66,48 @@ export default function ProjectPage({ data: { project, otherProjectPages } }: Pr
               Live Demo
             </Button>
           </Buttons>
-        </Description>
+          <Description>
+            <ReactMarkdown>{project.description}</ReactMarkdown>
+          </Description>
+        </div>
+        <div>
+          <MediaQuery query={`(min-width:${breakpoints.MIN_LAPTOP}px)`}>
+            <MouseActiveImages images={project.images} />
+          </MediaQuery>
+        </div>
 
-        <ImagesWrapper>
-          {project.images.slice(0, 3).map(({ gatsbyImageData }, i) => (
-            <ImageElement image={gatsbyImageData} alt={project.name} index={i} key={i} />
+        {/* <SectionName>Other projects</SectionName>
+        <section style={{ display: 'felx', margin: '1em 0' }}>
+          {otherProjectPages.nodes.map((node, i) => (
+            <Link to={PATH + node.name} key={i} style={{ margin: '0.4em', display: 'block' }}>
+              {node.name}
+            </Link>
           ))}
-        </ImagesWrapper>
-      </ContentWrapper>
-
-      <SectionName>Other projects</SectionName>
-      <section style={{ display: 'felx', margin: '1em 0' }}>
-        {otherProjectPages.nodes.map((node, i) => (
-          <Link to={PATH + node.name} key={i} style={{ margin: '0.4em', display: 'block' }}>
-            {node.name}
-          </Link>
-        ))}
-      </section>
-    </Wrapper>
+        </section> */}
+      </Wrapper>
+    </PageScrollWrapper>
   )
 }
 
 const Wrapper = styled.div`
   padding: 1em 4em;
   max-width: 100vw;
+  min-height: calc(100vh - 100px);
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(auto-fit, 1fr);
+
+  align-content: center;
+  justify-content: center;
+
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     padding: 1em 2em;
+    grid-template-columns: repeat(1, 1fr);
   }
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_MOBILE}px) {
-    padding: 1em 0em;
+    padding: 1em var(--content-global-padding);
   }
-`
-const BackgroundImage = styled(ParallaxGatsbyImage)`
-  width: 100%;
-  height: 8em;
-  position: absolute;
-  left: 0;
 `
 
 const Header = styled.header`
@@ -99,52 +118,19 @@ const Header = styled.header`
   margin-bottom: 1em;
 `
 
-const ContentWrapper = styled.section`
-  display: flex;
-  min-height: 30vh;
-
-  margin-bottom: 3em;
-
-  @media (max-width: ${1000}px) {
-    flex-direction: column-reverse;
-  }
+const GridItem = styled.div<{ name: string }>`
+  grid-area: ${(props) => props.name};
 `
 
 const Description = styled.div`
   max-width: 600px;
   width: 100%;
   font-size: 0.9em;
-`
+  text-align: justify;
 
-const ImageTranslations = [
-  { x: '25%', y: '-30%' },
-  { x: '-20%', y: '0%' },
-  { x: '10%', y: '30%' },
-]
-
-const ImagesWrapper = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  height: 300px;
-  padding-left: 100px;
-  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
-    padding-left: 0;
+  li {
+    list-style-type: upper-roman;
   }
-  @media (max-width: ${(props) => props.theme.breakpoints.MAX_MOBILE}px) {
-    height: 49vw;
-  }
-`
-
-const ImageElement = styled(GatsbyImage)<{ index: number }>`
-  width: 60vw;
-  max-width: 400px;
-  border-radius: 0.5em;
-  position: absolute;
-  transform: translate(${(props) => ImageTranslations[props.index].x}, ${(props) => ImageTranslations[props.index].y});
-  box-shadow: ${(props) => props.theme.shadows.hard};
 `
 
 const SectionName = styled.div`
@@ -165,9 +151,27 @@ const SectionName = styled.div`
 
 const Buttons = styled.div`
   display: flex;
+  margin: 1em 0;
   & > * {
     margin-right: 1em;
   }
+`
+
+const Skills = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  font-size: 0.8em;
+`
+
+const Badge = styled.div`
+  width: max-content;
+  padding: 0.5em;
+  margin: 0.3em;
+  border-radius: 0.75em;
+
+  background-color: ${(props) => props.theme.colors.palette.pink.dark};
 `
 
 export const query = graphql`

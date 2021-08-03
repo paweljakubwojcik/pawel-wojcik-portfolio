@@ -57,39 +57,45 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
 
   /* container query functionality TODO: extract it to new component */
   const [{ rect }, elementSizeRef] = useElementSize({})
-  const [fontSize, setFontSize] = useState(FONTSIZE.regular)
+  const [fontSize, setFontSize] = useState('')
 
   useEffect(() => {
-    if (rect) {
+    /* if (rect) {
       if (rect.width < 360 && fontSize !== FONTSIZE.smoll) {
         setFontSize(FONTSIZE.smoll)
       }
       if (rect.width > 360 && fontSize !== FONTSIZE.regular) {
         setFontSize(FONTSIZE.regular)
       }
-    }
+    } */
   }, [rect])
+
+  const tileRef = useRef<HTMLElement>()
 
   const handleClick = (e) => {
     e.preventDefault()
     if (setClicked) setClicked()
-    navigate(`${PATH}${name}`)
+    navigate(`${PATH}${name}`, {
+      state: {
+        position: tileRef.current.getBoundingClientRect(),
+      },
+    })
   }
 
   return (
     <Tile ref={forwardedRef}>
-      <BlurOverlay blurred={active}>
+      <BlurOverlay blurred={active} ref={tileRef as any}>
         <Image image={image.current} alt={name} />
       </BlurOverlay>
 
-      <NameOverlay ref={elementSizeRef as any} style={{ fontSize }}>
+      <NameOverlay ref={elementSizeRef as any}>
         <motion.div variants={TitleVariants}>
           <div style={{ fontSize: '1.9em', margin: '0.2em', textAlign: 'center' }}>{name}</div>
           <div>{brief}</div>
         </motion.div>
 
         <motion.div variants={ProjectIconsVariants}>
-          <div style={{ display: 'flex', fontSize: '1.5em' }}>
+          <div style={{ display: 'flex', fontSize: '1.7em' }}>
             <IconButton as={'a'} href={repository}>
               <FontAwesomeIcon icon={faGithub} />
             </IconButton>
@@ -97,7 +103,7 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
               <FontAwesomeIcon icon={faLink} />
             </IconButton>
           </div>
-          <Button as={Link} to={`${PATH}${name}`} onClick={handleClick} style={{ margin: '0.3em' }}>
+          <Button as={Link} to={`${PATH}${name}`} onClick={handleClick} style={{ margin: '0.3em', fontSize: '1.2em' }}>
             Read more
           </Button>
         </motion.div>
@@ -140,9 +146,7 @@ const NameOverlay = styled.div`
   width: 100%;
   height: 100%;
 
-  /*  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
-    font-size: 0.8em;
-  } */
+  font-size: 0.7em;
 `
 
 const BlurOverlay = styled.div<{ blurred: boolean }>`

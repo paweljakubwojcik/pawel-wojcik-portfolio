@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 
 import styled from 'styled-components'
-
+import { navigateDirections } from '../typescript'
 import { motion, MotionValue, useMotionTemplate, useTransform, Variants } from 'framer-motion'
 import { ReactBaseProps } from 'react-markdown/src/ast-to-react'
 
@@ -29,20 +29,26 @@ const POSITIONS = [
 ]
 
 const ProjectVariants: Variants = {
-  active: () => ({
+  active: ({ duration }) => ({
     x: '0%',
     y: '0%',
     scale: 1,
     cursor: 'default',
     transition: {
       delayChildren: 0.3,
+      duration,
+      type: 'spring',
     },
   }),
-  inactive: ({ index }) => ({
+  inactive: ({ index, duration }) => ({
     x: POSITIONS[index].x + '%',
     y: POSITIONS[index].y + '%',
     scale: POSITIONS[index].scale,
     cursor: 'pointer',
+    transition: {
+      duration,
+      type: 'spring',
+    },
   }),
 }
 
@@ -51,10 +57,11 @@ type PojectLinkProps = {
   index: number
   inView?: boolean
   motionValue: MotionValue
+  navigateTo: navigateDirections
 } & ReactBaseProps
 
 export default forwardRef<HTMLDivElement, PojectLinkProps>(function ProjectLink(
-  { active = false, index, inView, motionValue, children, ...rest },
+  { active = false, index, inView, navigateTo, motionValue, children, ...rest },
   ref
 ) {
   /**
@@ -78,14 +85,15 @@ export default forwardRef<HTMLDivElement, PojectLinkProps>(function ProjectLink(
   const transformScale = useTransform(motionValue, [0, 0.5, 1], [finalScale, finalScale, 1])
   const transform = useMotionTemplate`translate(${transformValueX}, ${transformValueY}) scale(${transformScale})`
 
+  const foldUp = navigateTo === navigateDirections.SINGLE_PROJECT
+
   return (
     <ImageWrapper
       variants={ProjectVariants}
       animate={active ? 'active' : 'inactive'}
       initial={'inactive'}
-      exit={'inactive'}
-      custom={{ index }}
-      transition={{ duration: 0.6, bounce: 0.4, type: 'spring' }}
+      exit={foldUp ? 'active' : 'inactive'}
+      custom={{ index, duration: foldUp ? 1 : 0.4 }}
       active={active}
       {...rest}
     >
