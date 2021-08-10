@@ -1,6 +1,6 @@
-
 import { motion, Variants } from 'framer-motion'
 import { Link, navigate } from 'gatsby'
+import { useLocation } from '@reach/router'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -48,6 +48,7 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
   forwardedRef
 ) {
   const image = useRef(getRandomElement(images).gatsbyImageData)
+  const location = useLocation()
 
   const tileRef = useRef<HTMLElement>()
 

@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
+import React, { useEffect, useReducer, useRef } from 'react'
 
 import styled from 'styled-components'
 import { graphql, Link, navigate, useStaticQuery } from 'gatsby'
+import { useLocation } from '@reach/router'
 
 import Section from '../Section'
 
 import { ProjectType, PropsFromSnapscrollSection } from '../../typescript'
 import ProjectLink from '../ProjectLink'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Button from '../Button'
 import ProjectTile from '../ProjectTile'
 
@@ -108,6 +109,8 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
       },
     })
   }
+
+  const location = useLocation()
 
   const navigateTo =
     location.pathname.search('/projects*/') === 0
