@@ -90,7 +90,7 @@ export default function ProjectPage({
             <ReactMarkdown>{project.description}</ReactMarkdown>
           </Description>
         </WrapperColumn>
-        <WrapperColumn style={{ position: 'sticky', bottom: 0 }}>
+        <WrapperColumn style={{ position: 'sticky', bottom: 0, zIndex: -1 }}>
           <MediaQuery query={`(min-width:${breakpoints.MIN_LAPTOP}px)`}>
             <MouseActiveImages images={project.images} />
           </MediaQuery>
