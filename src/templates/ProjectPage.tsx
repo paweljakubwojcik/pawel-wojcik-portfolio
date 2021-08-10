@@ -45,7 +45,7 @@ export default function ProjectPage({ data: { project, otherProjectPages }, loca
       <Wrapper>
         <Seo title={`${project.name}`} description={project.brief} />
         {/* <SectionName>My projects</SectionName> */}
-        <div>
+        <WrapperColumn>
           <Header>
             <h2>{project.name}</h2>
             <p>{project.brief}</p>
@@ -53,11 +53,7 @@ export default function ProjectPage({ data: { project, otherProjectPages }, loca
           <MediaQuery query={`(max-width:${breakpoints.MAX_TABLET}px)`}>
             <MouseActiveImages images={project.images} />
           </MediaQuery>
-          <Skills>
-            {project.skills.map((skill) => (
-              <Badge>{skill.name}</Badge>
-            ))}
-          </Skills>
+
           <Buttons>
             <Button icon={faGithub} as={'a'} href={project.repository} target="_blank">
               Code
@@ -66,15 +62,20 @@ export default function ProjectPage({ data: { project, otherProjectPages }, loca
               Live Demo
             </Button>
           </Buttons>
+          <Skills>
+            {project.skills.map((skill) => (
+              <Badge key={skill.name}>{skill.name}</Badge>
+            ))}
+          </Skills>
           <Description>
             <ReactMarkdown>{project.description}</ReactMarkdown>
           </Description>
-        </div>
-        <div>
+        </WrapperColumn>
+        <WrapperColumn>
           <MediaQuery query={`(min-width:${breakpoints.MIN_LAPTOP}px)`}>
             <MouseActiveImages images={project.images} />
           </MediaQuery>
-        </div>
+        </WrapperColumn>
 
         {/* <SectionName>Other projects</SectionName>
         <section style={{ display: 'felx', margin: '1em 0' }}>
@@ -84,6 +85,7 @@ export default function ProjectPage({ data: { project, otherProjectPages }, loca
             </Link>
           ))}
         </section> */}
+        <Link to={'/projects'}>Go back</Link>
       </Wrapper>
     </PageScrollWrapper>
   )
@@ -96,9 +98,8 @@ const Wrapper = styled.div`
 
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(auto-fit, 1fr);
+  grid-template-rows: 1fr;
 
-  align-content: center;
   justify-content: center;
 
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
@@ -110,16 +111,18 @@ const Wrapper = styled.div`
   }
 `
 
+const WrapperColumn = styled.div`
+  position: relative;
+  height: fit-content;
+  align-self: center;
+`
+
 const Header = styled.header`
   width: 100%;
   max-width: 700px;
   padding-top: 1.4em;
   padding-bottom: 0.5em;
   margin-bottom: 1em;
-`
-
-const GridItem = styled.div<{ name: string }>`
-  grid-area: ${(props) => props.name};
 `
 
 const Description = styled.div`
@@ -130,6 +133,10 @@ const Description = styled.div`
 
   li {
     list-style-type: upper-roman;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+    max-width: unset;
   }
 `
 
@@ -155,6 +162,9 @@ const Buttons = styled.div`
   & > * {
     margin-right: 1em;
   }
+  @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
+    justify-content: center;
+  }
 `
 
 const Skills = styled.div`
@@ -163,12 +173,14 @@ const Skills = styled.div`
   align-items: flex-start;
 
   font-size: 0.8em;
+  margin: 0.5em -0.3em;
 `
 
 const Badge = styled.div`
   width: max-content;
   padding: 0.5em;
   margin: 0.3em;
+
   border-radius: 0.75em;
 
   background-color: ${(props) => props.theme.colors.palette.pink.dark};

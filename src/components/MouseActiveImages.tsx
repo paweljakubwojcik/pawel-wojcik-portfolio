@@ -16,7 +16,7 @@ type MouseActiveImagesProps = {
   images: Array<{ gatsbyImageData: IGatsbyImageData }>
 }
 
-export default function MouseActiveImages({ images }: MouseActiveImagesProps) {
+export default function MouseActiveImages({ images, ...rest }: MouseActiveImagesProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   // gets invoked only in browser, not in SSR
@@ -37,7 +37,7 @@ export default function MouseActiveImages({ images }: MouseActiveImagesProps) {
   }))
 
   return (
-    <Wrapper>
+    <Wrapper {...rest}>
       {images.slice(0, 3).map(({ gatsbyImageData }, i: number) => (
         <ImageWrapper index={i} key={i} animate={{ ...imageTranslations[i] }} initial={{ x: 0, y: 0 }}>
           <ImageElement image={gatsbyImageData} alt={`image ${i}`} />

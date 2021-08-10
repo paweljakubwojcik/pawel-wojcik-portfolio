@@ -13,7 +13,6 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 
 import { PATH } from '../templates/ProjectPage'
-import useElementSize from '../hooks/useElementSize'
 
 const ProjectIconsVariants: Variants = {
   active: {
@@ -50,25 +49,10 @@ const FONTSIZE = {
 }
 
 export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile(
-  { project: { images, name, skills, link, repository, brief }, active, setClicked },
+  { project: { images, name, skills, link, repository, brief }, active, setClicked, ...props },
   forwardedRef
 ) {
   const image = useRef(getRandomElement(images).gatsbyImageData)
-
-  /* container query functionality TODO: extract it to new component */
-  const [{ rect }, elementSizeRef] = useElementSize({})
-  const [fontSize, setFontSize] = useState('')
-
-  useEffect(() => {
-    /* if (rect) {
-      if (rect.width < 360 && fontSize !== FONTSIZE.smoll) {
-        setFontSize(FONTSIZE.smoll)
-      }
-      if (rect.width > 360 && fontSize !== FONTSIZE.regular) {
-        setFontSize(FONTSIZE.regular)
-      }
-    } */
-  }, [rect])
 
   const tileRef = useRef<HTMLElement>()
 
@@ -83,12 +67,12 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
   }
 
   return (
-    <Tile ref={forwardedRef}>
+    <Tile ref={forwardedRef} {...props}>
       <BlurOverlay blurred={active} ref={tileRef as any}>
         <Image image={image.current} alt={name} />
       </BlurOverlay>
 
-      <NameOverlay ref={elementSizeRef as any}>
+      <NameOverlay>
         <motion.div variants={TitleVariants}>
           <div style={{ fontSize: '1.9em', margin: '0.2em', textAlign: 'center' }}>{name}</div>
           <div>{brief}</div>
@@ -118,7 +102,8 @@ const Tile = styled(motion.div)`
   overflow: hidden;
   box-shadow: ${(props) => props.theme.shadows.hard};
   border: 2px solid transparent;
-  &:hover {
+  &:hover,
+  &:focus-within {
     border: 2px solid ${(props) => props.theme.colors.palette.violet.light};
   }
   transition: border-color 1s;

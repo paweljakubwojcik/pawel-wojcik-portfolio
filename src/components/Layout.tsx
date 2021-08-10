@@ -62,9 +62,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {children}
             </motion.main>
           </AnimatePresence>
-          <Footer>
-            © {new Date().getFullYear()}, Built with <a href="https://www.gatsbyjs.com">Gatsby</a>
-          </Footer>
         </Container>
       </Wrapper>
     </ThemeProvider>
@@ -79,14 +76,6 @@ const Wrapper = styled.div`
   max-width: 2000px;
   margin: auto;
   position: relative;
-`
-
-const Footer = styled.footer`
-  display: flex;
-  z-index: 1;
-  position: fixed;
-  bottom: 0;
-  font-size: small;
 `
 
 export default Layout
