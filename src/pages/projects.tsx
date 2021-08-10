@@ -1,5 +1,5 @@
 import { motion, Variants } from 'framer-motion'
-import { graphql, Link, useStaticQuery } from 'gatsby'
+import { graphql, Link, PageProps, useStaticQuery } from 'gatsby'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -11,23 +11,20 @@ import Seo from '../components/Seo'
 import { useTheme } from '../context/theme'
 import useScreenSize from '../hooks/useScreenSize'
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
-import { ProjectType } from '../typescript'
+import { ProjectType, StandardLocationState } from '../typescript'
 
 // on transition get all positions of images and store them in map/object where keys are names of projects
 
-type State = {
-  positions: {
+type LocationState = {
+  positions?: {
     [key: string]: DOMRect
   }
-  active: number
-  containerWidth: number
-}
+  active?: number
+  containerWidth?: number
+} & StandardLocationState
 
-type projectsPageProps = {
-  location: {
-    state: State
-  }
-  data: { allGraphCmsProject: { nodes: ProjectType[] } }
+type DataType = {
+  allGraphCmsProject: { nodes: ProjectType[] }
 }
 
 export const query = graphql`
@@ -58,7 +55,7 @@ export default function projects({
   data: {
     allGraphCmsProject: { nodes: projects },
   },
-}: projectsPageProps) {
+}: PageProps<DataType, {}, LocationState>) {
   return (
     <PageScrollWrapper>
       <Seo title={'Projects'} />
@@ -77,6 +74,7 @@ const TileVariants: Variants = {
     y: 0,
     scale: 1,
     fontSize: '1em',
+    opacity: 1,
     transition: {
       type: 'spring',
       duration: 0.7,
@@ -94,6 +92,16 @@ const TileVariants: Variants = {
       fontSize: `${1 / fontScaleFactor}em`,
     }
   },
+  gridInitial: ({ index }) => ({
+    x: 0,
+    y: 100,
+    opacity: 0,
+    fontSize: '1em',
+    transition: {
+      duration: 0.7,
+      delay: index * 0.05 + 0.1,
+    },
+  }),
 }
 
 const Tile = ({
@@ -103,7 +111,7 @@ const Tile = ({
   index,
 }: {
   project: ProjectType
-  state: State
+  state: LocationState
   active: boolean
   index: number
 }) => {
@@ -129,8 +137,8 @@ const Tile = ({
     if (tileRefPosition.current) setCurrentPosition(tileRefPosition.current.getBoundingClientRect())
   }, [tileRefPosition.current])
 
-  const initialPosition = state ? state.positions[project.name] : undefined
-  const containerWidth = state ? state.containerWidth : 0
+  const initialPosition = state?.positions ? state.positions[project.name] : undefined
+  const containerWidth = state?.containerWidth ? state.containerWidth : 0
 
   const { width } = useScreenSize()
   const { breakpoints } = useTheme()
@@ -149,13 +157,17 @@ const Tile = ({
         <TileWrapper
           variants={TileVariants}
           custom={{ initialPosition, currentPosition, containerWidth, index }}
-          initial={initialPosition ? ['initial', 'inactive'] : ['grid', 'inactive']}
+          initial={initialPosition ? ['initial', 'inactive'] : ['gridInitial', 'inactive']}
           animate={['grid', isMobile || clicked ? 'active' : 'inactive']}
           exit={navigatingTo ? {} : { opacity: 0, y: '60%', transition: { duration: 0.7 } }}
           whileHover={'active'}
           onClick={() => setClicked((v) => !v)}
         >
-          <ProjectTile project={project} setClicked={() => setNavigatingTo(true)} />
+          <ProjectTile
+            project={project}
+            setClicked={() => setNavigatingTo(true)}
+            onFocusCapture={() => setClicked(true)}
+          />
         </TileWrapper>
       ) : (
         /* placeholder */

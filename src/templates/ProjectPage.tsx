@@ -3,50 +3,69 @@ import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import styled, { useTheme } from 'styled-components'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
-import ParallaxGatsbyImage from '../components/ParallaxGatsbyImage'
-import useElementSize from '../hooks/useElementSize'
+import { PageProps } from 'gatsby'
 import Button from '../components/Button'
 
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
-import { ProjectType } from '../typescript'
+import { ProjectType, StandardLocationState } from '../typescript'
 import Seo from '../components/Seo'
 import MouseActiveImages from '../components/MouseActiveImages'
 import PageScrollWrapper from '../components/PageScrollWrapper'
 import MediaQuery from '../components/MediaQuery'
+import { motion, Variants } from 'framer-motion'
 
 export const PATH = '/projects/'
 
-type ProjectPageProps = {
-  data: {
-    project: ProjectType
-    otherProjectPages: {
-      nodes: {
-        name: string
-        images: {
-          gatsbyImageData: IGatsbyImageData
-        }[]
+type DataType = {
+  project: ProjectType
+  otherProjectPages: {
+    nodes: {
+      name: string
+      images: {
+        gatsbyImageData: IGatsbyImageData
       }[]
-    }
-  }
-  location: {
-    state: {
-      position: DOMRect
-    }
+    }[]
   }
 }
 
-export default function ProjectPage({ data: { project, otherProjectPages }, location: { state } }: ProjectPageProps) {
-  console.log(state?.position)
+type LocationState = {
+  position: DOMRect
+} & StandardLocationState
+
+const StandardVariants: Variants = {
+  animate: {
+    y: '0%',
+    opacity: 1,
+    transition: {
+      duration: 0.8,
+    },
+  },
+  exit: {
+    y: '100%',
+    opacity: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+  initial: {
+    y: '100%',
+    opacity: 0,
+  },
+}
+
+export default function ProjectPage({
+  data: { project, otherProjectPages },
+  location: { state },
+}: PageProps<DataType, {}, LocationState>) {
   const { breakpoints } = useTheme()
 
   return (
     <PageScrollWrapper>
-      <Wrapper>
+      <Wrapper initial="initial" animate="animate" exit="exit" transition={{ staggerChildren: 0.3 }}>
         <Seo title={`${project.name}`} description={project.brief} />
-        {/* <SectionName>My projects</SectionName> */}
         <WrapperColumn>
-          <Header>
+          <Header variants={StandardVariants}>
             <h2>{project.name}</h2>
             <p>{project.brief}</p>
           </Header>
@@ -54,7 +73,7 @@ export default function ProjectPage({ data: { project, otherProjectPages }, loca
             <MouseActiveImages images={project.images} />
           </MediaQuery>
 
-          <Buttons>
+          <Buttons variants={StandardVariants}>
             <Button icon={faGithub} as={'a'} href={project.repository} target="_blank">
               Code
             </Button>
@@ -62,36 +81,36 @@ export default function ProjectPage({ data: { project, otherProjectPages }, loca
               Live Demo
             </Button>
           </Buttons>
-          <Skills>
+          <Skills variants={StandardVariants}>
             {project.skills.map((skill) => (
               <Badge key={skill.name}>{skill.name}</Badge>
             ))}
           </Skills>
-          <Description>
+          <Description variants={StandardVariants}>
             <ReactMarkdown>{project.description}</ReactMarkdown>
           </Description>
         </WrapperColumn>
-        <WrapperColumn>
+        <WrapperColumn style={{ position: 'sticky', bottom: 0 }}>
           <MediaQuery query={`(min-width:${breakpoints.MIN_LAPTOP}px)`}>
             <MouseActiveImages images={project.images} />
           </MediaQuery>
         </WrapperColumn>
 
         {/* <SectionName>Other projects</SectionName>
-        <section style={{ display: 'felx', margin: '1em 0' }}>
+        <section style={{ display: '', margin: '1em 0' }}>
           {otherProjectPages.nodes.map((node, i) => (
             <Link to={PATH + node.name} key={i} style={{ margin: '0.4em', display: 'block' }}>
               {node.name}
             </Link>
           ))}
         </section> */}
-        <Link to={'/projects'}>Go back</Link>
+        {state?.prevLocation ? <Link to={state.prevLocation}>Go back</Link> : <Link to={'/'}>Go to home page</Link>}
       </Wrapper>
     </PageScrollWrapper>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   padding: 1em 4em;
   max-width: 100vw;
   min-height: calc(100vh - 100px);
@@ -117,7 +136,7 @@ const WrapperColumn = styled.div`
   align-self: center;
 `
 
-const Header = styled.header`
+const Header = styled(motion.header)`
   width: 100%;
   max-width: 700px;
   padding-top: 1.4em;
@@ -125,7 +144,7 @@ const Header = styled.header`
   margin-bottom: 1em;
 `
 
-const Description = styled.div`
+const Description = styled(motion.div)`
   max-width: 600px;
   width: 100%;
   font-size: 0.9em;
@@ -156,7 +175,7 @@ const SectionName = styled.div`
   }
 `
 
-const Buttons = styled.div`
+const Buttons = styled(motion.div)`
   display: flex;
   margin: 1em 0;
   & > * {
@@ -167,7 +186,7 @@ const Buttons = styled.div`
   }
 `
 
-const Skills = styled.div`
+const Skills = styled(motion.div)`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;

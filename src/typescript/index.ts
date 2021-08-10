@@ -29,6 +29,10 @@ export type ProjectType = {
   }[]
 }
 
+export type StandardLocationState = {
+  prevLocation: string
+}
+
 export type PropsFromSnapscrollSection = {
   id: string
   visible?: boolean

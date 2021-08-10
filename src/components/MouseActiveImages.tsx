@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -14,6 +14,25 @@ const translations = [
 
 type MouseActiveImagesProps = {
   images: Array<{ gatsbyImageData: IGatsbyImageData }>
+}
+
+const ImageVariant: Variants = {
+  animate: ({ translation }) => ({
+    ...translation,
+  }),
+  initial: { x: 0, y: 0 },
+  exit: { x: 0, y: 0 },
+}
+
+const WrapperVariants: Variants = {
+  exit: {
+    y: '50%',
+    opacity: 0,
+    transition: {
+      duration: 0.4,
+      delay: 0.4,
+    },
+  },
 }
 
 export default function MouseActiveImages({ images, ...rest }: MouseActiveImagesProps) {
@@ -36,10 +55,20 @@ export default function MouseActiveImages({ images, ...rest }: MouseActiveImages
     y: `${translation.y + translation.z * mousePosition.y}%`,
   }))
 
+  console.log(imageTranslations)
+
   return (
-    <Wrapper {...rest}>
+    <Wrapper variants={WrapperVariants} animate={'animate'} initial="initial" exit="exit" {...rest}>
       {images.slice(0, 3).map(({ gatsbyImageData }, i: number) => (
-        <ImageWrapper index={i} key={i} animate={{ ...imageTranslations[i] }} initial={{ x: 0, y: 0 }}>
+        <ImageWrapper
+          index={i}
+          key={i}
+          animate={'animate'}
+          initial="initial"
+          exit="exit"
+          variants={ImageVariant}
+          custom={{ translation: { ...imageTranslations[i] } }}
+        >
           <ImageElement image={gatsbyImageData} alt={`image ${i}`} />
         </ImageWrapper>
       ))}
@@ -47,7 +76,7 @@ export default function MouseActiveImages({ images, ...rest }: MouseActiveImages
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   position: relative;
   z-index: -1;
   display: flex;

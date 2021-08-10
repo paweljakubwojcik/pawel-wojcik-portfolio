@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion, Variants } from 'framer-motion'
-import { graphql, Link, useStaticQuery, navigate } from 'gatsby'
+import { Link, navigate } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -43,11 +43,6 @@ type ProjectTileProps = {
   [key: string]: any
 }
 
-const FONTSIZE = {
-  smoll: '0.7em',
-  regular: '1em',
-}
-
 export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile(
   { project: { images, name, skills, link, repository, brief }, active, setClicked, ...props },
   forwardedRef
@@ -62,6 +57,7 @@ export default forwardRef<HTMLDivElement, ProjectTileProps>(function ProjectTile
     navigate(`${PATH}${name}`, {
       state: {
         position: tileRef.current.getBoundingClientRect(),
+        prevLocation: location?.pathname,
       },
     })
   }
