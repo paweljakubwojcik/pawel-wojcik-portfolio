@@ -42,7 +42,6 @@ const StandardVariants: Variants = {
     },
   },
   exit: {
-    y: '100%',
     opacity: 0,
     transition: {
       duration: 0.5,
@@ -54,6 +53,10 @@ const StandardVariants: Variants = {
   },
 }
 
+const WrapperVariants: Variants = {
+  animate: { transition: { staggerChildren: 0.3 } },
+}
+
 export default function ProjectPage({
   data: { project, otherProjectPages },
   location: { state },
@@ -62,7 +65,7 @@ export default function ProjectPage({
 
   return (
     <PageScrollWrapper>
-      <Wrapper initial="initial" animate="animate" exit="exit" transition={{ staggerChildren: 0.3 }}>
+      <Wrapper initial="initial" animate={'animate'} exit="exit" variants={WrapperVariants}>
         <Seo title={`${project.name}`} description={project.brief} />
         <WrapperColumn>
           <Header variants={StandardVariants}>
