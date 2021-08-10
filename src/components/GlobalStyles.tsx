@@ -41,23 +41,6 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     overflow-x: hidden;
 
-
-    scrollbar-width: thin;
-    scrollbar-color: ${(props) =>
-      `${props.theme.colors.palette.violet.light} ${props.theme.colors.palette.violet.dark}`}; /* scroll thumb & track */
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-    &::-webkit-scrollbar-track {
-      background: ${(props) => props.theme.colors.palette.violet.dark};
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: ${(props) => props.theme.colors.palette.violet.light};
-      border-radius: 20px;
-      width: 12px;
-      opacity: 0.5;
-    }
-
   }
 
   a{

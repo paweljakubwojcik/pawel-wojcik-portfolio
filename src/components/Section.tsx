@@ -75,8 +75,11 @@ const StyledTitle = styled(motion.h2)`
   z-index: 1;
 `
 const SubTitle = ({ children }) => {
+  const { progress } = useContext(ProgressContext)
+  const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
+
   return (
-    <StyledSubTitle exit={{ opacity: 0, y: '175%' }} transition={{ duration: 0.5 }}>
+    <StyledSubTitle style={{ opacity }} exit={{ opacity: 0, y: '175%' }} transition={{ duration: 0.5 }}>
       {children}
     </StyledSubTitle>
   )
@@ -91,8 +94,11 @@ const StyledSubTitle = styled(motion.h3)`
 `
 
 const Paragraph = ({ children }) => {
+  const { progress } = useContext(ProgressContext)
+  const opacity = useTransform(progress, [0, 0.7, 1], [0, 0, 1])
+
   return (
-    <StyledParagraph exit={{ opacity: 0, y: '150%' }} transition={{ duration: 0.5, delay: 0.2 }}>
+    <StyledParagraph style={{ opacity }} exit={{ opacity: 0, y: '150%' }} transition={{ duration: 0.5, delay: 0.2 }}>
       {children}
     </StyledParagraph>
   )

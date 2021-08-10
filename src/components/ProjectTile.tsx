@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import { motion, Variants } from 'framer-motion'
 import { Link, navigate } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
@@ -8,7 +8,7 @@ import { ProjectType } from '../typescript'
 import getRandomElement from '../utils/getRandomElement'
 import Button from './Button'
 import IconButton from './IconButton'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 
