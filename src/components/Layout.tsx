@@ -16,23 +16,10 @@ import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 import MouseFollower from './MouseFollower'
 import MediaQuery from './MediaQuery'
+import Loader from './Loader'
 
 type LayoutProps = {
   children: React.ReactNode
-}
-
-const ContainerVariants = {
-  exit: {
-    opacity: 1,
-    transition: { when: 'afterChildren' },
-  },
-  animate: {
-    opacity: 1,
-    transition: { when: 'beforeChildren' },
-  },
-  initial: {
-    opacity: 1,
-  },
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -50,6 +37,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <ThemeProvider>
+      <VariablesConverter>
+        <Loader />
+      </VariablesConverter>
+
       <MediaQuery query={`(min-width: ${theme.breakpoints.MIN_LAPTOP}px)`}>
         <MouseFollower />
       </MediaQuery>
@@ -76,6 +67,13 @@ const Wrapper = styled.div`
   max-width: 2000px;
   margin: auto;
   position: relative;
+`
+
+const VariablesConverter = styled.div`
+  --dark-violet: ${(props) => props.theme.colors.palette.violet.dark};
+  --light-violet: ${(props) => props.theme.colors.palette.violet.light};
+  --light-pink: ${(props) => props.theme.colors.palette.pink.light};
+  --dark-pink: ${(props) => props.theme.colors.palette.pink.dark};
 `
 
 export default Layout

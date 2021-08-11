@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { Color, DoubleSide, Mesh, MeshStandardMaterial, SphereBufferGeometry, SphereGeometry } from 'three'
 import { useSceneContext } from './SceneContext'
 
-export default function Moon() {
+export default function Moon({ onLoad }: { onLoad: () => void }) {
   const {
     texture: { publicURL: MOON_TEXTURE },
     displaycment: { publicURL: DISPLAYCMENT_MAP },
@@ -44,6 +44,8 @@ export default function Moon() {
 
       moon.current = new Mesh(geometry, material)
       scene.add(moon.current)
+
+      onLoad()
 
       animateFrame((clock) => {
         const elapsedTime = clock.getElapsedTime()

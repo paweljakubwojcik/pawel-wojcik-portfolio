@@ -232,9 +232,6 @@ export const query = graphql`
     otherProjectPages: allGraphCmsProject(filter: { name: { ne: $name } }) {
       nodes {
         name
-        images {
-          gatsbyImageData(placeholder: BLURRED, aspectRatio: 1.77, width: 300)
-        }
       }
     }
   }
