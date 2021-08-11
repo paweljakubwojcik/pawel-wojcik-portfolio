@@ -34,6 +34,15 @@ module.exports = {
       },
     },
     `gatsby-plugin-fontawesome-css`,
+    {
+      resolve: `gatsby-plugin-nprogress`,
+      options: {
+        // Setting a color is optional.
+        color: `#f15ad8`,
+        // Disable the loading spinner.
+        showSpinner: false,
+      },
+    },
 
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
