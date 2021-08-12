@@ -55,8 +55,6 @@ export default function MouseActiveImages({ images, ...rest }: MouseActiveImages
     y: `${translation.y + translation.z * mousePosition.y}%`,
   }))
 
-  console.log(imageTranslations)
-
   return (
     <Wrapper variants={WrapperVariants} animate={'animate'} initial="initial" exit="exit" {...rest}>
       {images.slice(0, 3).map(({ gatsbyImageData }, i: number) => (

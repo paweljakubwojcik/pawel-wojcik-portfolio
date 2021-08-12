@@ -16,13 +16,17 @@ const isBrowser = typeof window !== 'undefined'
 export default function MediaQuery({ children, query }: MediaQueryProps) {
   const match = useRef(isBrowser ? window.matchMedia(query) : null)
 
-  const [matches, setMatches] = useState(match.current?.matches)
+  const [matches, setMatches] = useState<boolean>()
 
   const handleChange = (t: MediaQueryListEvent) => setMatches(t.matches)
+
   useEffect(() => {
+    //setting set matches after the mount to properly hydrate server side rendered content
+    setMatches(match.current?.matches)
+
     match.current.addEventListener('change', handleChange)
     return () => match.current.removeEventListener('change', handleChange)
-  })
+  }, [])
 
   return matches ? <>{children}</> : null
 }
