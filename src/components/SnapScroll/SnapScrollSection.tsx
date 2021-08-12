@@ -14,6 +14,7 @@ type SnapScrollSectionProps = {
   scrollYProgress: MotionValue
   index: number
   numberOfSiblings: number
+  onScrollEnd: () => void
 }
 
 export default function SnapScrollSection({
@@ -22,10 +23,10 @@ export default function SnapScrollSection({
   scrollYProgress,
   index,
   numberOfSiblings,
+  onScrollEnd,
   ...props
 }: SnapScrollSectionProps) {
-  const { hash } = useLocation()
-  const { active, setActive, keyToHash, hashToKey } = useContext(SectionActiveContext)
+  const { setActive } = useContext(SectionActiveContext)
 
   const { inputValues, outputValues } = getScrollMapping(index, numberOfSiblings)
   const motionValue = useTransform(scrollYProgress, inputValues, outputValues)
@@ -33,9 +34,7 @@ export default function SnapScrollSection({
   const { setRef, visible: wholeView } = useIntersectionObserver(
     (entry) => {
       if (!wholeView) {
-        if (keyToHash(active) === hash && hashToKey(hash) !== id) {
-          navigate(keyToHash(id) || '/', { replace: true })
-        }
+        onScrollEnd()
       } else {
         setActive(id)
       }

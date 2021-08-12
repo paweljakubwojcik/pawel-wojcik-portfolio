@@ -37,6 +37,7 @@ const Container = styled(motion.section)`
   padding-right: var(--content-global-padding);
 
   overflow: hidden;
+  position: relative;
 
   @media (max-width: ${(props) => props.theme.breakpoints.MAX_TABLET}px) {
     padding-left: 7em;
@@ -59,7 +60,7 @@ const Title = ({ children }) => {
   const { progress } = useContext(ProgressContext)
   const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
   const filter = useMotionTemplate`opacity(${opacity})`
-  const x = useTransform(progress, [1, 0], [0, 40])
+  const x = useTransform(progress, [1, 0], [0, 60])
   const transform = useMotionTemplate`translateY(${x}%)`
 
   return (
@@ -75,7 +76,6 @@ const Title = ({ children }) => {
 
 const StyledTitle = styled(motion.h2)`
   font-size: 4em;
-  /* margin: 0.4em 0; */
   width: 100%;
 
   position: relative;
@@ -85,7 +85,7 @@ const StyledTitle = styled(motion.h2)`
 `
 const SubTitle = ({ children }) => {
   const { progress } = useContext(ProgressContext)
-  const opacity = useTransform(progress, [0, 0.8, 1], [0, 0, 1])
+  const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
   const filter = useMotionTemplate`opacity(${opacity})`
 
   return (
@@ -97,20 +97,23 @@ const SubTitle = ({ children }) => {
 
 const StyledSubTitle = styled(motion.h3)`
   font-size: 2em;
-  /*  margin: 1em 0.1rem; */
   color: ${(props) => props.theme.colors.palette.pink.main};
   position: relative;
   z-index: 1;
+
+  transition: filter 0.3s;
 `
 
 const Paragraph = ({ children }) => {
   const { progress } = useContext(ProgressContext)
   const opacity = useTransform(progress, [0, 0.7, 1], [0, 0, 1])
   const filter = useMotionTemplate`opacity(${opacity})`
+  const x = useTransform(progress, [1, 0], [0, 40])
+  const transform = useMotionTemplate`translateY(${x}%)`
 
   return (
     <StyledParagraph
-      style={{ filter }}
+      style={{ filter, transform }}
       exit={{ filter: 'opacity(0)', y: '150%' }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
@@ -126,6 +129,8 @@ const StyledParagraph = styled(motion.p)`
   z-index: 1;
   max-width: 500px;
   text-align: justify;
+
+  transition: filter 0.1s;
 `
 
 export default Object.assign(forwardRef<HTMLElement, SectionProps>(Section), { Column, Title, Paragraph, SubTitle })

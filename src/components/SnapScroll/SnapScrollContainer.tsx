@@ -47,8 +47,6 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
 
   const [active, setActive] = useState<string>(keys[0])
 
-  console.log({ active, hash: location.hash, pathname: location.pathname })
-
   //reacting to changing hash
   useEffect(() => {
     if (location.pathname !== '/') return
@@ -67,13 +65,27 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
     wrapperRef.current.style.scrollBehavior = 'smooth'
   }, [])
 
-  // handling changing active
-  /*    useEffect(() => {
-    if (active !== hashToKey(location.hash)) {
-      navigate(keyToHash(active) || '/', { replace: true })
+  // replacing default scroll by wheel event to preserve consistant experience across browsers
+  const handleWheel = (e: WheelEvent) => {
+    const { deltaY, ctrlKey } = e
+    if (ctrlKey) return
+
+    e.preventDefault()
+    if (deltaY > 0) {
+      wrapperRef.current.scrollBy(0, screenHeight)
     }
-  }, [active])
- */
+    if (deltaY < 0) {
+      wrapperRef.current.scrollBy(0, -screenHeight)
+    }
+  }
+  useEffect(() => {
+    wrapperRef.current.addEventListener('wheel', handleWheel)
+
+    return () => {
+      wrapperRef.current?.removeEventListener('wheel', handleWheel)
+    }
+  }, [])
+
   // handling scrolling with keys
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
@@ -84,17 +96,33 @@ export default function SnapScrollContainer({ children }: SnapScrollContainerPro
     }
   }
   useEffect(() => {
-    if (isBrowser) window.addEventListener('keydown', handleKeyDown)
+    if (isBrowser) {
+      window.addEventListener('keydown', handleKeyDown)
+    }
     return () => {
-      if (isBrowser) window.removeEventListener('keydown', handleKeyDown)
+      if (isBrowser) {
+        window.removeEventListener('keydown', handleKeyDown)
+      }
     }
   }, [])
+
+  const changeHash = (id: string) => {
+    if (keyToHash(active) === location.hash && hashToKey(location.hash) !== id) {
+      navigate(keyToHash(id) || '/', { replace: true })
+    }
+  }
 
   return (
     <SectionActiveContext.Provider value={{ active, setActive, hashToKey, keyToHash }}>
       <Wrapper ref={wrapperRef as any}>
         {Children.map(children, (child, i) => (
-          <SnapScrollSection id={keys[i]} scrollYProgress={scrollYProgress} index={i} numberOfSiblings={keys.length}>
+          <SnapScrollSection
+            id={keys[i]}
+            scrollYProgress={scrollYProgress}
+            index={i}
+            numberOfSiblings={keys.length}
+            onScrollEnd={() => changeHash(keys[i])}
+          >
             {child}
           </SnapScrollSection>
         ))}
