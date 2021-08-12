@@ -58,9 +58,16 @@ const Column = styled.div`
 const Title = ({ children }) => {
   const { progress } = useContext(ProgressContext)
   const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
+  const filter = useMotionTemplate`opacity(${opacity})`
+  const x = useTransform(progress, [1, 0], [0, 40])
+  const transform = useMotionTemplate`translateY(${x}%)`
 
   return (
-    <StyledTitle style={{ opacity }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.5, delay: 0.4 }}>
+    <StyledTitle
+      style={{ filter, transform }}
+      exit={{ filter: 'opacity(0)', y: '100%' }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+    >
       {children}
     </StyledTitle>
   )
@@ -73,13 +80,16 @@ const StyledTitle = styled(motion.h2)`
 
   position: relative;
   z-index: 1;
+
+  transition: transform 0.2s;
 `
 const SubTitle = ({ children }) => {
   const { progress } = useContext(ProgressContext)
-  const opacity = useTransform(progress, [0, 0.5, 1], [0, 0, 1])
+  const opacity = useTransform(progress, [0, 0.8, 1], [0, 0, 1])
+  const filter = useMotionTemplate`opacity(${opacity})`
 
   return (
-    <StyledSubTitle style={{ opacity }} exit={{ opacity: 0, y: '175%' }} transition={{ duration: 0.5 }}>
+    <StyledSubTitle style={{ filter }} exit={{ filter: 'opacity(0)', y: '175%' }} transition={{ duration: 0.5 }}>
       {children}
     </StyledSubTitle>
   )
@@ -96,9 +106,14 @@ const StyledSubTitle = styled(motion.h3)`
 const Paragraph = ({ children }) => {
   const { progress } = useContext(ProgressContext)
   const opacity = useTransform(progress, [0, 0.7, 1], [0, 0, 1])
+  const filter = useMotionTemplate`opacity(${opacity})`
 
   return (
-    <StyledParagraph style={{ opacity }} exit={{ opacity: 0, y: '150%' }} transition={{ duration: 0.5, delay: 0.2 }}>
+    <StyledParagraph
+      style={{ filter }}
+      exit={{ filter: 'opacity(0)', y: '150%' }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
       {children}
     </StyledParagraph>
   )
