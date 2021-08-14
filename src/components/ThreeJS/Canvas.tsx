@@ -4,6 +4,7 @@ import { PointLight, Scene, PerspectiveCamera, WebGLRenderer, Clock, TextureLoad
 import * as dat from 'dat.gui'
 import { SceneContextProvider } from './SceneContext'
 import { useRef } from 'react'
+import { MotionValue } from 'framer-motion'
 
 const isBrowser = typeof window !== `undefined`
 const fov = 50
@@ -15,10 +16,11 @@ type CanvasProp = {
   animation?: boolean
   children: React.ReactNode
   parent?: HTMLElement
+  cameraPosition?: { x: MotionValue; z: MotionValue }
   [key: string]: any
 }
 
-export default function Canvas({ children, animation, parent, ...props }: CanvasProp) {
+export default function Canvas({ children, animation, parent, cameraPosition, ...props }: CanvasProp) {
   const [canvas, canvasRef] = useState<HTMLElement>()
   const scene = useMemo(() => (isBrowser ? new Scene() : null), [])
   const camera = useMemo(() => (isBrowser ? new PerspectiveCamera(fov, aspectRatio, near, far) : null), [])
@@ -89,6 +91,15 @@ export default function Canvas({ children, animation, parent, ...props }: Canvas
       cancelAnimationFrame(animationHandle.current)
     }
   }, [animationCallbacks, animation])
+
+  useEffect(() => {
+    cameraPosition.x.onChange((value) => {
+      camera.position.setX(value)
+    })
+    cameraPosition.z.onChange((value) => {
+      camera.position.setZ(value)
+    })
+  }, [cameraPosition])
 
   useEffect(() => {
     console.log('creating view')

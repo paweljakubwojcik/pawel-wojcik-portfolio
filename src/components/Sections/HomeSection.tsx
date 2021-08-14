@@ -19,7 +19,7 @@ export default function HomeSection({ motionValue, visible, ...props }: PropsFro
         <Section.Paragraph>Take your ideas to the moon 🚀</Section.Paragraph>
       </Section.Column>
 
-      <Scene animation={visible} parent={sectionRef.current} />
+      <Scene animation={visible} parent={sectionRef.current} motionValue={motionValue} />
       <MotionContainer style={{ translateY, opacity: motionValue }}>
         <CallToScroll />
       </MotionContainer>
