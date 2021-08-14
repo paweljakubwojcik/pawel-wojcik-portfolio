@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { PointLight, Scene, PerspectiveCamera, WebGLRenderer, Clock, TextureLoader, LoadingManager } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import * as dat from 'dat.gui'
-import { useTheme } from 'styled-components'
 import { SceneContextProvider } from './SceneContext'
 import { useRef } from 'react'
 
