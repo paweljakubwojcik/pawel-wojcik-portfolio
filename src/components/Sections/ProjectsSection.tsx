@@ -48,7 +48,7 @@ export default function ProjectsSection({ visible, wholeView, motionValue, ...re
     allGraphCmsProject: { nodes: projects },
   } = useStaticQuery<ProjectSectionQuery>(graphql`
     query ProjectsQuery {
-      allGraphCmsProject {
+      allGraphCmsProject(limit: 4, sort: { fields: createdAt }) {
         nodes {
           name
           brief

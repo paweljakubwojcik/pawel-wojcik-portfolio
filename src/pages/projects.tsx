@@ -29,7 +29,7 @@ type DataType = {
 
 export const query = graphql`
   query AllProjects {
-    allGraphCmsProject {
+    allGraphCmsProject(sort: { fields: createdAt }) {
       nodes {
         name
         description
@@ -56,12 +56,24 @@ export default function projects({
     allGraphCmsProject: { nodes: projects },
   },
 }: PageProps<DataType, {}, LocationState>) {
+  const numberOfProjects = 4
+
   return (
     <PageScrollWrapper>
       <Seo title={'Projects'} />
-      <TilesContainer animate={{ transition: { staggerChildren: 1 } }} exit={{ transition: { staggerChildren: 1 } }}>
-        {projects.map((project, i) => (
+      <TilesContainer>
+        {projects.slice(0, numberOfProjects).map((project, i) => (
           <Tile project={project} state={state} active={i === state?.active} key={project.name} index={i} />
+        ))}
+        {projects.slice(numberOfProjects).map((project, i) => (
+          <Tile
+            project={project}
+            state={undefined}
+            active={i === state?.active}
+            key={project.name}
+            index={i + numberOfProjects}
+            delay={state?.positions ? 0.4 : 0}
+          />
         ))}
       </TilesContainer>
     </PageScrollWrapper>
@@ -69,7 +81,7 @@ export default function projects({
 }
 
 const TileVariants: Variants = {
-  grid: ({ index }) => ({
+  grid: ({ index, delay }) => ({
     x: 0,
     y: 0,
     scale: 1,
@@ -78,7 +90,7 @@ const TileVariants: Variants = {
     transition: {
       type: 'spring',
       duration: 0.7,
-      delay: index * 0.05 + 0.1,
+      delay: index * 0.05 + 0.1 + delay,
     },
   }),
   initial: ({ initialPosition, currentPosition, containerWidth }) => {
@@ -92,14 +104,14 @@ const TileVariants: Variants = {
       fontSize: `${1 / fontScaleFactor}em`,
     }
   },
-  gridInitial: ({ index }) => ({
+  gridInitial: ({ index, delay }) => ({
     x: 0,
     y: 100,
     opacity: 0,
     fontSize: '1em',
     transition: {
       duration: 0.7,
-      delay: index * 0.05 + 0.1,
+      delay: index * 0.05 + 0.1 + delay,
     },
   }),
 }
@@ -109,11 +121,13 @@ const Tile = ({
   state,
   active,
   index,
+  delay = 0,
 }: {
   project: ProjectType
-  state: LocationState
+  state?: LocationState
   active: boolean
   index: number
+  delay?: number
 }) => {
   const tileRefPosition = useRef<HTMLDivElement>()
   const [currentPosition, setCurrentPosition] = useState<DOMRect>()
@@ -152,11 +166,10 @@ const Tile = ({
    */
   return (
     <WrapperWrapper ref={tileRefPosition} style={{ zIndex: active ? 1 : 0, opacity }}>
-      {''}
       {currentPosition ? (
         <TileWrapper
           variants={TileVariants}
-          custom={{ initialPosition, currentPosition, containerWidth, index }}
+          custom={{ initialPosition, currentPosition, containerWidth, index, delay }}
           initial={initialPosition ? ['initial', 'inactive'] : ['gridInitial', 'inactive']}
           animate={['grid', isMobile || clicked ? 'active' : 'inactive']}
           exit={navigatingTo ? {} : { opacity: 0, y: '60%', transition: { duration: 0.7 } }}
